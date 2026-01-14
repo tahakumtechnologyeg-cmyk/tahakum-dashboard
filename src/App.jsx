@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Settings, Cpu, Network, Linkedin, Zap, FileText, Layers, Phone, Send, Mail } from 'lucide-react';
+import { Menu, X, Settings, Cpu, Network, Linkedin, Zap, FileText, Layers, Phone, Send, Mail, MessageCircle, MapPin } from 'lucide-react';
 
 const NAV_LINKS = [
     { name: 'Home', href: '#hero' },
@@ -58,9 +58,15 @@ const App = () => {
         const sectionId = href.replace('#', '');
         const element = document.getElementById(sectionId);
         if (element) {
-            // Add a small delay to allow the menu to close and layout to stabilize if needed
             setTimeout(() => {
-                element.scrollIntoView({ behavior: 'smooth' });
+                const headerOffset = 85; // Adjust based on your navbar height
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
             }, 100);
         }
     };
@@ -852,34 +858,50 @@ const App = () => {
 
                             {/* Sidebar info */}
                             <motion.div
-                                className="space-y-5"
+                                className="space-y-8"
                                 {...slideInFromRight(0.15)}
                             >
                                 <div>
-                                    <h3 className="text-sm font-semibold tracking-[0.22em] uppercase text-gray-400 mb-2">
-                                        Email
-                                    </h3>
-                                    <p className="text-sm text-white">team.takamul.eg@gmail.com</p>
-                                </div>
-                                <div>
-                                    <h3 className="text-sm font-semibold tracking-[0.22em] uppercase text-gray-400 mb-2">
+                                    <h3 className="text-sm font-semibold tracking-[0.22em] uppercase text-gray-400 mb-4">
                                         Location
                                     </h3>
-                                    <p className="text-sm text-white">Cairo, Egypt</p>
+                                    <div className="flex items-center space-x-3 text-white">
+                                        <MapPin className="w-5 h-5 text-takamul-red" />
+                                        <span>Cairo, Egypt</span>
+                                    </div>
                                 </div>
+
                                 <div>
-                                    <h3 className="text-sm font-semibold tracking-[0.22em] uppercase text-gray-400 mb-2">
-                                        LinkedIn
+                                    <h3 className="text-sm font-semibold tracking-[0.22em] uppercase text-gray-400 mb-4">
+                                        Connect
                                     </h3>
-                                    <a
-                                        href="https://www.linkedin.com/company/takamull/"
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="inline-flex items-center space-x-2 text-sm text-gray-300 hover:text-white transition-colors"
-                                    >
-                                        <Linkedin className="w-4 h-4 text-takamul-red" />
-                                        <span>/takamull</span>
-                                    </a>
+                                    <div className="flex items-center space-x-4">
+                                        <a
+                                            href="https://wa.me/201055357422"
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="group p-3 rounded-full bg-white/5 border border-white/10 hover:border-takamul-red hover:bg-takamul-red/10 transition-all duration-300"
+                                            aria-label="WhatsApp"
+                                        >
+                                            <MessageCircle className="w-5 h-5 text-gray-400 group-hover:text-takamul-red transition-colors" />
+                                        </a>
+                                        <a
+                                            href="https://www.linkedin.com/company/takamull/"
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="group p-3 rounded-full bg-white/5 border border-white/10 hover:border-takamul-red hover:bg-takamul-red/10 transition-all duration-300"
+                                            aria-label="LinkedIn"
+                                        >
+                                            <Linkedin className="w-5 h-5 text-gray-400 group-hover:text-takamul-red transition-colors" />
+                                        </a>
+                                        <a
+                                            href="mailto:team.takamul.eg@gmail.com"
+                                            className="group p-3 rounded-full bg-white/5 border border-white/10 hover:border-takamul-red hover:bg-takamul-red/10 transition-all duration-300"
+                                            aria-label="Email"
+                                        >
+                                            <Mail className="w-5 h-5 text-gray-400 group-hover:text-takamul-red transition-colors" />
+                                        </a>
+                                    </div>
                                 </div>
                             </motion.div>
                         </div>
@@ -888,63 +910,54 @@ const App = () => {
             </main>
 
             {/* Footer */}
-            <footer className="bg-black border-t border-white/10 py-8">
-                <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <footer className="bg-black border-t border-white/10 py-12">
+                <div className="container mx-auto px-6 flex flex-col items-center justify-center space-y-6">
                     <div className="flex items-center space-x-3">
                         <img
                             src={logoSrc}
                             alt="Takamul Logo"
-                            className="w-8 h-8 rounded"
+                            className="w-10 h-10 rounded"
                         />
-                        <span className="text-sm text-gray-400">
-                            &copy; {new Date().getFullYear()} Takamul. All rights reserved.
+                        <span className="text-xl font-bold tracking-tighter text-white">
+                            TAKAMUL
                         </span>
                     </div>
-                    <a
-                        href="https://www.linkedin.com/company/takamull/"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center space-x-2 text-sm text-gray-300 hover:text-white transition-colors"
-                    >
-                        <Linkedin className="w-4 h-4 text-takamul-red" />
-                        <span>Connect on LinkedIn</span>
-                    </a>
+
+                    <div className="flex items-center space-x-8">
+                        <a
+                            href="https://wa.me/201055357422"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="group p-3 rounded-full bg-white/5 border border-white/10 hover:border-takamul-red hover:bg-takamul-red/10 transition-all duration-300"
+                            aria-label="WhatsApp"
+                        >
+                            <MessageCircle className="w-5 h-5 text-gray-400 group-hover:text-takamul-red transition-colors" />
+                        </a>
+                        <a
+                            href="https://www.linkedin.com/company/takamull/"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="group p-3 rounded-full bg-white/5 border border-white/10 hover:border-takamul-red hover:bg-takamul-red/10 transition-all duration-300"
+                            aria-label="LinkedIn"
+                        >
+                            <Linkedin className="w-5 h-5 text-gray-400 group-hover:text-takamul-red transition-colors" />
+                        </a>
+                        <a
+                            href="mailto:team.takamul.eg@gmail.com"
+                            className="group p-3 rounded-full bg-white/5 border border-white/10 hover:border-takamul-red hover:bg-takamul-red/10 transition-all duration-300"
+                            aria-label="Email"
+                        >
+                            <Mail className="w-5 h-5 text-gray-400 group-hover:text-takamul-red transition-colors" />
+                        </a>
+                    </div>
+
+                    <span className="text-sm text-gray-500 font-mono">
+                        &copy; {new Date().getFullYear()} Takamul Industrial Automation.
+                    </span>
                 </div>
             </footer>
 
-            {/* WhatsApp Floating Button */}
-            {/* WhatsApp Floating Button */}
-            <motion.a
-                href="https://wa.me/201055357422"
-                target="_blank"
-                rel="noreferrer"
-                className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-full bg-[#25D366] text-white shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:bg-[#20bd5a] flex items-center space-x-2 font-bold tracking-wide"
-                aria-label="Chat on WhatsApp"
-                initial={{ scale: 1 }}
-                animate={{ scale: [1, 1.05, 1] }}
-                transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-                whileHover={{ scale: 1.1 }}
-            >
-                <svg
-                    viewBox="0 0 24 24"
-                    width="24"
-                    height="24"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    fill="none"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="w-5 h-5"
-                >
-                    <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
-                    <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
-                </svg>
-                <span>Chat on WhatsApp</span>
-            </motion.a>
+
         </div>
     );
 };

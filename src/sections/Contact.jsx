@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Send, MapPin, Mail, Phone, Linkedin } from 'lucide-react';
+import { Send, MapPin, Mail, Phone, Linkedin, MessageCircle } from 'lucide-react';
 
 const Contact = () => {
     return (
@@ -20,28 +20,45 @@ const Contact = () => {
                             Tell us about your project and we will design the right mix of automation, embedded, and IIoT to get you production-ready with confidence.
                         </p>
 
-                        <div className="space-y-6">
-                            <div className="flex items-center space-x-4 text-gray-300">
-                                <Mail className="w-5 h-5 text-takamul-blue" />
-                                <span>team.takamul.eg@gmail.com</span>
+                        <div className="space-y-8">
+                            <div>
+                                <h4 className="text-xs font-semibold tracking-[0.22em] uppercase text-gray-500 mb-3">Location</h4>
+                                <div className="flex items-center space-x-3 text-gray-300">
+                                    <MapPin className="w-5 h-5 text-takamul-blue" />
+                                    <span>Cairo, Egypt</span>
+                                </div>
                             </div>
-                            <div className="flex items-center space-x-4 text-gray-300">
-                                <Phone className="w-5 h-5 text-takamul-blue" />
-                                <span>+20 105 535 7422</span>
+
+                            <div>
+                                <h4 className="text-xs font-semibold tracking-[0.22em] uppercase text-gray-500 mb-3">Connect</h4>
+                                <div className="flex items-center space-x-4">
+                                    <a
+                                        href="https://wa.me/201055357422"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="group p-3 rounded-full bg-white/5 border border-white/10 hover:border-takamul-blue hover:bg-takamul-blue/10 transition-all duration-300"
+                                        aria-label="WhatsApp"
+                                    >
+                                        <MessageCircle className="w-5 h-5 text-gray-400 group-hover:text-takamul-blue transition-colors" />
+                                    </a>
+                                    <a
+                                        href="https://www.linkedin.com/company/takamull/"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="group p-3 rounded-full bg-white/5 border border-white/10 hover:border-takamul-blue hover:bg-takamul-blue/10 transition-all duration-300"
+                                        aria-label="LinkedIn"
+                                    >
+                                        <Linkedin className="w-5 h-5 text-gray-400 group-hover:text-takamul-blue transition-colors" />
+                                    </a>
+                                    <a
+                                        href="mailto:team.takamul.eg@gmail.com"
+                                        className="group p-3 rounded-full bg-white/5 border border-white/10 hover:border-takamul-blue hover:bg-takamul-blue/10 transition-all duration-300"
+                                        aria-label="Email"
+                                    >
+                                        <Mail className="w-5 h-5 text-gray-400 group-hover:text-takamul-blue transition-colors" />
+                                    </a>
+                                </div>
                             </div>
-                            <div className="flex items-center space-x-4 text-gray-300">
-                                <MapPin className="w-5 h-5 text-takamul-blue" />
-                                <span>Cairo, Egypt</span>
-                            </div>
-                            <a
-                                href="https://www.linkedin.com/company/takamull/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className="inline-flex items-center space-x-3 text-gray-300 hover:text-white transition-colors"
-                            >
-                                <Linkedin className="w-5 h-5 text-takamul-blue" />
-                                <span>LinkedIn</span>
-                            </a>
                         </div>
                     </motion.div>
 
@@ -98,6 +115,18 @@ const Contact = () => {
                                         placeholder="name@company.com"
                                     />
                                 </div>
+                            </div>
+
+                            {/* Phone Number Input - Added to match App.jsx */}
+                            <div>
+                                <label htmlFor="phone" className="block text-sm font-medium text-gray-400 mb-2">Phone Number <span className='text-red-500'>*</span></label>
+                                <input
+                                    type="tel"
+                                    id="phone"
+                                    required
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-takamul-blue transition-colors"
+                                    placeholder="Your phone number"
+                                />
                             </div>
 
                             <div>
