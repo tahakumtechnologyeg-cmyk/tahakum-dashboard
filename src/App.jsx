@@ -55,7 +55,8 @@ const App = () => {
     const handleMobileClick = (e, href) => {
         e.preventDefault();
         setNavOpen(false);
-        const element = document.querySelector(href);
+        const sectionId = href.replace('#', '');
+        const element = document.getElementById(sectionId);
         if (element) {
             // Add a small delay to allow the menu to close and layout to stabilize if needed
             setTimeout(() => {
@@ -909,7 +910,7 @@ const App = () => {
                 href="https://wa.me/201557526116"
                 target="_blank"
                 rel="noreferrer"
-                className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-[#25D366] text-white shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:bg-[#20bd5a] hover:scale-105 transition-all duration-300 flex items-center justify-center"
+                className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-full bg-[#25D366] text-white shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:bg-[#20bd5a] hover:scale-105 transition-all duration-300 flex items-center space-x-2 font-bold tracking-wide"
                 aria-label="Chat on WhatsApp"
             >
                 <svg
@@ -921,11 +922,12 @@ const App = () => {
                     fill="none"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="w-6 h-6"
+                    className="w-5 h-5"
                 >
                     <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
                     <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
                 </svg>
+                <span>Chat on WhatsApp</span>
             </a>
         </div>
     );
