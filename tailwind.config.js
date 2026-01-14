@@ -8,10 +8,10 @@ export default {
         extend: {
             colors: {
                 takamul: {
-                    dark: "#0a0a0a",
-                    blue: "#3b82f6",
-                    slate: "#64748b",
-                    contrast: "#ffffff",
+                    dark: "#0a0a0a",      // Deep Black
+                    red: "#dc2626",       // Industrial Red (from logo)
+                    slate: "#1f2937",     // Dark Slate
+                    white: "#f9fafb",     // Off-white
                 }
             },
             fontFamily: {
