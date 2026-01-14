@@ -5,11 +5,18 @@ import { ArrowRight, Activity, ChevronDown } from 'lucide-react';
 const Hero = () => {
     return (
         <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-            {/* Background with Overlay */}
+            {/* Video Background */}
             <div className="absolute inset-0 z-0">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-20 filter grayscale"></div>
+                <video
+                    className="w-full h-full object-cover"
+                    src="https://player.vimeo.com/external/437244350.hd.mp4?s=232625e0193f1dfbec20b59f82bc5eac4a1c3831&profile_id=175&oauth2_token_id=57447761"
+                    poster="https://images.pexels.com/photos/256381/pexels-photo-256381.jpeg?auto=compress&cs=tinysrgb&w=1920"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-takamul-dark via-takamul-dark/90 to-takamul-dark/60"></div>
-
                 {/* Animated Red Glow */}
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-takamul-red/10 rounded-full blur-[120px] animate-pulse"></div>
             </div>
