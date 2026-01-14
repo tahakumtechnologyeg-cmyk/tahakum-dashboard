@@ -38,7 +38,15 @@ const App = () => {
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+
+        // Global smooth scrolling for all in-page anchors
+        const originalScrollBehavior = document.documentElement.style.scrollBehavior;
+        document.documentElement.style.scrollBehavior = 'smooth';
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            document.documentElement.style.scrollBehavior = originalScrollBehavior || 'auto';
+        };
     }, []);
 
     const logoSrc = `${import.meta.env.BASE_URL}assets/logo-icon.jpg`;
@@ -124,18 +132,19 @@ const App = () => {
                     id="hero"
                     className="relative min-h-screen flex items-center justify-center overflow-hidden"
                 >
-                    {/* Video background */}
+                    {/* Video background - Industrial Robotic Arms */}
                     <div className="absolute inset-0 z-0">
                         <video
                             className="w-full h-full object-cover"
-                            src="https://player.vimeo.com/external/494251261.sd.mp4?s=164620601f7096f4c45b85a3637172b528e5e786&profile_id=164&oauth2_token_id=57447761"
-                            poster="https://images.pexels.com/photos/1439097/pexels-photo-1439097.jpeg?auto=compress&cs=tinysrgb&w=1920"
+                            src="https://player.vimeo.com/external/373233001.sd.mp4?s=ec9e3280917b7b0dff78eaefdd8f2fa2e9890ade&profile_id=164&oauth2_token_id=57447761"
+                            poster="https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?auto=compress&cs=tinysrgb&w=1920"
                             autoPlay
                             muted
                             loop
                             playsInline
                         />
                         {/* Dark overlay for readability */}
+                        <div className="absolute inset-0 bg-black/60" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-takamul-dark/80" />
                         {/* Grid Overlay - Technical/Engineering Drawing Feel */}
                         <div 
@@ -212,15 +221,16 @@ const App = () => {
                     id="about"
                     className="relative py-24 bg-black overflow-hidden"
                 >
-                    {/* Background industrial image + overlay - Engineering Control Room/PCB */}
+                    {/* Background industrial image + overlay - Smart Warehouse with AMRs/AGVs */}
                     <div className="absolute inset-0 -z-10">
                         <div
                             className="absolute inset-0 bg-cover bg-center opacity-35"
                             style={{
                                 backgroundImage:
-                                    "url('https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1920')"
+                                    "url('https://images.pexels.com/photos/1108101/pexels-photo-1108101.jpeg?auto=compress&cs=tinysrgb&w=1920')"
                             }}
                         />
+                        <div className="absolute inset-0 bg-black/60" />
                         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-takamul-dark/90" />
                         <div className="absolute -top-32 right-10 w-80 h-80 bg-takamul-red/20 blur-[120px]" />
                     </div>
@@ -360,6 +370,18 @@ const App = () => {
                                 className="group relative rounded-2xl border border-white/10 bg-black/40 p-7 overflow-hidden"
                                 {...slideInFromLeft(0.1)}
                             >
+                                {/* Visual: Control Panel with PLC/HMI */}
+                                <div className="absolute inset-y-0 right-0 w-1/3 opacity-30 pointer-events-none">
+                                    <div
+                                        className="w-full h-full bg-cover bg-center"
+                                        style={{
+                                            backgroundImage:
+                                                "url('https://images.pexels.com/photos/3861971/pexels-photo-3861971.jpeg?auto=compress&cs=tinysrgb&w=1200')"
+                                        }}
+                                    />
+                                    <div className="absolute inset-0 bg-black/60" />
+                                </div>
+
                                 {/* Ladder Logic Diagram Background Pattern */}
                                 <div 
                                     className="absolute inset-0 opacity-[0.08]"
@@ -423,6 +445,18 @@ const App = () => {
                                     </defs>
                                     <rect width="100%" height="100%" fill="url(#circuit-pattern)" />
                                 </svg>
+
+                                {/* Visual: High-tech Circuit Board (PCB) */}
+                                <div className="absolute inset-y-0 right-0 w-1/3 opacity-30 pointer-events-none">
+                                    <div
+                                        className="w-full h-full bg-cover bg-center"
+                                        style={{
+                                            backgroundImage:
+                                                "url('https://images.pexels.com/photos/315938/pexels-photo-315938.jpeg?auto=compress&cs=tinysrgb&w=1200')"
+                                        }}
+                                    />
+                                    <div className="absolute inset-0 bg-black/60" />
+                                </div>
                                 <div className="absolute inset-0 bg-gradient-to-br from-slate-900/60 via-transparent to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 <div className="relative z-10 space-y-4">
                                     <motion.div 
@@ -678,6 +712,7 @@ const App = () => {
                                 backgroundImage: "url('https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=1920')"
                             }}
                         />
+                        <div className="absolute inset-0 bg-black/60" />
                         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/95 to-takamul-dark/95" />
                         {/* Overlay SVG pattern for connectivity feel */}
                         <svg className="absolute inset-0 w-full h-full opacity-[0.15]" xmlns="http://www.w3.org/2000/svg">
