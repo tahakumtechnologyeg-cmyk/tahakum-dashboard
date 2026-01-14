@@ -906,12 +906,21 @@ const App = () => {
             </footer>
 
             {/* WhatsApp Floating Button */}
-            <a
+            {/* WhatsApp Floating Button */}
+            <motion.a
                 href="https://wa.me/201557526116"
                 target="_blank"
                 rel="noreferrer"
-                className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-full bg-[#25D366] text-white shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:bg-[#20bd5a] hover:scale-105 transition-all duration-300 flex items-center space-x-2 font-bold tracking-wide"
+                className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-full bg-[#25D366] text-white shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:bg-[#20bd5a] flex items-center space-x-2 font-bold tracking-wide"
                 aria-label="Chat on WhatsApp"
+                initial={{ scale: 1 }}
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+                whileHover={{ scale: 1.1 }}
             >
                 <svg
                     viewBox="0 0 24 24"
@@ -928,7 +937,7 @@ const App = () => {
                     <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
                 </svg>
                 <span>Chat on WhatsApp</span>
-            </a>
+            </motion.a>
         </div>
     );
 };
