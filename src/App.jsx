@@ -4,6 +4,7 @@ import { Menu, X, Settings, Cpu, Network, Linkedin, Zap, FileText, Layers } from
 
 const NAV_LINKS = [
     { name: 'Home', href: '#hero' },
+    { name: 'About', href: '#about' },
     { name: 'Services', href: '#services' },
     { name: 'Hardware', href: '#hardware' },
     { name: 'Contact', href: '#contact' }
@@ -211,13 +212,13 @@ const App = () => {
                     id="about"
                     className="relative py-24 bg-black overflow-hidden"
                 >
-                    {/* Background industrial image + overlay */}
+                    {/* Background industrial image + overlay - Engineering Control Room/PCB */}
                     <div className="absolute inset-0 -z-10">
                         <div
-                            className="absolute inset-0 bg-cover bg-center opacity-40"
+                            className="absolute inset-0 bg-cover bg-center opacity-35"
                             style={{
                                 backgroundImage:
-                                    "url('https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?auto=compress&cs=tinysrgb&w=1920')"
+                                    "url('https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1920')"
                             }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-takamul-dark/90" />
@@ -232,22 +233,22 @@ const App = () => {
                                     About Us
                                 </h2>
                                 <h3 className="text-3xl md:text-4xl font-bold text-white leading-tight mb-4">
-                                    Engineering-led automation for the next industrial decade.
+                                    The Digital Nervous System Provider
                                 </h3>
                                 <p className="text-sm md:text-base text-gray-300 mb-4">
                                     We are <span className="font-semibold text-white">Takamul</span>, an
-                                    engineering-driven firm focused on bridging the gap between
+                                    engineering-driven firm specializing in bridging the gap between
                                     traditional industrial automation and the future of{' '}
-                                    <span className="font-semibold text-white">IIoT</span>. Our team
-                                    has spent years inside factories, panels, and control rooms,
-                                    turning real-world constraints into robust architectures.
+                                    <span className="font-semibold text-white">IIoT</span>. We don't just automate;
+                                    we build the <span className="font-semibold text-white">Digital Nervous System</span>{' '}
+                                    for factories, ensuring every sensor and motor is connected, monitored, and intelligent.
                                 </p>
                                 <p className="text-sm md:text-base text-gray-300 mb-4">
-                                    We do not simply automate; we design and implement the{' '}
-                                    <span className="font-semibold text-white">Digital Nervous System</span>{' '}
-                                    for your factory — where every sensor, drive, and controller is
-                                    connected, monitored, and made intelligent for faster decisions and
-                                    safer operations.
+                                    Our core expertise lies in designing high-end proprietary hardware, including{' '}
+                                    <span className="font-semibold text-white">Micro-PLCs</span>, and developing
+                                    customized embedded systems and PCBs from scratch. We combine deep engineering
+                                    knowledge with practical factory experience to deliver solutions that work
+                                    reliably in real-world industrial environments.
                                 </p>
                                 <div className="mt-6 space-y-3 text-sm text-gray-300">
                                     <div>
@@ -669,9 +670,17 @@ const App = () => {
                     id="contact"
                     className="relative py-24 bg-takamul-dark overflow-hidden"
                 >
-                    {/* Global Network/Data Mesh Background */}
-                    <div className="absolute inset-0 opacity-[0.1]">
-                        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    {/* Global Network/Data Mesh Background Image */}
+                    <div className="absolute inset-0 -z-10">
+                        <div
+                            className="absolute inset-0 bg-cover bg-center opacity-30"
+                            style={{
+                                backgroundImage: "url('https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=1920')"
+                            }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/95 to-takamul-dark/95" />
+                        {/* Overlay SVG pattern for connectivity feel */}
+                        <svg className="absolute inset-0 w-full h-full opacity-[0.15]" xmlns="http://www.w3.org/2000/svg">
                             <defs>
                                 <pattern id="network-mesh" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
                                     <circle cx="20" cy="20" r="3" fill="rgba(220, 38, 38, 0.4)" />
