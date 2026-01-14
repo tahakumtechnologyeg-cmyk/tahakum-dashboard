@@ -23,11 +23,11 @@ const Contact = () => {
                         <div className="space-y-6">
                             <div className="flex items-center space-x-4 text-gray-300">
                                 <Mail className="w-5 h-5 text-takamul-blue" />
-                                <span>info@takamul.tech</span>
+                                <span>team.takamul.eg@gmail.com</span>
                             </div>
                             <div className="flex items-center space-x-4 text-gray-300">
                                 <Phone className="w-5 h-5 text-takamul-blue" />
-                                <span>+20 123 456 7890</span>
+                                <span>+20 105 535 7422</span>
                             </div>
                             <div className="flex items-center space-x-4 text-gray-300">
                                 <MapPin className="w-5 h-5 text-takamul-blue" />

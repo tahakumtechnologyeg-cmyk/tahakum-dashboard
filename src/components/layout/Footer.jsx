@@ -32,9 +32,9 @@ const Footer = () => {
                     <div>
                         <h4 className="text-white font-bold mb-6 uppercase tracking-wider text-sm">Contact</h4>
                         <div className="space-y-4">
-                            <a href="mailto:info@takamul.tech" className="flex items-center space-x-3 text-gray-400 hover:text-white transition-colors">
+                            <a href="mailto:team.takamul.eg@gmail.com" className="flex items-center space-x-3 text-gray-400 hover:text-white transition-colors">
                                 <Mail className="w-4 h-4 text-takamul-red" />
-                                <span>info@takamul.tech</span>
+                                <span>team.takamul.eg@gmail.com</span>
                             </a>
                             <div className="flex items-center space-x-3 text-gray-400">
                                 <MapPin className="w-4 h-4 text-takamul-red" />

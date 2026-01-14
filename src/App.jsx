@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Settings, Cpu, Network, Linkedin, Zap, FileText, Layers, Phone, Send } from 'lucide-react';
+import { Menu, X, Settings, Cpu, Network, Linkedin, Zap, FileText, Layers, Phone, Send, Mail } from 'lucide-react';
 
 const NAV_LINKS = [
     { name: 'Home', href: '#hero' },
@@ -95,6 +95,10 @@ const App = () => {
                                 {link.name}
                             </a>
                         ))}
+                        <div className="flex items-center space-x-4 border-l border-white/20 pl-6 ml-2">
+                            <a href="tel:+201055357422" className="text-gray-300 hover:text-white transition-colors" title="Call Us"><Phone size={18} /></a>
+                            <a href="mailto:team.takamul.eg@gmail.com" className="text-gray-300 hover:text-white transition-colors" title="Email Us"><Mail size={18} /></a>
+                        </div>
                         <a
                             href="#contact"
                             className="px-5 py-2 rounded bg-takamul-red text-xs font-bold tracking-widest uppercase shadow-[0_0_18px_rgba(239,68,68,0.55)] hover:bg-red-600 transition-colors"
@@ -104,13 +108,16 @@ const App = () => {
                     </div>
 
                     {/* Mobile trigger */}
-                    <button
-                        className="md:hidden text-white"
-                        onClick={() => setNavOpen(o => !o)}
-                        aria-label="Toggle navigation"
-                    >
-                        {navOpen ? <X /> : <Menu />}
-                    </button>
+                    <div className="flex items-center space-x-4 md:hidden">
+                        <a href="tel:+201055357422" className="text-gray-300"><Phone size={20} /></a>
+                        <button
+                            className="text-white"
+                            onClick={() => setNavOpen(o => !o)}
+                            aria-label="Toggle navigation"
+                        >
+                            {navOpen ? <X /> : <Menu />}
+                        </button>
+                    </div>
                 </div>
 
                 {/* Mobile menu */}
@@ -852,7 +859,7 @@ const App = () => {
                                     <h3 className="text-sm font-semibold tracking-[0.22em] uppercase text-gray-400 mb-2">
                                         Email
                                     </h3>
-                                    <p className="text-sm text-white">info@takamul.tech</p>
+                                    <p className="text-sm text-white">team.takamul.eg@gmail.com</p>
                                 </div>
                                 <div>
                                     <h3 className="text-sm font-semibold tracking-[0.22em] uppercase text-gray-400 mb-2">
@@ -908,7 +915,7 @@ const App = () => {
             {/* WhatsApp Floating Button */}
             {/* WhatsApp Floating Button */}
             <motion.a
-                href="https://wa.me/201557526116"
+                href="https://wa.me/201055357422"
                 target="_blank"
                 rel="noreferrer"
                 className="fixed bottom-6 right-6 z-50 px-5 py-3 rounded-full bg-[#25D366] text-white shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:bg-[#20bd5a] flex items-center space-x-2 font-bold tracking-wide"
