@@ -206,6 +206,129 @@ const App = () => {
                     </div>
                 </section>
 
+                {/* About Us Section */}
+                <section
+                    id="about"
+                    className="relative py-24 bg-black overflow-hidden"
+                >
+                    {/* Background industrial image + overlay */}
+                    <div className="absolute inset-0 -z-10">
+                        <div
+                            className="absolute inset-0 bg-cover bg-center opacity-40"
+                            style={{
+                                backgroundImage:
+                                    "url('https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?auto=compress&cs=tinysrgb&w=1920')"
+                            }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-takamul-dark/90" />
+                        <div className="absolute -top-32 right-10 w-80 h-80 bg-takamul-red/20 blur-[120px]" />
+                    </div>
+
+                    <div className="container mx-auto px-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                            {/* Copy / Identity */}
+                            <motion.div {...slideInFromLeft(0.05)}>
+                                <h2 className="text-sm font-semibold tracking-[0.22em] uppercase text-takamul-red mb-3">
+                                    About Us
+                                </h2>
+                                <h3 className="text-3xl md:text-4xl font-bold text-white leading-tight mb-4">
+                                    Engineering-led automation for the next industrial decade.
+                                </h3>
+                                <p className="text-sm md:text-base text-gray-300 mb-4">
+                                    We are <span className="font-semibold text-white">Takamul</span>, an
+                                    engineering-driven firm focused on bridging the gap between
+                                    traditional industrial automation and the future of{' '}
+                                    <span className="font-semibold text-white">IIoT</span>. Our team
+                                    has spent years inside factories, panels, and control rooms,
+                                    turning real-world constraints into robust architectures.
+                                </p>
+                                <p className="text-sm md:text-base text-gray-300 mb-4">
+                                    We do not simply automate; we design and implement the{' '}
+                                    <span className="font-semibold text-white">Digital Nervous System</span>{' '}
+                                    for your factory — where every sensor, drive, and controller is
+                                    connected, monitored, and made intelligent for faster decisions and
+                                    safer operations.
+                                </p>
+                                <div className="mt-6 space-y-3 text-sm text-gray-300">
+                                    <div>
+                                        <span className="font-semibold text-white">
+                                            • High-end proprietary hardware (Micro‑PLCs)
+                                        </span>
+                                        <span className="block text-gray-400">
+                                            — architected for industrial environments, open protocols,
+                                            and long lifecycles.
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span className="font-semibold text-white">
+                                            • Customized embedded systems &amp; PCBs from scratch
+                                        </span>
+                                        <span className="block text-gray-400">
+                                            — from schematics and layout to firmware and enclosures.
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span className="font-semibold text-white">
+                                            • Expert PLC / HMI / SCADA programming &amp; maintenance
+                                        </span>
+                                        <span className="block text-gray-400">
+                                            — keeping legacy lines running while preparing them for IIoT.
+                                        </span>
+                                    </div>
+                                </div>
+                            </motion.div>
+
+                            {/* Stats / Identity Metrics */}
+                            <motion.div
+                                className="lg:pl-8"
+                                {...slideInFromRight(0.1)}
+                            >
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+                                    <motion.div
+                                        className="rounded-2xl bg-white/5 border border-white/10 p-5 backdrop-blur"
+                                        whileHover={{ y: -4 }}
+                                        transition={{ type: 'spring', stiffness: 200, damping: 18 }}
+                                    >
+                                        <p className="text-xs tracking-[0.18em] uppercase text-gray-400 mb-2">
+                                            Custom PCBs Designed
+                                        </p>
+                                        <p className="text-3xl font-bold text-white">120+</p>
+                                    </motion.div>
+                                    <motion.div
+                                        className="rounded-2xl bg-white/5 border border-white/10 p-5 backdrop-blur"
+                                        whileHover={{ y: -4 }}
+                                        transition={{ type: 'spring', stiffness: 200, damping: 18 }}
+                                    >
+                                        <p className="text-xs tracking-[0.18em] uppercase text-gray-400 mb-2">
+                                            Factories Optimized
+                                        </p>
+                                        <p className="text-3xl font-bold text-white">35+</p>
+                                    </motion.div>
+                                    <motion.div
+                                        className="rounded-2xl bg-white/5 border border-white/10 p-5 backdrop-blur"
+                                        whileHover={{ y: -4 }}
+                                        transition={{ type: 'spring', stiffness: 200, damping: 18 }}
+                                    >
+                                        <p className="text-xs tracking-[0.18em] uppercase text-gray-400 mb-2">
+                                            Support
+                                        </p>
+                                        <p className="text-3xl font-bold text-white">24/7</p>
+                                    </motion.div>
+                                </div>
+                                <div className="rounded-2xl border border-takamul-red/40 bg-gradient-to-br from-takamul-red/20 via-black to-black p-6">
+                                    <p className="text-xs tracking-[0.18em] uppercase text-gray-200 mb-2">
+                                        The Digital Nervous System
+                                    </p>
+                                    <p className="text-sm text-gray-200">
+                                        A unified control and data layer that lets you see, predict, and
+                                        act — not just react — across every machine, line, and site.
+                                    </p>
+                                </div>
+                            </motion.div>
+                        </div>
+                    </div>
+                </section>
+
                 {/* Services Section */}
                 <section
                     id="services"
