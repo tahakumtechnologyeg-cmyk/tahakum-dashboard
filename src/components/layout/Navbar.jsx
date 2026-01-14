@@ -27,7 +27,7 @@ const Navbar = () => {
             <div className="container mx-auto px-6 flex justify-between items-center">
                 <a href="#" className="flex items-center space-x-3">
                     {/* Logo Integration */}
-                    <img src="/assets/logo-icon.jpg" alt="Takamul Icon" className="w-8 h-8 rounded" />
+                    <img src={`${import.meta.env.BASE_URL}assets/logo-icon.jpg`} alt="Takamul Logo" className="w-8 h-8 rounded" />
                     <span className="text-2xl font-bold tracking-tighter text-white">TAKAMUL</span>
                 </a>
 
