@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Settings, Cpu, Network, Linkedin } from 'lucide-react';
+import { Menu, X, Settings, Cpu, Network, Linkedin, Zap, FileText, Layers } from 'lucide-react';
 
 const NAV_LINKS = [
     { name: 'Home', href: '#hero' },
@@ -14,6 +14,20 @@ const fadeInUp = (delay = 0) => ({
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true },
     transition: { duration: 0.7, delay }
+});
+
+const slideInFromLeft = (delay = 0) => ({
+    initial: { opacity: 0, x: -60 },
+    whileInView: { opacity: 1, x: 0 },
+    viewport: { once: true },
+    transition: { duration: 0.8, delay, ease: "easeOut" }
+});
+
+const slideInFromRight = (delay = 0) => ({
+    initial: { opacity: 0, x: 60 },
+    whileInView: { opacity: 1, x: 0 },
+    viewport: { once: true },
+    transition: { duration: 0.8, delay, ease: "easeOut" }
 });
 
 const App = () => {
@@ -122,6 +136,17 @@ const App = () => {
                         />
                         {/* Dark overlay for readability */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-takamul-dark/80" />
+                        {/* Grid Overlay - Technical/Engineering Drawing Feel */}
+                        <div 
+                            className="absolute inset-0 opacity-[0.15]"
+                            style={{
+                                backgroundImage: `
+                                    linear-gradient(rgba(220, 38, 38, 0.1) 1px, transparent 1px),
+                                    linear-gradient(90deg, rgba(220, 38, 38, 0.1) 1px, transparent 1px)
+                                `,
+                                backgroundSize: '50px 50px'
+                            }}
+                        />
                         {/* Subtle red glow */}
                         <div className="absolute -bottom-32 right-0 w-[420px] h-[420px] bg-takamul-red/25 blur-[140px] pointer-events-none" />
                     </div>
@@ -209,8 +234,31 @@ const App = () => {
                             {/* Industrial Automation & Maintenance */}
                             <motion.div
                                 className="group relative rounded-2xl border border-white/10 bg-black/40 p-7 overflow-hidden"
-                                {...fadeInUp(0.1)}
+                                {...slideInFromLeft(0.1)}
                             >
+                                {/* Ladder Logic Diagram Background Pattern */}
+                                <div 
+                                    className="absolute inset-0 opacity-[0.08]"
+                                    style={{
+                                        backgroundImage: `
+                                            repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(220, 38, 38, 0.3) 20px, rgba(220, 38, 38, 0.3) 22px),
+                                            repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(220, 38, 38, 0.2) 40px, rgba(220, 38, 38, 0.2) 42px)
+                                        `
+                                    }}
+                                />
+                                {/* Scanning Effect Animation */}
+                                <motion.div
+                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-takamul-red/20 to-transparent"
+                                    initial={{ x: '-100%' }}
+                                    animate={{ x: '200%' }}
+                                    transition={{
+                                        duration: 3,
+                                        repeat: Infinity,
+                                        repeatDelay: 2,
+                                        ease: "linear"
+                                    }}
+                                    style={{ width: '30%' }}
+                                />
                                 <div className="absolute inset-0 bg-gradient-to-br from-red-900/30 via-transparent to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 <div className="relative z-10 space-y-4">
                                     <div className="inline-flex items-center justify-center rounded-xl bg-red-900/40 p-3">
@@ -239,11 +287,38 @@ const App = () => {
                                 className="group relative rounded-2xl border border-white/10 bg-black/40 p-7 overflow-hidden"
                                 {...fadeInUp(0.15)}
                             >
+                                {/* Circuit Board Traces Background Pattern (Gold/Red lines on Dark) */}
+                                <svg className="absolute inset-0 w-full h-full opacity-[0.12]" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <pattern id="circuit-pattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                                            <path d="M0,30 L60,30 M30,0 L30,60" stroke="rgba(220, 38, 38, 0.4)" strokeWidth="1" />
+                                            <path d="M15,15 L45,15 M15,45 L45,45 M15,15 L15,45 M45,15 L45,45" stroke="rgba(234, 179, 8, 0.3)" strokeWidth="0.5" />
+                                            <circle cx="15" cy="15" r="2" fill="rgba(220, 38, 38, 0.5)" />
+                                            <circle cx="45" cy="45" r="2" fill="rgba(234, 179, 8, 0.4)" />
+                                        </pattern>
+                                    </defs>
+                                    <rect width="100%" height="100%" fill="url(#circuit-pattern)" />
+                                </svg>
                                 <div className="absolute inset-0 bg-gradient-to-br from-slate-900/60 via-transparent to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 <div className="relative z-10 space-y-4">
-                                    <div className="inline-flex items-center justify-center rounded-xl bg-slate-900/60 p-3">
+                                    <motion.div 
+                                        className="inline-flex items-center justify-center rounded-xl bg-slate-900/60 p-3"
+                                        animate={{ 
+                                            scale: [1, 1.05, 1],
+                                            boxShadow: [
+                                                "0 0 0px rgba(220, 38, 38, 0)",
+                                                "0 0 20px rgba(220, 38, 38, 0.4)",
+                                                "0 0 0px rgba(220, 38, 38, 0)"
+                                            ]
+                                        }}
+                                        transition={{
+                                            duration: 2,
+                                            repeat: Infinity,
+                                            repeatDelay: 1
+                                        }}
+                                    >
                                         <Cpu className="w-7 h-7 text-gray-100" />
-                                    </div>
+                                    </motion.div>
                                     <h3 className="text-xl font-semibold text-white">
                                         Smart Embedded Solutions
                                     </h3>
@@ -265,7 +340,7 @@ const App = () => {
                             {/* IIoT & Digital Transformation */}
                             <motion.div
                                 className="group relative rounded-2xl border border-white/10 bg-black/40 p-7 overflow-hidden"
-                                {...fadeInUp(0.2)}
+                                {...slideInFromRight(0.2)}
                             >
                                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/40 via-transparent to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 <div className="relative z-10 space-y-4">
@@ -316,66 +391,151 @@ const App = () => {
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {/* Economy - ESP32 */}
                             <motion.div
-                                className="relative rounded-2xl border border-white/10 bg-gradient-to-b from-slate-900 to-black p-7 flex flex-col"
-                                {...fadeInUp(0.1)}
+                                className="group relative rounded-2xl border border-white/10 bg-gradient-to-b from-slate-900 to-black p-7 flex flex-col overflow-hidden"
+                                {...slideInFromLeft(0.1)}
                             >
-                                <h3 className="text-xl font-semibold text-white mb-2">Economy</h3>
-                                <p className="text-sm text-takamul-red font-mono mb-4">
-                                    ESP32 Platform
-                                </p>
-                                <p className="text-sm text-gray-300 mb-4 flex-1">
-                                    Cost‑optimized controllers and gateways built on ESP32 — ideal
-                                    for pilot cells, light industrial automation, and IoT
-                                    experiments.
-                                </p>
-                                <ul className="text-xs text-gray-400 space-y-1 mb-4">
-                                    <li>• Wi‑Fi / BLE connectivity</li>
-                                    <li>• Fast iteration for PoCs</li>
-                                    <li>• Upgrade path to STM32 / RISC‑V</li>
-                                </ul>
+                                {/* Blueprint Pattern Background */}
+                                <div 
+                                    className="absolute inset-0 opacity-[0.06]"
+                                    style={{
+                                        backgroundImage: `
+                                            repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(220, 38, 38, 0.2) 2px, rgba(220, 38, 38, 0.2) 4px),
+                                            repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(220, 38, 38, 0.2) 2px, rgba(220, 38, 38, 0.2) 4px)
+                                        `,
+                                        backgroundSize: '20px 20px'
+                                    }}
+                                />
+                                <div className="relative z-10">
+                                    <div className="flex items-center space-x-3 mb-4">
+                                        <div className="p-2 rounded-lg bg-white/5 border border-white/10">
+                                            <FileText className="w-5 h-5 text-gray-400" />
+                                        </div>
+                                        <h3 className="text-xl font-semibold text-white">Economy</h3>
+                                    </div>
+                                    <p className="text-sm text-takamul-red font-mono mb-4">
+                                        ESP32 Platform
+                                    </p>
+                                    <p className="text-sm text-gray-300 mb-4 flex-1">
+                                        Cost‑optimized controllers and gateways built on ESP32 — ideal
+                                        for pilot cells, light industrial automation, and IoT
+                                        experiments.
+                                    </p>
+                                    <ul className="text-xs text-gray-400 space-y-1 mb-4">
+                                        <li>• Wi‑Fi / BLE connectivity</li>
+                                        <li>• Fast iteration for PoCs</li>
+                                        <li>• Upgrade path to STM32 / RISC‑V</li>
+                                    </ul>
+                                </div>
                             </motion.div>
 
                             {/* Standard - STM32 */}
                             <motion.div
-                                className="relative rounded-2xl border border-takamul-red/60 bg-gradient-to-b from-red-900/40 via-black to-black p-7 flex flex-col shadow-[0_0_32px_rgba(248,113,113,0.35)]"
+                                className="group relative rounded-2xl border border-takamul-red/60 bg-gradient-to-b from-red-900/40 via-black to-black p-7 flex flex-col shadow-[0_0_32px_rgba(248,113,113,0.35)] overflow-hidden"
                                 {...fadeInUp(0.15)}
                             >
-                                <div className="absolute top-4 right-5 text-[10px] px-2 py-1 rounded-full bg-takamul-red text-white tracking-[0.15em] uppercase">
+                                {/* Blueprint Pattern Background */}
+                                <div 
+                                    className="absolute inset-0 opacity-[0.08]"
+                                    style={{
+                                        backgroundImage: `
+                                            repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(220, 38, 38, 0.3) 2px, rgba(220, 38, 38, 0.3) 4px),
+                                            repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(220, 38, 38, 0.3) 2px, rgba(220, 38, 38, 0.3) 4px)
+                                        `,
+                                        backgroundSize: '20px 20px'
+                                    }}
+                                />
+                                <div className="absolute top-4 right-5 text-[10px] px-2 py-1 rounded-full bg-takamul-red text-white tracking-[0.15em] uppercase z-10">
                                     Standard
                                 </div>
-                                <h3 className="text-xl font-semibold text-white mb-2">Standard</h3>
-                                <p className="text-sm text-takamul-red font-mono mb-4">
-                                    STM32 Platform
-                                </p>
-                                <p className="text-sm text-gray-300 mb-4 flex-1">
-                                    Industrial‑grade STM32 controllers for robust motion, IO, and
-                                    safety applications in harsh environments.
-                                </p>
-                                <ul className="text-xs text-gray-300 space-y-1 mb-4">
-                                    <li>• Deterministic real‑time control</li>
-                                    <li>• Fieldbus &amp; industrial ethernet ready</li>
-                                    <li>• Wide temperature and EMC‑aware design</li>
-                                </ul>
+                                <div className="relative z-10">
+                                    <div className="flex items-center space-x-3 mb-4">
+                                        <div className="p-2 rounded-lg bg-red-900/30 border border-takamul-red/30">
+                                            <Layers className="w-5 h-5 text-takamul-red" />
+                                        </div>
+                                        <h3 className="text-xl font-semibold text-white">Standard</h3>
+                                    </div>
+                                    <p className="text-sm text-takamul-red font-mono mb-4">
+                                        STM32 Platform
+                                    </p>
+                                    <p className="text-sm text-gray-300 mb-4 flex-1">
+                                        Industrial‑grade STM32 controllers for robust motion, IO, and
+                                        safety applications in harsh environments.
+                                    </p>
+                                    <ul className="text-xs text-gray-300 space-y-1 mb-4">
+                                        <li>• Deterministic real‑time control</li>
+                                        <li>• Fieldbus &amp; industrial ethernet ready</li>
+                                        <li>• Wide temperature and EMC‑aware design</li>
+                                    </ul>
+                                </div>
                             </motion.div>
 
                             {/* Pro - RISC-V */}
                             <motion.div
-                                className="relative rounded-2xl border border-white/10 bg-gradient-to-b from-slate-900 via-slate-950 to-black p-7 flex flex-col"
-                                {...fadeInUp(0.2)}
+                                className="group relative rounded-2xl border border-white/10 bg-gradient-to-b from-slate-900 via-slate-950 to-black p-7 flex flex-col overflow-hidden"
+                                {...slideInFromRight(0.2)}
                             >
-                                <h3 className="text-xl font-semibold text-white mb-2">Pro</h3>
-                                <p className="text-sm text-takamul-red font-mono mb-4">
-                                    RISC‑V Platform
-                                </p>
-                                <p className="text-sm text-gray-300 mb-4 flex-1">
-                                    High‑performance RISC‑V compute for advanced analytics, vision,
-                                    and coordination of fleets of robots or AGVs.
-                                </p>
-                                <ul className="text-xs text-gray-400 space-y-1 mb-4">
-                                    <li>• Parallel processing for heavy workloads</li>
-                                    <li>• AI‑ready at the edge</li>
-                                    <li>• Open, extensible ISA for long‑term roadmaps</li>
-                                </ul>
+                                {/* Blueprint Pattern Background */}
+                                <div 
+                                    className="absolute inset-0 opacity-[0.08]"
+                                    style={{
+                                        backgroundImage: `
+                                            repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(220, 38, 38, 0.3) 2px, rgba(220, 38, 38, 0.3) 4px),
+                                            repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(220, 38, 38, 0.3) 2px, rgba(220, 38, 38, 0.3) 4px)
+                                        `,
+                                        backgroundSize: '20px 20px'
+                                    }}
+                                />
+                                {/* Cutting Edge Glowing Effect */}
+                                <motion.div
+                                    className="absolute -inset-[2px] bg-gradient-to-r from-takamul-red via-orange-500 to-takamul-red rounded-2xl opacity-50 blur-sm"
+                                    animate={{
+                                        opacity: [0.3, 0.6, 0.3],
+                                        scale: [1, 1.02, 1]
+                                    }}
+                                    transition={{
+                                        duration: 3,
+                                        repeat: Infinity,
+                                        ease: "easeInOut"
+                                    }}
+                                />
+                                <div className="absolute top-4 right-5 z-10">
+                                    <span className="text-[10px] px-2 py-1 rounded-full bg-gradient-to-r from-takamul-red to-orange-500 text-white tracking-[0.15em] uppercase font-bold shadow-[0_0_12px_rgba(220,38,38,0.6)]">
+                                        Cutting Edge
+                                    </span>
+                                </div>
+                                <div className="relative z-10">
+                                    <div className="flex items-center space-x-3 mb-4">
+                                        <motion.div 
+                                            className="p-2 rounded-lg bg-gradient-to-br from-takamul-red/20 to-orange-500/20 border border-takamul-red/40"
+                                            animate={{
+                                                boxShadow: [
+                                                    "0 0 8px rgba(220, 38, 38, 0.3)",
+                                                    "0 0 16px rgba(220, 38, 38, 0.5)",
+                                                    "0 0 8px rgba(220, 38, 38, 0.3)"
+                                                ]
+                                            }}
+                                            transition={{
+                                                duration: 2,
+                                                repeat: Infinity
+                                            }}
+                                        >
+                                            <Zap className="w-5 h-5 text-takamul-red" />
+                                        </motion.div>
+                                        <h3 className="text-xl font-semibold text-white">Pro</h3>
+                                    </div>
+                                    <p className="text-sm text-takamul-red font-mono mb-4">
+                                        RISC‑V Platform
+                                    </p>
+                                    <p className="text-sm text-gray-300 mb-4 flex-1">
+                                        High‑performance RISC‑V compute for advanced analytics, vision,
+                                        and coordination of fleets of robots or AGVs.
+                                    </p>
+                                    <ul className="text-xs text-gray-400 space-y-1 mb-4">
+                                        <li>• Parallel processing for heavy workloads</li>
+                                        <li>• AI‑ready at the edge</li>
+                                        <li>• Open, extensible ISA for long‑term roadmaps</li>
+                                    </ul>
+                                </div>
                             </motion.div>
                         </div>
                     </div>
@@ -384,18 +544,39 @@ const App = () => {
                 {/* Contact Section */}
                 <section
                     id="contact"
-                    className="py-24 bg-takamul-dark"
+                    className="relative py-24 bg-takamul-dark overflow-hidden"
                 >
-                    <div className="container mx-auto px-6">
+                    {/* Global Network/Data Mesh Background */}
+                    <div className="absolute inset-0 opacity-[0.1]">
+                        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <pattern id="network-mesh" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                                    <circle cx="20" cy="20" r="3" fill="rgba(220, 38, 38, 0.4)" />
+                                    <circle cx="80" cy="20" r="3" fill="rgba(220, 38, 38, 0.4)" />
+                                    <circle cx="50" cy="50" r="3" fill="rgba(220, 38, 38, 0.4)" />
+                                    <circle cx="20" cy="80" r="3" fill="rgba(220, 38, 38, 0.4)" />
+                                    <circle cx="80" cy="80" r="3" fill="rgba(220, 38, 38, 0.4)" />
+                                    <line x1="20" y1="20" x2="80" y2="20" stroke="rgba(220, 38, 38, 0.2)" strokeWidth="1" />
+                                    <line x1="20" y1="20" x2="50" y2="50" stroke="rgba(220, 38, 38, 0.2)" strokeWidth="1" />
+                                    <line x1="80" y1="20" x2="50" y2="50" stroke="rgba(220, 38, 38, 0.2)" strokeWidth="1" />
+                                    <line x1="50" y1="50" x2="20" y2="80" stroke="rgba(220, 38, 38, 0.2)" strokeWidth="1" />
+                                    <line x1="50" y1="50" x2="80" y2="80" stroke="rgba(220, 38, 38, 0.2)" strokeWidth="1" />
+                                    <line x1="20" y1="80" x2="80" y2="80" stroke="rgba(220, 38, 38, 0.2)" strokeWidth="1" />
+                                </pattern>
+                            </defs>
+                            <rect width="100%" height="100%" fill="url(#network-mesh)" />
+                        </svg>
+                    </div>
+                    <div className="container mx-auto px-6 relative z-10">
                         <motion.div
                             className="max-w-2xl mb-10"
-                            {...fadeInUp(0)}
+                            {...slideInFromLeft(0)}
                         >
                             <h2 className="text-sm font-semibold tracking-[0.22em] uppercase text-takamul-red mb-3">
                                 Contact
                             </h2>
                             <p className="text-3xl md:text-4xl font-bold text-white leading-tight mb-3">
-                                Ready to build your Digital Nervous System?
+                                Connect your Factory to the Future.
                             </p>
                             <p className="text-sm md:text-base text-gray-300">
                                 Share a bit about your plant, constraints, and ambitions — we&apos;ll
@@ -407,7 +588,7 @@ const App = () => {
                             {/* Form */}
                             <motion.div
                                 className="lg:col-span-2 glass rounded-2xl border border-white/10 bg-black/50 p-8"
-                                {...fadeInUp(0.1)}
+                                {...slideInFromLeft(0.1)}
                             >
                                 <form className="space-y-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -468,7 +649,7 @@ const App = () => {
                             {/* Sidebar info */}
                             <motion.div
                                 className="space-y-5"
-                                {...fadeInUp(0.15)}
+                                {...slideInFromRight(0.15)}
                             >
                                 <div>
                                     <h3 className="text-sm font-semibold tracking-[0.22em] uppercase text-gray-400 mb-2">
