@@ -5,14 +5,14 @@ import { Settings, Cpu, Network } from 'lucide-react';
 const ServicesGrid = () => {
     const services = [
         {
-            title: "Industrial Automation & Maintenance",
-            desc: "End‑to‑end PLC, HMI, and SCADA engineering — from design and programming to preventive maintenance — to keep your industrial operations safe, reliable, and always online.",
+            title: "Industrial Automation & Maintenance (PLC/HMI/SCADA)",
+            desc: "Design, program, and maintain PLC, HMI, and SCADA for industrial reliability — end‑to‑end engineering that keeps every line safe, stable, and always online.",
             icon: <Settings className="w-8 h-8 text-white" />,
             bg: "bg-red-900/30"
         },
         {
-            title: "Smart Embedded Solutions",
-            desc: "Customized PCBs and Embedded Systems engineered from scratch — including high‑end Custom PCB Design, firmware, and enclosure integration — to match your exact application and constraints.",
+            title: "Smart Solutions (Custom PCB/Embedded)",
+            desc: "Customized PCBs and Embedded Systems engineered from scratch — high‑end Custom PCB Design, firmware, and enclosure integration tailored to your exact application and constraints.",
             icon: <Cpu className="w-8 h-8 text-white" />,
             bg: "bg-slate-900/40"
         },

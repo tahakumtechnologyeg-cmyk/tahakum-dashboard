@@ -6,6 +6,7 @@ import HardwareTiers from './sections/HardwareTiers';
 import PowerFeature from './sections/PowerFeature';
 import SoftwareInnovation from './sections/SoftwareInnovation';
 import ServicesGrid from './sections/ServicesGrid';
+import Contact from './sections/Contact';
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                 <PowerFeature />
                 <SoftwareInnovation />
                 <ServicesGrid />
+                <Contact />
             </main>
 
             <Footer />
