@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Settings, Cpu, Network, Linkedin, Zap, FileText, Layers } from 'lucide-react';
+import { Menu, X, Settings, Cpu, Network, Linkedin, Zap, FileText, Layers, Phone, Send } from 'lucide-react';
 
 const NAV_LINKS = [
     { name: 'Home', href: '#hero' },
@@ -35,6 +35,7 @@ const App = () => {
     const [navOpen, setNavOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
 
+
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener('scroll', handleScroll);
@@ -45,19 +46,30 @@ const App = () => {
 
         return () => {
             window.removeEventListener('scroll', handleScroll);
-            document.documentElement.style.scrollBehavior = originalScrollBehavior || 'auto';
+            // document.documentElement.style.scrollBehavior = originalScrollBehavior || 'auto'; // Keep smooth scroll behavior
         };
     }, []);
 
     const logoSrc = `${import.meta.env.BASE_URL}assets/logo-icon.jpg`;
 
+    const handleMobileClick = (e, href) => {
+        e.preventDefault();
+        setNavOpen(false);
+        const element = document.querySelector(href);
+        if (element) {
+            // Add a small delay to allow the menu to close and layout to stabilize if needed
+            setTimeout(() => {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-takamul-dark text-white selection:bg-takamul-red/30 overflow-x-hidden">
             {/* Navbar */}
             <nav
-                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-                    scrolled ? 'backdrop-blur-xl bg-black/70 py-3 border-b border-white/5' : 'bg-transparent py-5'
-                }`}
+                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'backdrop-blur-xl bg-black/70 py-3 border-b border-white/5' : 'bg-transparent py-5'
+                    }`}
             >
                 <div className="container mx-auto px-6 flex items-center justify-between">
                     <a href="#hero" className="flex items-center space-x-3">
@@ -114,7 +126,7 @@ const App = () => {
                                     <a
                                         key={link.name}
                                         href={link.href}
-                                        onClick={() => setNavOpen(false)}
+                                        onClick={(e) => handleMobileClick(e, link.href)}
                                         className="text-gray-200 text-sm font-medium tracking-wide"
                                     >
                                         {link.name}
@@ -147,7 +159,7 @@ const App = () => {
                         <div className="absolute inset-0 bg-black/60" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/85 to-takamul-dark/80" />
                         {/* Grid Overlay - Technical/Engineering Drawing Feel */}
-                        <div 
+                        <div
                             className="absolute inset-0 opacity-[0.15]"
                             style={{
                                 backgroundImage: `
@@ -383,7 +395,7 @@ const App = () => {
                                 </div>
 
                                 {/* Ladder Logic Diagram Background Pattern */}
-                                <div 
+                                <div
                                     className="absolute inset-0 opacity-[0.08]"
                                     style={{
                                         backgroundImage: `
@@ -459,9 +471,9 @@ const App = () => {
                                 </div>
                                 <div className="absolute inset-0 bg-gradient-to-br from-slate-900/60 via-transparent to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                 <div className="relative z-10 space-y-4">
-                                    <motion.div 
+                                    <motion.div
                                         className="inline-flex items-center justify-center rounded-xl bg-slate-900/60 p-3"
-                                        animate={{ 
+                                        animate={{
                                             scale: [1, 1.05, 1],
                                             boxShadow: [
                                                 "0 0 0px rgba(220, 38, 38, 0)",
@@ -553,7 +565,7 @@ const App = () => {
                                 {...slideInFromLeft(0.1)}
                             >
                                 {/* Blueprint Pattern Background */}
-                                <div 
+                                <div
                                     className="absolute inset-0 opacity-[0.06]"
                                     style={{
                                         backgroundImage: `
@@ -592,7 +604,7 @@ const App = () => {
                                 {...fadeInUp(0.15)}
                             >
                                 {/* Blueprint Pattern Background */}
-                                <div 
+                                <div
                                     className="absolute inset-0 opacity-[0.08]"
                                     style={{
                                         backgroundImage: `
@@ -633,7 +645,7 @@ const App = () => {
                                 {...slideInFromRight(0.2)}
                             >
                                 {/* Blueprint Pattern Background */}
-                                <div 
+                                <div
                                     className="absolute inset-0 opacity-[0.08]"
                                     style={{
                                         backgroundImage: `
@@ -663,7 +675,7 @@ const App = () => {
                                 </div>
                                 <div className="relative z-10">
                                     <div className="flex items-center space-x-3 mb-4">
-                                        <motion.div 
+                                        <motion.div
                                             className="p-2 rounded-lg bg-gradient-to-br from-takamul-red/20 to-orange-500/20 border border-takamul-red/40"
                                             animate={{
                                                 boxShadow: [
@@ -789,6 +801,23 @@ const App = () => {
                                         </div>
                                     </div>
 
+                                    {/* Phone Number Input */}
+                                    <div>
+                                        <label
+                                            htmlFor="phone"
+                                            className="block text-xs font-medium tracking-wide text-gray-400 mb-2 uppercase"
+                                        >
+                                            Phone Number <span className='text-red-500'>*</span>
+                                        </label>
+                                        <input
+                                            id="phone"
+                                            type="tel"
+                                            required
+                                            className="w-full rounded-lg bg-white/5 border border-white/10 px-4 py-3 text-sm text-white focus:outline-none focus:border-takamul-red focus:ring-1 focus:ring-takamul-red"
+                                            placeholder="Your phone number"
+                                        />
+                                    </div>
+
                                     <div>
                                         <label
                                             htmlFor="message"
@@ -874,6 +903,30 @@ const App = () => {
                     </a>
                 </div>
             </footer>
+
+            {/* WhatsApp Floating Button */}
+            <a
+                href="https://wa.me/201557526116"
+                target="_blank"
+                rel="noreferrer"
+                className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-[#25D366] text-white shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:bg-[#20bd5a] hover:scale-105 transition-all duration-300 flex items-center justify-center"
+                aria-label="Chat on WhatsApp"
+            >
+                <svg
+                    viewBox="0 0 24 24"
+                    width="24"
+                    height="24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-6 h-6"
+                >
+                    <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
+                    <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
+                </svg>
+            </a>
         </div>
     );
 };
