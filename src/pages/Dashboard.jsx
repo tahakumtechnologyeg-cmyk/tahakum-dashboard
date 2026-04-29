@@ -8,6 +8,7 @@ import { useTelemetry } from '../hooks/useTelemetry'
 import SensorCard from '../components/SensorCard'
 import LiveChart from '../components/LiveChart'
 import ControlPanel from '../components/ControlPanel'
+import PowerStats from '../components/PowerStats'
 import AlertsPanel from '../components/AlertsPanel'
 import { DEMO_MODE } from '../lib/demo'
 
@@ -124,6 +125,10 @@ export default function Dashboard() {
           <div className="col-span-12 lg:col-span-3 space-y-4">
             <SectionHeader title="CONTROL PANEL" subtitle="Admin access required" />
             <ControlPanel />
+            <div className="pt-2">
+              <SectionHeader title="ENERGY TRACKING" subtitle="Pump consumption data" />
+            </div>
+            <PowerStats />
           </div>
         </div>
 
@@ -146,6 +151,10 @@ export default function Dashboard() {
           {mobileTab === 'control' && (
             <div className="space-y-4">
               <ControlPanel />
+              <div className="pt-2">
+                <SectionHeader title="ENERGY TRACKING" subtitle="Pump consumption data" />
+              </div>
+              <PowerStats />
             </div>
           )}
         </div>
