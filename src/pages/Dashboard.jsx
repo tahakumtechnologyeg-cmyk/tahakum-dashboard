@@ -1,8 +1,5 @@
 import { useState } from 'react'
-import {
-  Droplets, Wifi, WifiOff, LogOut, Cpu, Menu, X,
-  Bell, LayoutDashboard, Settings
-} from 'lucide-react'
+import { LogOut, Bell, LayoutDashboard, Settings } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { useTelemetry } from '../hooks/useTelemetry'
 import SensorCard from '../components/SensorCard'
@@ -10,7 +7,6 @@ import LiveChart from '../components/LiveChart'
 import ControlPanel from '../components/ControlPanel'
 import PowerStats from '../components/PowerStats'
 import AlertsPanel from '../components/AlertsPanel'
-import { DEMO_MODE } from '../lib/demo'
 
 const SENSOR_ORDER = ['TDS', 'TEMPERATURE', 'FLOW', 'PRESSURE', 'DIFF_PRESSURE']
 
@@ -121,11 +117,13 @@ export default function Dashboard() {
     setTimeout(() => {
       setPrevTab(mobileTab)
       setMobileTab(newTab)
-      setTransitioning(false)
-    }, 180)
+      // small delay before fading back in so content has rendered
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setTransitioning(false))
+      })
+    }, 220)
   }
 
-  const now = new Date()
 
   return (
     <div className="min-h-screen bg-scada-bg font-body relative">
@@ -143,17 +141,9 @@ export default function Dashboard() {
               <div className="font-mono text-xs" style={{color:'rgba(251,247,239,0.75)'}}>SMART SOLUTION</div>
             </div>
           </div>
-          {/* Center */}
-          <div className="flex items-center gap-4">
-            <div className="font-mono text-xs" style={{color:'rgba(251,247,239,0.8)'}}>
-              {now.toLocaleDateString()} · <span style={{color:'#FBF7EF'}}>{now.toLocaleTimeString()}</span>
-            </div>
-            <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-mono ${
-              connected ? 'border-white/30 text-white bg-white/15' : 'border-white/20 text-white/70 bg-white/10'
-            }`}>
-              {connected ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
-              {connected ? (DEMO_MODE ? 'DEMO LIVE' : 'SUPABASE LIVE') : 'DISCONNECTED'}
-            </div>
+          {/* Center — just a subtle live dot, no text clutter */}
+          <div className="flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full ${connected ? 'bg-green-300 animate-pulse' : 'bg-white/40'}`} />
           </div>
           {/* Right */}
           <div className="flex items-center gap-2">
@@ -179,12 +169,6 @@ export default function Dashboard() {
           </div>
           {/* Right: connection + user + logout */}
           <div className="flex items-center gap-2">
-            <div className={`flex items-center gap-1 px-2 py-1 rounded-full border text-[10px] font-mono ${
-              connected ? 'border-white/30 text-white bg-white/15' : 'border-white/20 text-white/60 bg-white/10'
-            }`}>
-              {connected ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
-              <span>{connected ? 'LIVE' : 'OFF'}</span>
-            </div>
             <div className="flex items-center gap-1.5 px-2 py-1.5 border border-white/30 rounded-lg" style={{background:'rgba(255,255,255,0.12)'}}>
               <div className="w-1.5 h-1.5 rounded-full bg-green-300 flex-shrink-0" />
               <span className="font-mono text-[11px] max-w-[90px] truncate" style={{color:'#FBF7EF'}}>
@@ -250,11 +234,13 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* MOBILE: tabbed view with fade transition */}
+        {/* MOBILE: tabbed view with smooth fade+slide transition */}
         <div className="sm:hidden" style={{
           opacity: transitioning ? 0 : 1,
-          transform: transitioning ? 'translateY(6px)' : 'translateY(0)',
-          transition: 'opacity 0.18s ease, transform 0.18s ease'
+          transform: transitioning ? 'translateY(10px) scale(0.99)' : 'translateY(0) scale(1)',
+          transition: transitioning
+            ? 'opacity 0.22s cubic-bezier(0.4,0,1,1), transform 0.22s cubic-bezier(0.4,0,1,1)'
+            : 'opacity 0.32s cubic-bezier(0,0,0.2,1), transform 0.32s cubic-bezier(0,0,0.2,1)'
         }}>
           {mobileTab === 'sensors' && (
             <div className="space-y-3">
@@ -282,16 +268,6 @@ export default function Dashboard() {
         </div>
       </main>
 
-      <footer className="relative z-10 border-t border-scada-border mt-8 px-6 py-4 bg-white">
-        <div className="max-w-screen-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span className="font-mono text-xs text-scada-muted">
-            Takamul Smart Solution · Supabase Realtime
-          </span>
-          <span className="font-mono text-xs text-scada-muted">
-            {DEMO_MODE ? '⚡ DEMO MODE — connect Supabase to go live' : '🟢 LIVE — Supabase connected'}
-          </span>
-        </div>
-      </footer>
     </div>
   )
 }
