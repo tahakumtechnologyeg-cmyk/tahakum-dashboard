@@ -34,7 +34,7 @@ export default function Dashboard() {
           {/* Logo */}
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-scada-accent/30 bg-white overflow-hidden">
-              <img src="/takamul-logo.jpeg" alt="Takamul" className="w-full h-full object-contain" />
+              <img src="/bolt-logo.svg" alt="Takamul" className="w-full h-full object-contain" />
             </div>
             <div>
               <div className="font-display text-sm font-bold tracking-widest text-white leading-none">TAKAMUL</div>
