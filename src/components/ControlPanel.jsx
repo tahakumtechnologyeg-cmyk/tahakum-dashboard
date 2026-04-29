@@ -7,19 +7,19 @@ export default function ControlPanel() {
   const { controls, updating, error, applyControl } = useControls()
   const { user } = useAuth()
 
-  const [localSpeed, setLocalSpeed] = useState(controls.pump_speed)
-  const [localPressure, setLocalPressure] = useState(controls.target_pressure)
+  const [localSpeed, setLocalSpeed] = useState(controls?.pump_speed ?? 0)
+  const [localPressure, setLocalPressure] = useState(controls?.target_pressure ?? 3.5)
   const [pendingSpeed, setPendingSpeed] = useState(false)
   const [pendingPressure, setPendingPressure] = useState(false)
 
-  useEffect(() => { setLocalSpeed(controls.pump_speed) }, [controls.pump_speed])
-  useEffect(() => { setLocalPressure(controls.target_pressure) }, [controls.target_pressure])
+  useEffect(() => { setLocalSpeed(controls?.pump_speed ?? 0) }, [controls?.pump_speed])
+  useEffect(() => { setLocalPressure(controls?.target_pressure ?? 3.5) }, [controls?.target_pressure])
 
   // Speed: 0–50 Hz (VFD output frequency)
-  const freqPct = Math.round((localSpeed / 50) * 100)
+  const freqPct = Math.round(((localSpeed || 0) / 50) * 100)
 
   async function togglePump() {
-    await applyControl({ status: !controls.status, pump_speed: controls.status ? 0 : localSpeed })
+    await applyControl({ status: !controls?.status, pump_speed: controls?.status ? 0 : localSpeed })
   }
 
   async function sendSpeed() {
@@ -34,7 +34,7 @@ export default function ControlPanel() {
     setPendingPressure(false)
   }
 
-  const pumpStatusColor = controls.status
+  const pumpStatusColor = controls?.status
     ? 'text-scada-green border-scada-green/40 bg-scada-green/10'
     : 'text-scada-muted border-scada-muted/30 bg-scada-dim/20'
 
@@ -61,19 +61,19 @@ export default function ControlPanel() {
 
       {/* Pump ON/OFF */}
       <div className={`bg-scada-panel border rounded-xl p-5 transition-all duration-300 ${
-        controls.status ? 'border-scada-green/30' : 'border-scada-border'
-      }`} style={controls.status ? { boxShadow: '0 0 20px rgba(0,255,136,0.15)' } : {}}>
+        controls?.status ? 'border-scada-green/30' : 'border-scada-border'
+      }`} style={controls?.status ? { boxShadow: '0 0 20px rgba(0,255,136,0.15)' } : {}}>
 
         <div className="flex items-center justify-between">
           <div>
             <div className="font-display text-xs font-bold tracking-widest text-scada-text mb-1">PUMP STATUS</div>
             <div className={`flex items-center gap-2 text-sm font-mono font-bold ${
-              controls.status ? 'text-scada-green' : 'text-scada-muted'
+              controls?.status ? 'text-scada-green' : 'text-scada-muted'
             }`}>
               <div className={`w-2 h-2 rounded-full ${
-                controls.status ? 'bg-scada-green animate-pulse' : 'bg-scada-muted'
+                controls?.status ? 'bg-scada-green animate-pulse' : 'bg-scada-muted'
               }`} />
-              {controls.status ? 'RUNNING' : 'STOPPED'}
+              {controls?.status ? 'RUNNING' : 'STOPPED'}
             </div>
           </div>
 
@@ -83,14 +83,14 @@ export default function ControlPanel() {
             className={`relative w-16 h-16 rounded-full border-2 font-display font-bold text-xs tracking-wider transition-all duration-300 flex flex-col items-center justify-center gap-1 ${pumpStatusColor} ${
               updating ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 active:scale-95'
             }`}
-            style={controls.status ? { boxShadow: '0 0 24px rgba(0,255,136,0.4)' } : {}}>
+            style={controls?.status ? { boxShadow: '0 0 24px rgba(0,255,136,0.4)' } : {}}>
             <Power className="w-6 h-6" />
-            <span className="text-[9px] leading-none">{controls.status ? 'STOP' : 'START'}</span>
+            <span className="text-[9px] leading-none">{controls?.status ? 'STOP' : 'START'}</span>
           </button>
         </div>
 
         {/* Run time indicator */}
-        {controls.status && (
+        {controls?.status && (
           <div className="mt-4 h-1 rounded-full bg-scada-bg overflow-hidden">
             <div className="h-full bg-scada-green rounded-full animate-pulse" style={{ width: `${freqPct}%` }} />
           </div>
@@ -124,7 +124,7 @@ export default function ControlPanel() {
             step={0.5}
             value={localSpeed}
             onChange={e => setLocalSpeed(parseFloat(e.target.value))}
-            disabled={!controls.status}
+            disabled={!controls?.status}
             className="w-full h-2 rounded-full appearance-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
             style={{
               background: `linear-gradient(to right, #00D4FF ${freqPct}%, #0A1520 ${freqPct}%)`,
@@ -162,7 +162,7 @@ export default function ControlPanel() {
           <span className="font-mono text-sm text-scada-muted">Hz</span>
           <button
             onClick={sendSpeed}
-            disabled={updating || pendingSpeed || !controls.status}
+            disabled={updating || pendingSpeed || !controls?.status}
             className="flex-1 bg-scada-accent/10 border border-scada-accent/30 text-scada-accent font-display text-xs font-bold tracking-wider py-2 rounded-lg hover:bg-scada-accent/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
             {pendingSpeed ? 'SENDING...' : 'APPLY'}
           </button>

@@ -21,10 +21,11 @@ export function useControls() {
       if (data) setControls(data)
     })
 
+    const channelId = `controls-live-${Math.random().toString(36).substring(2, 9)}`
     const channel = supabase
-      .channel('controls-live')
+      .channel(channelId)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'controls' }, payload => {
-        setControls(payload.new)
+        if (payload.new) setControls(payload.new)
       })
       .subscribe()
 
