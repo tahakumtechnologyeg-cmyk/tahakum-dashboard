@@ -34,12 +34,10 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-md px-6">
         {/* Logo / Header */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-6 shadow-2xl"
-            style={{ boxShadow: '0 0 30px rgba(211,47,47,0.3)' }}>
-            <img src="/bolt-logo.svg" alt="Takamul" className="w-full h-full object-cover rounded-2xl" />
+          <div className="flex justify-center mb-6">
+            <img src="/takamul-logo.jpeg" alt="Takamul Logo" className="h-28 w-auto object-contain rounded-xl shadow-2xl" />
           </div>
-          <h1 className="font-display text-2xl font-bold text-white tracking-widest">TAKAMUL</h1>
-          <p className="font-body text-scada-text text-sm mt-1 tracking-wider">SMART SOLUTION — WATER TREATMENT</p>
+          <p className="font-body text-scada-text text-sm tracking-wider">SMART SOLUTION — WATER TREATMENT</p>
           <div className="flex items-center justify-center gap-2 mt-3">
             <div className="h-px flex-1 bg-scada-border" />
             <span className="font-mono text-xs text-scada-muted">SECURE ACCESS</span>

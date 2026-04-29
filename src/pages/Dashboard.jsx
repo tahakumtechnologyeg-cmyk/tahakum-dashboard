@@ -34,12 +34,9 @@ export default function Dashboard() {
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden shadow-lg" style={{ boxShadow: '0 0 15px rgba(211,47,47,0.3)' }}>
-              <img src="/bolt-logo.svg" alt="Takamul" className="w-full h-full object-cover" />
-            </div>
-            <div>
-              <div className="font-display text-sm font-bold tracking-widest text-white leading-none">TAKAMUL</div>
-              <div className="font-mono text-xs text-scada-muted hidden sm:block">SMART SOLUTION</div>
+            <img src="/takamul-logo.jpeg" alt="Takamul Logo" className="h-9 w-auto rounded object-contain bg-white/5" />
+            <div className="hidden sm:block">
+              <div className="font-mono text-xs text-scada-muted">SMART SOLUTION</div>
             </div>
           </div>
 
