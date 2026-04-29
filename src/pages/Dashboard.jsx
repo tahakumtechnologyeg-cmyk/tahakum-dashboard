@@ -9,7 +9,6 @@ import SensorCard from '../components/SensorCard'
 import LiveChart from '../components/LiveChart'
 import ControlPanel from '../components/ControlPanel'
 import AlertsPanel from '../components/AlertsPanel'
-import IntegrationGuide from '../components/IntegrationGuide'
 import { DEMO_MODE } from '../lib/demo'
 
 const SENSOR_ORDER = ['TDS', 'TEMPERATURE', 'FLOW', 'PRESSURE', 'DIFF_PRESSURE']
@@ -17,7 +16,6 @@ const SENSOR_ORDER = ['TDS', 'TEMPERATURE', 'FLOW', 'PRESSURE', 'DIFF_PRESSURE']
 export default function Dashboard() {
   const { user, signOut } = useAuth()
   const { latest, history, connected } = useTelemetry()
-  const [showGuide, setShowGuide] = useState(false)
   const [mobileTab, setMobileTab] = useState('sensors') // sensors | charts | control
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -61,12 +59,6 @@ export default function Dashboard() {
 
           {/* Right: user + actions */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowGuide(true)}
-              className="hidden sm:flex items-center gap-2 px-3 py-1.5 border border-scada-border rounded-lg text-scada-muted hover:text-scada-accent hover:border-scada-accent/30 font-mono text-xs transition-all">
-              <Cpu className="w-3.5 h-3.5" />
-              ESP32 Guide
-            </button>
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 border border-scada-border rounded-lg">
               <div className="w-2 h-2 rounded-full bg-scada-green" />
               <span className="font-mono text-xs text-scada-text">{user?.email?.split('@')[0]}</span>
@@ -132,12 +124,6 @@ export default function Dashboard() {
           <div className="col-span-12 lg:col-span-3 space-y-4">
             <SectionHeader title="CONTROL PANEL" subtitle="Admin access required" />
             <ControlPanel />
-            <button
-              onClick={() => setShowGuide(true)}
-              className="w-full flex items-center justify-center gap-2 py-2.5 border border-scada-border rounded-lg text-scada-muted hover:text-scada-accent hover:border-scada-accent/30 font-mono text-xs transition-all">
-              <Cpu className="w-3.5 h-3.5" />
-              ESP32-S3 Integration Guide
-            </button>
           </div>
         </div>
 
@@ -160,19 +146,10 @@ export default function Dashboard() {
           {mobileTab === 'control' && (
             <div className="space-y-4">
               <ControlPanel />
-              <button
-                onClick={() => setShowGuide(true)}
-                className="w-full flex items-center justify-center gap-2 py-3 border border-scada-border rounded-lg text-scada-muted font-mono text-xs">
-                <Cpu className="w-3.5 h-3.5" />
-                ESP32 Integration Guide
-              </button>
             </div>
           )}
         </div>
       </main>
-
-      {/* Integration Guide Modal */}
-      {showGuide && <IntegrationGuide onClose={() => setShowGuide(false)} />}
 
       {/* Footer */}
       <footer className="border-t border-scada-border mt-8 px-6 py-4">
