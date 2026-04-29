@@ -44,7 +44,7 @@ export default function LiveChart({ sensorType, data, title }) {
     <div className="bg-scada-panel border border-scada-border rounded-xl p-5">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="font-display text-sm font-bold tracking-widest text-white">{title}</h3>
+          <h3 className="font-display text-sm font-bold tracking-widest text-scada-text">{title}</h3>
           <p className="font-body text-xs text-scada-muted mt-0.5">{cfg?.fullLabel} · Last {chartData.length} readings</p>
         </div>
         <div className="flex items-center gap-2">

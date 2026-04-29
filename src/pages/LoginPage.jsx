@@ -353,7 +353,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center font-mono text-xs mt-5" style={{color:'rgba(0,150,200,0.4)'}}>
-          Takamul Smart Solution v2.4.1 · ESP32-S3 + STM32 Integration
+          Takamul Smart Solution v2.4.1
         </p>
       </div>
     </div>

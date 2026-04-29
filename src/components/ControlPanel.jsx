@@ -43,7 +43,7 @@ export default function ControlPanel() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-display text-sm font-bold tracking-widest text-white">VFD CONTROL PANEL</h2>
+          <h2 className="font-display text-sm font-bold tracking-widest text-scada-text">VFD CONTROL PANEL</h2>
           <p className="font-body text-xs text-scada-muted mt-0.5">Variable Frequency Drive · Water Pump</p>
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-scada-accent/30 bg-scada-accent/5">

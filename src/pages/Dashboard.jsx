@@ -14,16 +14,122 @@ import { DEMO_MODE } from '../lib/demo'
 
 const SENSOR_ORDER = ['TDS', 'TEMPERATURE', 'FLOW', 'PRESSURE', 'DIFF_PRESSURE']
 
+/* ── Subtle automation background (circuit + gears) ── */
+function AutomationBg() {
+  return (
+    <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
+      {/* Warm cream base — matches scada-bg */}
+      <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.18 }}>
+        <defs>
+          <pattern id="circuit-grid" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+            {/* Grid lines */}
+            <line x1="0" y1="40" x2="80" y2="40" stroke="#8B6F47" strokeWidth="0.5" strokeDasharray="4 4"/>
+            <line x1="40" y1="0" x2="40" y2="80" stroke="#8B6F47" strokeWidth="0.5" strokeDasharray="4 4"/>
+            {/* Circuit nodes */}
+            <circle cx="40" cy="40" r="2.5" fill="#7B5E3A" fillOpacity="0.6"/>
+            <circle cx="0" cy="0" r="1.5" fill="#7B5E3A" fillOpacity="0.4"/>
+            <circle cx="80" cy="0" r="1.5" fill="#7B5E3A" fillOpacity="0.4"/>
+            <circle cx="0" cy="80" r="1.5" fill="#7B5E3A" fillOpacity="0.4"/>
+            <circle cx="80" cy="80" r="1.5" fill="#7B5E3A" fillOpacity="0.4"/>
+            {/* Short traces */}
+            <line x1="40" y1="40" x2="60" y2="40" stroke="#7B5E3A" strokeWidth="1.2"/>
+            <line x1="60" y1="40" x2="60" y2="55" stroke="#7B5E3A" strokeWidth="1.2"/>
+            <circle cx="60" cy="55" r="2" fill="#7B5E3A" fillOpacity="0.5"/>
+            <line x1="40" y1="40" x2="40" y2="20" stroke="#7B5E3A" strokeWidth="1.2"/>
+            <line x1="40" y1="20" x2="25" y2="20" stroke="#7B5E3A" strokeWidth="1.2"/>
+            <circle cx="25" cy="20" r="2" fill="#7B5E3A" fillOpacity="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#circuit-grid)"/>
+      </svg>
+
+      {/* Gear — top right */}
+      <svg className="absolute" style={{ top: '6%', right: '3%', width: 120, height: 120, opacity: 0.1 }} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(50,50)">
+          {[0,30,60,90,120,150,180,210,240,270,300,330].map((a, i) => (
+            <rect key={i} x="-4" y="-46" width="8" height="14" rx="2"
+              fill="#7B5E3A"
+              transform={`rotate(${a})`}/>
+          ))}
+          <circle r="34" fill="none" stroke="#7B5E3A" strokeWidth="3"/>
+          <circle r="14" fill="none" stroke="#7B5E3A" strokeWidth="2.5"/>
+          <circle r="5" fill="#7B5E3A"/>
+        </g>
+      </svg>
+
+      {/* Gear — bottom left, smaller */}
+      <svg className="absolute" style={{ bottom: '8%', left: '1.5%', width: 80, height: 80, opacity: 0.09 }} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(50,50)">
+          {[0,45,90,135,180,225,270,315].map((a, i) => (
+            <rect key={i} x="-4" y="-44" width="8" height="12" rx="2"
+              fill="#7B5E3A"
+              transform={`rotate(${a})`}/>
+          ))}
+          <circle r="32" fill="none" stroke="#7B5E3A" strokeWidth="3"/>
+          <circle r="13" fill="none" stroke="#7B5E3A" strokeWidth="2"/>
+          <circle r="4.5" fill="#7B5E3A"/>
+        </g>
+      </svg>
+
+      {/* Robot arm silhouette — bottom right corner */}
+      <svg className="absolute" style={{ bottom: 0, right: '6%', width: 160, height: 160, opacity: 0.07 }}
+        viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+        {/* Base */}
+        <rect x="60" y="130" width="40" height="12" rx="3" fill="#7B5E3A"/>
+        <rect x="68" y="116" width="24" height="16" rx="3" fill="#7B5E3A"/>
+        {/* Upper arm */}
+        <rect x="72" y="70" width="16" height="48" rx="4" fill="#7B5E3A"/>
+        <circle cx="80" cy="70" r="10" fill="#7B5E3A"/>
+        {/* Forearm */}
+        <g transform="rotate(-35, 80, 70)">
+          <rect x="74" y="22" width="12" height="50" rx="3" fill="#7B5E3A"/>
+          <circle cx="80" cy="22" r="8" fill="#7B5E3A"/>
+          {/* Wrist */}
+          <g transform="rotate(45, 80, 22)">
+            <rect x="76" y="-16" width="8" height="20" rx="2" fill="#7B5E3A"/>
+            <line x1="72" y1="-22" x2="77" y2="-16" stroke="#7B5E3A" strokeWidth="3" strokeLinecap="round"/>
+            <line x1="88" y1="-22" x2="83" y2="-16" stroke="#7B5E3A" strokeWidth="3" strokeLinecap="round"/>
+          </g>
+        </g>
+      </svg>
+
+      {/* Conveyor belt — bottom left */}
+      <svg className="absolute" style={{ bottom: 0, left: 0, width: 280, height: 60, opacity: 0.08 }}
+        viewBox="0 0 280 60" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="20" width="260" height="22" rx="4" fill="none" stroke="#7B5E3A" strokeWidth="2"/>
+        {[30,60,90,120,150,180,210,240].map(x => (
+          <line key={x} x1={x} y1="20" x2={x} y2="42" stroke="#7B5E3A" strokeWidth="1.5"/>
+        ))}
+        <circle cx="22" cy="42" r="10" fill="none" stroke="#7B5E3A" strokeWidth="2"/>
+        <circle cx="258" cy="42" r="10" fill="none" stroke="#7B5E3A" strokeWidth="2"/>
+      </svg>
+    </div>
+  )
+}
+
 export default function Dashboard() {
   const { user, signOut } = useAuth()
   const { latest, history, connected } = useTelemetry()
   const [mobileTab, setMobileTab] = useState('sensors')
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [prevTab, setPrevTab] = useState('sensors')
+  const [transitioning, setTransitioning] = useState(false)
+
+  function switchTab(newTab) {
+    if (newTab === mobileTab) return
+    setTransitioning(true)
+    setTimeout(() => {
+      setPrevTab(mobileTab)
+      setMobileTab(newTab)
+      setTransitioning(false)
+    }, 180)
+  }
 
   const now = new Date()
 
   return (
-    <div className="min-h-screen bg-scada-bg font-body">
+    <div className="min-h-screen bg-scada-bg font-body relative">
+      <AutomationBg />
       {/* ── Top Bar ─────────────────────────────────────────── */}
       <header className="sticky top-0 z-40 border-b border-scada-border shadow-sm" style={{background:'#B94040'}}>
 
@@ -100,8 +206,8 @@ export default function Dashboard() {
           ].map(({ id, label, icon: Icon }) => (
             <button
               key={id}
-              onClick={() => setMobileTab(id)}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 font-mono text-xs transition-colors ${
+              onClick={() => switchTab(id)}
+              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 font-mono text-xs transition-all duration-200 ${
                 mobileTab === id
                   ? 'border-b-2 border-white font-bold'
                   : 'opacity-70'
@@ -115,7 +221,7 @@ export default function Dashboard() {
       </header>
 
       {/* ── Main Layout ──────────────────────────────────────── */}
-      <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 py-6">
+      <main className="relative z-10 max-w-screen-2xl mx-auto px-4 sm:px-6 py-6">
 
         <div className="hidden sm:grid sm:grid-cols-12 gap-6">
           <div className="col-span-12 lg:col-span-5 space-y-4">
@@ -144,8 +250,12 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* MOBILE: tabbed view */}
-        <div className="sm:hidden">
+        {/* MOBILE: tabbed view with fade transition */}
+        <div className="sm:hidden" style={{
+          opacity: transitioning ? 0 : 1,
+          transform: transitioning ? 'translateY(6px)' : 'translateY(0)',
+          transition: 'opacity 0.18s ease, transform 0.18s ease'
+        }}>
           {mobileTab === 'sensors' && (
             <div className="space-y-3">
               <AlertsPanel latest={latest} />
@@ -172,10 +282,10 @@ export default function Dashboard() {
         </div>
       </main>
 
-      <footer className="border-t border-scada-border mt-8 px-6 py-4 bg-white">
+      <footer className="relative z-10 border-t border-scada-border mt-8 px-6 py-4 bg-white">
         <div className="max-w-screen-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <span className="font-mono text-xs text-scada-muted">
-            Takamul Smart Solution · ESP32-S3 + STM32 · Supabase Realtime
+            Takamul Smart Solution · Supabase Realtime
           </span>
           <span className="font-mono text-xs text-scada-muted">
             {DEMO_MODE ? '⚡ DEMO MODE — connect Supabase to go live' : '🟢 LIVE — Supabase connected'}

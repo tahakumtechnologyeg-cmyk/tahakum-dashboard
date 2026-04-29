@@ -162,13 +162,6 @@ export default function PowerStats() {
         </ResponsiveContainer>
       </div>
 
-      {/* Formula */}
-      <div className="bg-scada-bg border border-scada-border/60 rounded-lg px-3 py-2">
-        <p className="font-mono text-xs text-scada-muted">
-          <span className="text-scada-accent">P</span> = {MOTOR_RATED_KW} × (Hz/{VFD_MAX_HZ})³ ÷ {EFFICIENCY}
-          <span className="text-scada-muted/60 ml-2">Affinity Law</span>
-        </p>
-      </div>
     </div>
   )
 }
