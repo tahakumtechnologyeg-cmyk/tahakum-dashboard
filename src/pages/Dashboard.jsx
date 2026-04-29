@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import {
   Droplets, Wifi, WifiOff, LogOut, Cpu, Menu, X,
-  Bell, LayoutDashboard, Settings
+  Bell, LayoutDashboard, Settings, Zap
 } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { useTelemetry } from '../hooks/useTelemetry'
@@ -10,6 +10,7 @@ import LiveChart from '../components/LiveChart'
 import ControlPanel from '../components/ControlPanel'
 import AlertsPanel from '../components/AlertsPanel'
 import IntegrationGuide from '../components/IntegrationGuide'
+import PowerAnalytics from '../components/PowerAnalytics'
 import { DEMO_MODE } from '../lib/demo'
 
 const SENSOR_ORDER = ['TDS', 'TEMPERATURE', 'FLOW', 'PRESSURE', 'DIFF_PRESSURE']
@@ -88,6 +89,7 @@ export default function Dashboard() {
             { id: 'sensors', label: 'Sensors', icon: LayoutDashboard },
             { id: 'charts', label: 'Charts', icon: Bell },
             { id: 'control', label: 'Control', icon: Settings },
+            { id: 'power', label: 'Power', icon: Zap },
           ].map(({ id, label, icon: Icon }) => (
             <button
               key={id}
@@ -138,6 +140,9 @@ export default function Dashboard() {
               <Cpu className="w-3.5 h-3.5" />
               ESP32-S3 Integration Guide
             </button>
+            <div className="pt-4 space-y-4">
+              <PowerAnalytics />
+            </div>
           </div>
         </div>
 
@@ -166,6 +171,11 @@ export default function Dashboard() {
                 <Cpu className="w-3.5 h-3.5" />
                 ESP32 Integration Guide
               </button>
+            </div>
+          )}
+          {mobileTab === 'power' && (
+            <div className="space-y-4 pt-2">
+              <PowerAnalytics />
             </div>
           )}
         </div>
