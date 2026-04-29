@@ -4,7 +4,7 @@ import { Droplets, Lock, User, AlertCircle, Eye, EyeOff } from 'lucide-react'
 
 export default function LoginPage() {
   const { signIn, loading, error } = useAuth()
-  const [email, setEmail] = useState('admin@aquacontrol.io')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPass, setShowPass] = useState(false)
   const [localError, setLocalError] = useState(null)
@@ -29,15 +29,23 @@ export default function LoginPage() {
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-scada-accent via-scada-green to-scada-accent" />
 
       <div className="relative z-10 w-full max-w-md px-6">
+        {/* Warm red framed container */}
+        <div style={{
+          border: '1.5px solid #B94040',
+          borderRadius: '20px',
+          padding: '2.5rem 2rem',
+          background: 'rgba(251,247,239,0.75)',
+          boxShadow: '0 0 48px rgba(185,64,64,0.16), 0 8px 32px rgba(185,64,64,0.10), 0 2px 8px rgba(0,0,0,0.06)'
+        }}>
         {/* Logo / Header */}
         <div className="text-center mb-10">
           <div className="flex justify-center mb-6">
             <img src="./bolt-logo.svg" alt="Takamul Logo" className="w-20 h-20 rounded-2xl shadow-2xl" style={{ boxShadow: '0 0 30px rgba(211,47,47,0.4)' }} />
           </div>
-          <p className="font-body text-scada-text text-sm tracking-wider">SMART SOLUTION — WATER TREATMENT</p>
+          <p className="font-body text-scada-text text-sm tracking-wider" style={{color:'#2C1F10', fontWeight:600}}>SMART SOLUTION — WATER TREATMENT</p>
           <div className="flex items-center justify-center gap-2 mt-3">
             <div className="h-px flex-1 bg-scada-border" />
-            <span className="font-mono text-xs text-scada-muted">SECURE ACCESS</span>
+            <span className="font-mono text-xs" style={{color:'#6B5440'}}>SECURE ACCESS</span>
             <div className="h-px flex-1 bg-scada-border" />
           </div>
         </div>
@@ -118,6 +126,8 @@ export default function LoginPage() {
             )}
           </button>
         </form>
+
+        </div>{/* end warm red frame */}
 
         <p className="text-center font-mono text-xs text-scada-muted mt-6">
           Takamul Smart Solution v2.4.1 · ESP32-S3 + STM32 Integration
