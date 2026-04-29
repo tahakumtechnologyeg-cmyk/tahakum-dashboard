@@ -34,9 +34,9 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-md px-6">
         {/* Logo / Header */}
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl border border-scada-accent/30 bg-white mb-6 overflow-hidden"
-            style={{ boxShadow: '0 0 30px rgba(0,212,255,0.2)' }}>
-            <img src="/bolt-logo.svg" alt="Takamul" className="w-full h-full object-contain" />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-6 shadow-2xl"
+            style={{ boxShadow: '0 0 30px rgba(211,47,47,0.3)' }}>
+            <img src="/bolt-logo.svg" alt="Takamul" className="w-full h-full object-cover rounded-2xl" />
           </div>
           <h1 className="font-display text-2xl font-bold text-white tracking-widest">TAKAMUL</h1>
           <p className="font-body text-scada-text text-sm mt-1 tracking-wider">SMART SOLUTION — WATER TREATMENT</p>
