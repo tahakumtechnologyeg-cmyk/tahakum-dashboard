@@ -34,8 +34,9 @@ export default function Dashboard() {
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <img src="/bolt-logo.svg" alt="Takamul Logo" className="w-8 h-8 rounded-lg shadow-lg" style={{ boxShadow: '0 0 15px rgba(211,47,47,0.3)' }} />
+            <img src="./bolt-logo.svg" alt="Takamul Logo" className="w-8 h-8 rounded-lg" style={{ boxShadow: '0 0 15px rgba(211,47,47,0.3)' }} />
             <div className="hidden sm:block">
+              <div className="font-display text-sm font-bold tracking-widest text-white leading-none">TAKAMUL</div>
               <div className="font-mono text-xs text-scada-muted">SMART SOLUTION</div>
             </div>
           </div>
@@ -161,7 +162,7 @@ export default function Dashboard() {
       <footer className="border-t border-scada-border mt-8 px-6 py-4">
         <div className="max-w-screen-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <span className="font-mono text-xs text-scada-muted">
-            AquaControl SCADA · ESP32-S3 + STM32 · Supabase Realtime
+            Takamul Smart Solution · ESP32-S3 + STM32 · Supabase Realtime
           </span>
           <span className="font-mono text-xs text-scada-muted">
             {DEMO_MODE ? '⚡ DEMO MODE — connect Supabase to go live' : '🟢 LIVE — Supabase connected'}

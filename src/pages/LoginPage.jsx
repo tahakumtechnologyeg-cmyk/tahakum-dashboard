@@ -35,7 +35,7 @@ export default function LoginPage() {
         {/* Logo / Header */}
         <div className="text-center mb-10">
           <div className="flex justify-center mb-6">
-            <img src="/bolt-logo.svg" alt="Takamul Logo" className="w-20 h-20 rounded-2xl shadow-2xl" style={{ boxShadow: '0 0 30px rgba(211,47,47,0.4)' }} />
+            <img src="./bolt-logo.svg" alt="Takamul Logo" className="w-20 h-20 rounded-2xl shadow-2xl" style={{ boxShadow: '0 0 30px rgba(211,47,47,0.4)' }} />
           </div>
           <p className="font-body text-scada-text text-sm tracking-wider">SMART SOLUTION — WATER TREATMENT</p>
           <div className="flex items-center justify-center gap-2 mt-3">
