@@ -35,8 +35,8 @@ export default function Dashboard() {
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-scada-accent/30 bg-scada-panel">
-              <Droplets className="w-4 h-4 text-scada-accent" />
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-scada-accent/30 bg-scada-panel overflow-hidden">
+              <img src="/takamul-logo.jpeg" alt="Takamul Logo" className="w-full h-full object-cover" />
             </div>
             <div>
               <div className="font-display text-sm font-bold tracking-widest text-white leading-none">TAKAMUL</div>
