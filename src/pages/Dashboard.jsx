@@ -10,7 +10,6 @@ import LiveChart from '../components/LiveChart'
 import ControlPanel from '../components/ControlPanel'
 import AlertsPanel from '../components/AlertsPanel'
 import IntegrationGuide from '../components/IntegrationGuide'
-import PowerStats from '../components/PowerStats'
 import { DEMO_MODE } from '../lib/demo'
 
 const SENSOR_ORDER = ['TDS', 'TEMPERATURE', 'FLOW', 'PRESSURE', 'DIFF_PRESSURE']
@@ -36,8 +35,8 @@ export default function Dashboard() {
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden border border-scada-accent/30 bg-scada-panel">
-              <img src="/takamul-logo.jpeg" alt="Takamul Logo" className="w-full h-full object-cover" />
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-scada-accent/30 bg-scada-panel">
+              <Droplets className="w-4 h-4 text-scada-accent" />
             </div>
             <div>
               <div className="font-display text-sm font-bold tracking-widest text-white leading-none">TAKAMUL</div>
@@ -133,7 +132,6 @@ export default function Dashboard() {
           <div className="col-span-12 lg:col-span-3 space-y-4">
             <SectionHeader title="CONTROL PANEL" subtitle="Admin access required" />
             <ControlPanel />
-            <PowerStats />
             <button
               onClick={() => setShowGuide(true)}
               className="w-full flex items-center justify-center gap-2 py-2.5 border border-scada-border rounded-lg text-scada-muted hover:text-scada-accent hover:border-scada-accent/30 font-mono text-xs transition-all">
@@ -162,7 +160,6 @@ export default function Dashboard() {
           {mobileTab === 'control' && (
             <div className="space-y-4">
               <ControlPanel />
-              <PowerStats />
               <button
                 onClick={() => setShowGuide(true)}
                 className="w-full flex items-center justify-center gap-2 py-3 border border-scada-border rounded-lg text-scada-muted font-mono text-xs">
