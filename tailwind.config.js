@@ -10,28 +10,23 @@ export default {
       },
       colors: {
         scada: {
-          bg: '#050A0E',
-          panel: '#0A1520',
-          border: '#0D2137',
-          accent: '#00D4FF',
-          green: '#00FF88',
-          amber: '#FFB800',
-          red: '#FF3B3B',
-          dim: '#1A3A5C',
-          text: '#7FAFC8',
-          muted: '#3A5F7A',
+          bg:     '#F0F4F8',   // خلفية رمادي فاتح جداً
+          panel:  '#FFFFFF',   // الكروت بيضاء
+          border: '#CBD5E1',   // حدود رمادي ناعم
+          accent: '#0284C7',   // أزرق بترولي
+          green:  '#16A34A',   // أخضر واضح
+          amber:  '#D97706',   // برتقالي دافي
+          red:    '#DC2626',   // أحمر واضح
+          dim:    '#E2E8F0',   // رمادي خفيف للـ hover
+          text:   '#334155',   // نص داكن مريح
+          muted:  '#64748B',   // نص ثانوي
         }
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'scan': 'scan 4s linear infinite',
         'blink': 'blink 1.2s step-end infinite',
       },
       keyframes: {
-        scan: {
-          '0%': { transform: 'translateY(-100%)' },
-          '100%': { transform: 'translateY(100vh)' },
-        },
         blink: {
           '0%, 100%': { opacity: 1 },
           '50%': { opacity: 0 },

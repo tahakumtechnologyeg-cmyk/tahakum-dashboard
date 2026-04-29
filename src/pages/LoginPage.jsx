@@ -18,18 +18,15 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-scada-bg flex items-center justify-center relative overflow-hidden">
-      {/* Grid background */}
-      <div className="absolute inset-0 opacity-5"
+      {/* Subtle dot grid */}
+      <div className="absolute inset-0 opacity-40"
         style={{
-          backgroundImage: 'linear-gradient(rgba(0,212,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.5) 1px, transparent 1px)',
-          backgroundSize: '40px 40px'
+          backgroundImage: 'radial-gradient(circle, #CBD5E1 1px, transparent 1px)',
+          backgroundSize: '28px 28px'
         }}
       />
-
-      {/* Glow orb */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full opacity-5"
-        style={{ background: 'radial-gradient(circle, #00D4FF 0%, transparent 70%)' }}
-      />
+      {/* Top color bar */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-scada-accent via-scada-green to-scada-accent" />
 
       <div className="relative z-10 w-full max-w-md px-6">
         {/* Logo / Header */}

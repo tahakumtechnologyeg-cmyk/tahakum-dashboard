@@ -24,13 +24,8 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-scada-bg font-body">
-      {/* Scan line effect */}
-      <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden opacity-[0.03]">
-        <div className="w-full h-8 bg-gradient-to-b from-transparent via-scada-accent to-transparent animate-scan" />
-      </div>
-
       {/* ── Top Bar ─────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 border-b border-scada-border bg-scada-bg/95 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-scada-border bg-white shadow-sm">
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Logo */}
           <div className="flex items-center gap-3">
@@ -159,7 +154,7 @@ export default function Dashboard() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-scada-border mt-8 px-6 py-4">
+      <footer className="border-t border-scada-border mt-8 px-6 py-4 bg-white">
         <div className="max-w-screen-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <span className="font-mono text-xs text-scada-muted">
             Takamul Smart Solution · ESP32-S3 + STM32 · Supabase Realtime
