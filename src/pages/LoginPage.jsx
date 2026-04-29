@@ -17,11 +17,11 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-scada-bg flex items-center justify-center relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{background:'#D6E8F5'}}>
       {/* Subtle dot grid */}
-      <div className="absolute inset-0 opacity-40"
+      <div className="absolute inset-0 opacity-25"
         style={{
-          backgroundImage: 'radial-gradient(circle, #CBD5E1 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(circle, #A8C8E8 1px, transparent 1px)',
           backgroundSize: '28px 28px'
         }}
       />
