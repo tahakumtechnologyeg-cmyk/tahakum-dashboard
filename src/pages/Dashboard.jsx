@@ -25,26 +25,26 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-scada-bg font-body">
       {/* ── Top Bar ─────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 border-b border-scada-border bg-white shadow-sm">
+      <header className="sticky top-0 z-40 border-b border-scada-border shadow-sm" style={{background:'#B94040'}}>
         <div className="flex items-center justify-between px-4 sm:px-6 h-14">
           {/* Logo */}
           <div className="flex items-center gap-3">
             <img src="./bolt-logo.svg" alt="Takamul Logo" className="w-8 h-8 rounded-lg" style={{ boxShadow: '0 0 15px rgba(211,47,47,0.3)' }} />
             <div className="hidden sm:block">
-              <div className="font-display text-sm font-bold tracking-widest text-white leading-none">TAKAMUL</div>
-              <div className="font-mono text-xs text-scada-muted">SMART SOLUTION</div>
+              <div className="font-display text-sm font-bold tracking-widest leading-none" style={{color:'#FBF7EF'}}>TAKAMUL</div>
+              <div className="font-mono text-xs" style={{color:'rgba(251,247,239,0.75)'}}>SMART SOLUTION</div>
             </div>
           </div>
 
           {/* Center: clock + connection */}
           <div className="hidden sm:flex items-center gap-4">
-            <div className="font-mono text-xs text-scada-muted">
-              {now.toLocaleDateString()} · <span className="text-scada-text">{now.toLocaleTimeString()}</span>
+            <div className="font-mono text-xs" style={{color:'rgba(251,247,239,0.8)'}}>
+              {now.toLocaleDateString()} · <span style={{color:'#FBF7EF'}}>{now.toLocaleTimeString()}</span>
             </div>
             <div className={`flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-mono ${
               connected
-                ? 'border-scada-green/30 text-scada-green bg-scada-green/5'
-                : 'border-scada-red/30 text-scada-red bg-scada-red/5'
+                ? 'border-white/30 text-white bg-white/15'
+                : 'border-white/20 text-white/70 bg-white/10'
             }`}>
               {connected ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
               {connected ? (DEMO_MODE ? 'DEMO LIVE' : 'SUPABASE LIVE') : 'DISCONNECTED'}
@@ -53,12 +53,13 @@ export default function Dashboard() {
 
           {/* Right: user + actions */}
           <div className="flex items-center gap-2">
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 border border-scada-border rounded-lg">
-              <div className="w-2 h-2 rounded-full bg-scada-green" />
-              <span className="font-mono text-xs text-scada-text">{user?.email?.split('@')[0]}</span>
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 border border-white/30 rounded-lg" style={{background:'rgba(255,255,255,0.12)'}}>
+              <div className="w-2 h-2 rounded-full bg-green-300" />
+              <span className="font-mono text-xs" style={{color:'#FBF7EF'}}>{user?.email?.split('@')[0]}</span>
             </div>
             <button onClick={signOut}
-              className="p-2 text-scada-muted hover:text-scada-red transition-colors"
+              className="p-2 transition-colors"
+              style={{color:'rgba(251,247,239,0.8)'}}
               title="Sign out">
               <LogOut className="w-4 h-4" />
             </button>
