@@ -1,5 +1,6 @@
 # 💧 AquaControl SCADA — Water Treatment Monitor & Control System
 
+
 A professional Industrial SCADA dashboard for real-time water treatment monitoring and VFD pump control, built with **React + Vite + Supabase** and deployable to **GitHub Pages**.
 
 ## 🏭 Hardware Integration
