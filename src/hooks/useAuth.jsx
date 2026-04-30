@@ -66,10 +66,23 @@ export function AuthProvider({ children }) {
       setLoading(false)
       return { error: { message: 'Sign-up is disabled in demo mode' } }
     }
-    const { error } = await supabase.auth.signUp({ email, password })
-    if (error) setError(error.message)
+    const { data, error } = await supabase.auth.signUp({ email, password })
+    if (error) {
+      setError(error.message)
+      setLoading(false)
+      return { error }
+    }
+    // ← fix: create profile row so the user exists in the public.profiles table
+    if (data?.user) {
+      await supabase.from('profiles').upsert({
+        id: data.user.id,
+        email: data.user.email,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'id' })
+    }
     setLoading(false)
-    return { error }
+    return { error: null }
   }
 
   async function signOut() {

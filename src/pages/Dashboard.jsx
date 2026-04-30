@@ -83,7 +83,11 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-scada-bg font-body relative">
+    <div className="min-h-screen font-body relative" style={{ background: 'linear-gradient(160deg, #0A2A6E 0%, #0E4A9C 30%, #1565C0 55%, #0D47A1 80%, #083170 100%)' }}>
+      {/* Sky glow */}
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0, background: 'radial-gradient(ellipse 90% 60% at 50% 10%, rgba(100,210,255,0.18) 0%, rgba(30,136,229,0.08) 50%, transparent 80%)' }} />
+      {/* Grid floor */}
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0, backgroundImage: 'linear-gradient(rgba(100,210,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(100,210,255,0.07) 1px, transparent 1px)', backgroundSize: '52px 52px' }} />
       <AutomationBg />
 
       {/* ── Top Bar ── */}
@@ -195,7 +199,6 @@ export default function Dashboard() {
 
         {activeTab === 'control' && (
           <div className="max-w-2xl mx-auto">
-            <SectionHeader title="VFD CONTROL PANEL" subtitle="Variable Frequency Drive · Water Pump" />
             <ControlPanel />
           </div>
         )}

@@ -10,6 +10,7 @@ export default function ProfilePage() {
 
   const [avatarUrl, setAvatarUrl] = useState(null)
   const [avatarPreview, setAvatarPreview] = useState(null)
+  const [pendingFile, setPendingFile] = useState(null)  // ← fix: track file separately
   const [uploading, setUploading] = useState(false)
 
   const [form, setForm] = useState({
@@ -49,6 +50,7 @@ export default function ProfilePage() {
       setMsg({ type: 'err', text: 'Image must be under 2 MB' })
       return
     }
+    setPendingFile(file)  // ← fix: save file reference
     setAvatarPreview(URL.createObjectURL(file))
   }
 
@@ -77,19 +79,20 @@ export default function ProfilePage() {
       }
 
       let newAvatarUrl = avatarUrl
-      const fileInput = fileInputRef.current
-      if (fileInput?.files?.[0]) {
+      if (pendingFile) {  // ← fix: use pendingFile state instead of fileInputRef
         setUploading(true)
         try {
-          newAvatarUrl = await uploadAvatar(fileInput.files[0])
+          newAvatarUrl = await uploadAvatar(pendingFile)
           setAvatarUrl(newAvatarUrl)
           setAvatarPreview(null)
+          setPendingFile(null)
         } catch {
           // Storage bucket might not exist — skip avatar upload silently
         }
         setUploading(false)
       }
 
+      // Update auth metadata (name, username, phone, avatar)
       const { error } = await supabase.auth.updateUser({
         data: {
           full_name: form.full_name,
@@ -99,6 +102,18 @@ export default function ProfilePage() {
         },
       })
       if (error) throw error
+
+      // ← fix: also upsert into public profiles table so signup data is persisted
+      await supabase.from('profiles').upsert({
+        id: user.id,
+        email: user.email,
+        full_name: form.full_name,
+        username: form.username,
+        phone: form.phone,
+        avatar_url: newAvatarUrl,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'id' })
+
       setMsg({ type: 'ok', text: 'Profile saved successfully!' })
     } catch (err) {
       setMsg({ type: 'err', text: err.message })

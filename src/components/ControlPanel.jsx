@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Power, Zap, Target, RotateCcw, AlertCircle, ChevronUp, ChevronDown, Lock } from 'lucide-react'
+import { Power, Cpu, Target, RotateCcw, AlertCircle, ChevronUp, ChevronDown, Lock } from 'lucide-react'
 import { useControls } from '../hooks/useControls'
 import { useAuth } from '../hooks/useAuth'
 
@@ -41,10 +41,13 @@ export default function ControlPanel() {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="font-display text-sm font-bold tracking-widest text-scada-text">VFD CONTROL PANEL</h2>
-          <p className="font-body text-xs text-scada-muted mt-0.5">Variable Frequency Drive · Water Pump</p>
+      <div className="flex items-center justify-between pb-1 border-b border-scada-border/60 mb-4">
+        <div className="flex items-center gap-2">
+          <span className="text-xl">⚙️</span>
+          <div>
+            <h2 className="font-display text-sm font-bold tracking-widest text-scada-text">VFD CONTROL PANEL</h2>
+            <p className="font-body text-xs text-scada-muted mt-0.5">Variable Frequency Drive · Water Pump</p>
+          </div>
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-scada-accent/30 bg-scada-accent/5">
           <Lock className="w-3 h-3 text-scada-accent" />
@@ -100,7 +103,7 @@ export default function ControlPanel() {
       {/* VFD Frequency */}
       <div className="bg-scada-panel border border-scada-border rounded-xl p-5">
         <div className="flex items-center gap-2 mb-4">
-          <Zap className="w-4 h-4 text-scada-accent" />
+          <Cpu className="w-4 h-4 text-scada-accent" />
           <span className="font-display text-xs font-bold tracking-widest text-scada-text">VFD FREQUENCY</span>
         </div>
 
