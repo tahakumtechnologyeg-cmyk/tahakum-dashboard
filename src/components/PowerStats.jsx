@@ -74,7 +74,7 @@ export default function PowerStats() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-display text-sm font-bold tracking-widest text-white">POWER CONSUMPTION</h2>
+          <h2 className="font-display text-sm font-bold tracking-widest" style={{ color: '#111111' }}>POWER CONSUMPTION</h2>
           <p className="font-body text-xs text-scada-muted mt-0.5">Energy metrics and usage statistics</p>
         </div>
         <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-yellow-400/30 bg-yellow-400/10">

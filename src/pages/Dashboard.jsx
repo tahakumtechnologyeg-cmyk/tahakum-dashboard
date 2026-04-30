@@ -58,10 +58,10 @@ function AutomationBg() {
 
 function SectionHeader({ title, subtitle }) {
   return (
-    <div className="flex items-center justify-between pb-1 border-b border-scada-border/60 mb-4">
+    <div className="flex items-center justify-between pb-1 border-b border-white/20 mb-4">
       <div>
-        <h2 className="font-display text-xs font-bold tracking-widest text-scada-text">{title}</h2>
-        {subtitle && <p className="font-body text-xs text-scada-muted mt-0.5">{subtitle}</p>}
+        <h2 className="font-display text-xs font-bold tracking-widest text-white">{title}</h2>
+        {subtitle && <p className="font-body text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.75)' }}>{subtitle}</p>}
       </div>
     </div>
   )
@@ -133,13 +133,13 @@ export default function Dashboard() {
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-mono text-xs transition-all duration-200 text-left w-full ${
                 activeTab === id
                   ? 'font-bold border border-scada-accent/30'
-                  : 'opacity-50 hover:opacity-80 hover:bg-scada-dim/50'
+                  : 'opacity-70 hover:opacity-100 hover:bg-scada-dim/50'
               }`}
               style={activeTab === id ? {
                 background: 'rgba(185,64,64,0.12)',
                 color: '#B94040',
                 boxShadow: 'inset 3px 0 0 #B94040',
-              } : { color: 'var(--scada-text)' }}
+              } : { color: '#111111' }}
             >
               <Icon className="w-4 h-4 shrink-0" />
               <span>{label}</span>
