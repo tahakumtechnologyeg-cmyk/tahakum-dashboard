@@ -10,7 +10,7 @@ export default function ProfilePage() {
 
   const [avatarUrl, setAvatarUrl] = useState(null)
   const [avatarPreview, setAvatarPreview] = useState(null)
-  const [pendingFile, setPendingFile] = useState(null)  // ← fix: track file separately
+  const [pendingFile, setPendingFile] = useState(null)
   const [uploading, setUploading] = useState(false)
 
   const [form, setForm] = useState({
@@ -25,12 +25,14 @@ export default function ProfilePage() {
   const [pwOpen, setPwOpen] = useState(false)
   const [savingProfile, setSavingProfile] = useState(false)
   const [savingPw, setSavingPw] = useState(false)
-  const [msg, setMsg] = useState(null)   // { type: 'ok'|'err', text: string }
+  const [msg, setMsg] = useState(null)
   const [pwMsg, setPwMsg] = useState(null)
 
-  /* ── Load existing profile from Supabase metadata ── */
+  /* ── Load profile: first from user_metadata (fast), then from DB (accurate) ── */
   useEffect(() => {
     if (DEMO_MODE || !user) return
+
+    // 1) Instant load from user_metadata as fallback
     const meta = user.user_metadata || {}
     setForm(f => ({
       ...f,
@@ -40,6 +42,27 @@ export default function ProfilePage() {
       email: user.email || '',
     }))
     if (meta.avatar_url) setAvatarUrl(meta.avatar_url)
+
+    // 2) Load from profiles table — this is the source of truth after refresh
+    async function loadProfile() {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single()
+
+      if (error || !data) return
+
+      setForm(f => ({
+        ...f,
+        full_name: data.full_name || f.full_name,
+        username: data.username || f.username,
+        phone: data.phone || f.phone,
+      }))
+      if (data.avatar_url) setAvatarUrl(data.avatar_url)
+    }
+
+    loadProfile()
   }, [user])
 
   /* ── Avatar pick ── */
@@ -50,7 +73,7 @@ export default function ProfilePage() {
       setMsg({ type: 'err', text: 'Image must be under 2 MB' })
       return
     }
-    setPendingFile(file)  // ← fix: save file reference
+    setPendingFile(file)
     setAvatarPreview(URL.createObjectURL(file))
   }
 
@@ -58,7 +81,9 @@ export default function ProfilePage() {
   async function uploadAvatar(file) {
     const ext = file.name.split('.').pop()
     const path = `avatars/${user.id}.${ext}`
-    const { error } = await supabase.storage.from('profiles').upload(path, file, { upsert: true })
+    const { error } = await supabase.storage
+      .from('profiles')
+      .upload(path, file, { upsert: true })
     if (error) throw error
     const { data } = supabase.storage.from('profiles').getPublicUrl(path)
     return data.publicUrl
@@ -79,21 +104,25 @@ export default function ProfilePage() {
       }
 
       let newAvatarUrl = avatarUrl
-      if (pendingFile) {  // ← fix: use pendingFile state instead of fileInputRef
+
+      if (pendingFile) {
         setUploading(true)
         try {
           newAvatarUrl = await uploadAvatar(pendingFile)
           setAvatarUrl(newAvatarUrl)
           setAvatarPreview(null)
           setPendingFile(null)
-        } catch {
-          // Storage bucket might not exist — skip avatar upload silently
+        } catch (uploadErr) {
+          setMsg({ type: 'err', text: `Avatar upload failed: ${uploadErr.message}` })
+          setUploading(false)
+          setSavingProfile(false)
+          return
         }
         setUploading(false)
       }
 
-      // Update auth metadata (name, username, phone, avatar)
-      const { error } = await supabase.auth.updateUser({
+      // Update Supabase Auth metadata
+      const { error: authError } = await supabase.auth.updateUser({
         data: {
           full_name: form.full_name,
           username: form.username,
@@ -101,10 +130,10 @@ export default function ProfilePage() {
           avatar_url: newAvatarUrl,
         },
       })
-      if (error) throw error
+      if (authError) throw authError
 
-      // ← fix: also upsert into public profiles table so signup data is persisted
-      await supabase.from('profiles').upsert({
+      // Upsert into public profiles table (source of truth on refresh)
+      const { error: dbError } = await supabase.from('profiles').upsert({
         id: user.id,
         email: user.email,
         full_name: form.full_name,
@@ -113,6 +142,7 @@ export default function ProfilePage() {
         avatar_url: newAvatarUrl,
         updated_at: new Date().toISOString(),
       }, { onConflict: 'id' })
+      if (dbError) throw dbError
 
       setMsg({ type: 'ok', text: 'Profile saved successfully!' })
     } catch (err) {
@@ -228,9 +258,7 @@ export default function ProfilePage() {
           />
         </div>
 
-        {msg && (
-          <StatusMsg type={msg.type} text={msg.text} />
-        )}
+        {msg && <StatusMsg type={msg.type} text={msg.text} />}
 
         <button
           type="submit"
@@ -242,8 +270,9 @@ export default function ProfilePage() {
             boxShadow: '0 0 16px rgba(185,64,64,0.25)',
           }}
         >
-          {savingProfile ? (
-            <><div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> SAVING...</>
+          {savingProfile || uploading ? (
+            <><div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            {uploading ? 'UPLOADING...' : 'SAVING...'}</>
           ) : (
             <><Save className="w-3.5 h-3.5" /> SAVE PROFILE</>
           )}
@@ -252,7 +281,6 @@ export default function ProfilePage() {
 
       {/* ── Change Password (Collapsible) ── */}
       <div className="bg-scada-panel border border-scada-border rounded-xl overflow-hidden">
-        {/* Toggle header */}
         <button
           type="button"
           onClick={() => { setPwOpen(o => !o); setPwMsg(null) }}
@@ -268,7 +296,6 @@ export default function ProfilePage() {
           />
         </button>
 
-        {/* Collapsible content */}
         <div
           style={{
             maxHeight: pwOpen ? '400px' : '0px',

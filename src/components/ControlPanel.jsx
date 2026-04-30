@@ -214,7 +214,7 @@ export default function ControlPanel() {
       <button
         onClick={() => applyControl({ status: false, pump_speed: 0, target_pressure: 3.5 })}
         disabled={updating}
-        className="w-full flex items-center justify-center gap-2 py-2.5 border border-scada-border rounded-lg text-scada-muted hover:text-scada-red hover:border-scada-red/30 font-mono text-xs transition-all disabled:opacity-40">
+        className="w-full flex items-center justify-center gap-2 py-2.5 border border-white/30 rounded-lg text-white hover:bg-white/10 hover:border-white/50 font-mono text-xs transition-all disabled:opacity-40">
         <RotateCcw className="w-3.5 h-3.5" />
         EMERGENCY STOP & RESET
       </button>
