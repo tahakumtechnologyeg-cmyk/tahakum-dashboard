@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LogOut, LayoutDashboard, LineChart, Settings, Zap, User, Cpu } from 'lucide-react'
+import { LogOut, LayoutDashboard, LineChart, Settings, Zap, User, Cpu, Bell, HeadphonesIcon } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { useTelemetry } from '../hooks/useTelemetry'
 import SensorCard from '../components/SensorCard'
@@ -9,16 +9,20 @@ import PowerStats from '../components/PowerStats'
 import AlertsPanel from '../components/AlertsPanel'
 import ProfilePage from '../components/ProfilePage'
 import DevicesPage from '../components/DevicesPage'
+import NotificationsPage, { getNotifCount } from '../components/NotificationsPage'
+import SupportPage from '../components/SupportPage'
 
 const SENSOR_ORDER = ['TDS', 'TEMPERATURE', 'FLOW', 'PRESSURE', 'DIFF_PRESSURE']
 
 const TABS = [
-  { id: 'sensors', label: 'Sensor Overview',    shortLabel: 'Sensors', icon: LayoutDashboard },
-  { id: 'charts',  label: 'Trend Analysis',      shortLabel: 'Trends',  icon: LineChart },
-  { id: 'control', label: 'VFD Control Panel',   shortLabel: 'Control', icon: Settings },
-  { id: 'energy',  label: 'Energy Tracking',     shortLabel: 'Energy',  icon: Zap },
-  { id: 'devices', label: 'My Devices',          shortLabel: 'Devices', icon: Cpu },
-  { id: 'profile', label: 'Profile',             shortLabel: 'Profile', icon: User },
+  { id: 'sensors',       label: 'Sensor Overview',    shortLabel: 'Sensors',       icon: LayoutDashboard },
+  { id: 'charts',        label: 'Trend Analysis',      shortLabel: 'Trends',        icon: LineChart },
+  { id: 'control',       label: 'VFD Control Panel',   shortLabel: 'Control',       icon: Settings },
+  { id: 'energy',        label: 'Energy Tracking',     shortLabel: 'Energy',        icon: Zap },
+  { id: 'devices',       label: 'My Devices',          shortLabel: 'Devices',       icon: Cpu },
+  { id: 'notifications', label: 'Notifications',       shortLabel: 'Alerts',        icon: Bell },
+  { id: 'support',       label: 'Support',             shortLabel: 'Support',       icon: HeadphonesIcon },
+  { id: 'profile',       label: 'Profile',             shortLabel: 'Profile',       icon: User },
 ]
 
 function AutomationBg() {
@@ -98,6 +102,8 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('sensors')
   const [transitioning, setTransitioning] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
+
+  const notifCount = getNotifCount(latest)
 
   function switchTab(newTab) {
     if (newTab === activeTab) return
@@ -227,11 +233,28 @@ export default function Dashboard() {
                 transform: drawerOpen ? 'translateX(0)' : 'translateX(-16px)',
                 opacity: drawerOpen ? 1 : 0,
                 transition: `transform 0.3s cubic-bezier(0.4,0,0.2,1) ${index * 35}ms, opacity 0.3s ease ${index * 35}ms, background 0.15s, color 0.15s`,
+                position: 'relative',
               }}
             >
               <Icon style={{ width: 16, height: 16, flexShrink: 0 }} />
               <span style={{ flex: 1 }}>{label}</span>
-              {activeTab === id && (
+              {/* Notification badge */}
+              {id === 'notifications' && notifCount > 0 && (
+                <span style={{
+                  minWidth: 18, height: 18, borderRadius: 9,
+                  background: '#B94040', color: '#FBF7EF',
+                  fontFamily: 'monospace', fontSize: 10, fontWeight: 700,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  padding: '0 5px', flexShrink: 0,
+                  animation: 'pulse 2s infinite',
+                }}>
+                  {notifCount}
+                </span>
+              )}
+              {activeTab === id && notifCount === 0 && id !== 'notifications' && (
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#B94040', flexShrink: 0 }} />
+              )}
+              {activeTab === id && id === 'notifications' && notifCount === 0 && (
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#B94040', flexShrink: 0 }} />
               )}
             </button>
@@ -337,6 +360,20 @@ export default function Dashboard() {
             <div className="max-w-xl mx-auto">
               <SectionHeader title="PROFILE" subtitle="Manage your account" />
               <ProfilePage />
+            </div>
+          )}
+
+          {activeTab === 'notifications' && (
+            <div className="max-w-2xl mx-auto">
+              <SectionHeader title="NOTIFICATIONS" subtitle="Sensor alerts & motor events" />
+              <NotificationsPage latest={latest} />
+            </div>
+          )}
+
+          {activeTab === 'support' && (
+            <div className="max-w-xl mx-auto">
+              <SectionHeader title="SUPPORT" subtitle="Get help from the Takamul team" />
+              <SupportPage />
             </div>
           )}
         </main>
