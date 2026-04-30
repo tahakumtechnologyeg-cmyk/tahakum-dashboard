@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { User, Mail, Phone, Camera, Save, AlertCircle, CheckCircle, Lock, Eye, EyeOff } from 'lucide-react'
+import { User, Mail, Phone, Camera, Save, AlertCircle, CheckCircle, Lock, Eye, EyeOff, ChevronDown } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { supabase } from '../lib/supabase'
 import { DEMO_MODE } from '../lib/demo'
@@ -21,6 +21,7 @@ export default function ProfilePage() {
 
   const [pwForm, setPwForm] = useState({ newPassword: '', confirmPassword: '' })
   const [showPw, setShowPw] = useState(false)
+  const [pwOpen, setPwOpen] = useState(false)
   const [savingProfile, setSavingProfile] = useState(false)
   const [savingPw, setSavingPw] = useState(false)
   const [msg, setMsg] = useState(null)   // { type: 'ok'|'err', text: string }
@@ -234,53 +235,77 @@ export default function ProfilePage() {
         </button>
       </form>
 
-      {/* ── Change Password ── */}
-      <form onSubmit={handleChangePassword} className="bg-scada-panel border border-scada-border rounded-xl p-6 space-y-4">
-        <div className="flex items-center gap-2 mb-1">
-          <Lock className="w-4 h-4 text-scada-accent" />
-          <h3 className="font-display text-xs font-bold tracking-widest text-scada-text">CHANGE PASSWORD</h3>
-        </div>
-
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-scada-muted" />
-          <input
-            type={showPw ? 'text' : 'password'}
-            value={pwForm.newPassword}
-            onChange={e => setPwForm(f => ({ ...f, newPassword: e.target.value }))}
-            placeholder="New password"
-            className="w-full rounded-lg pl-10 pr-10 py-2.5 font-mono text-sm bg-scada-dim border border-scada-border text-scada-text placeholder:text-scada-muted/50 focus:outline-none focus:border-scada-accent/50"
-          />
-          <button type="button" onClick={() => setShowPw(p => !p)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-scada-muted">
-            {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-          </button>
-        </div>
-
-        <div className="relative">
-          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-scada-muted" />
-          <input
-            type={showPw ? 'text' : 'password'}
-            value={pwForm.confirmPassword}
-            onChange={e => setPwForm(f => ({ ...f, confirmPassword: e.target.value }))}
-            placeholder="Confirm new password"
-            className="w-full rounded-lg pl-10 pr-4 py-2.5 font-mono text-sm bg-scada-dim border border-scada-border text-scada-text placeholder:text-scada-muted/50 focus:outline-none focus:border-scada-accent/50"
-          />
-        </div>
-
-        {pwMsg && <StatusMsg type={pwMsg.type} text={pwMsg.text} />}
-
+      {/* ── Change Password (Collapsible) ── */}
+      <div className="bg-scada-panel border border-scada-border rounded-xl overflow-hidden">
+        {/* Toggle header */}
         <button
-          type="submit"
-          disabled={savingPw || !pwForm.newPassword}
-          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-display text-xs font-bold tracking-widest transition-all disabled:opacity-50 border border-scada-accent/40 text-scada-accent hover:bg-scada-accent/10"
+          type="button"
+          onClick={() => { setPwOpen(o => !o); setPwMsg(null) }}
+          className="w-full flex items-center justify-between px-6 py-4 hover:bg-scada-dim/50 transition-colors"
         >
-          {savingPw ? (
-            <><div className="w-3.5 h-3.5 border-2 border-scada-accent/30 border-t-scada-accent rounded-full animate-spin" /> UPDATING...</>
-          ) : (
-            <><Lock className="w-3.5 h-3.5" /> UPDATE PASSWORD</>
-          )}
+          <div className="flex items-center gap-2">
+            <Lock className="w-4 h-4 text-scada-accent" />
+            <span className="font-display text-xs font-bold tracking-widest text-scada-text">CHANGE PASSWORD</span>
+          </div>
+          <ChevronDown
+            className="w-4 h-4 text-scada-muted transition-transform duration-300"
+            style={{ transform: pwOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+          />
         </button>
-      </form>
+
+        {/* Collapsible content */}
+        <div
+          style={{
+            maxHeight: pwOpen ? '400px' : '0px',
+            overflow: 'hidden',
+            transition: 'max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+          }}
+        >
+          <form onSubmit={handleChangePassword} className="px-6 pb-6 space-y-4 border-t border-scada-border/60">
+            <div className="pt-4" />
+
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-scada-muted" />
+              <input
+                type={showPw ? 'text' : 'password'}
+                value={pwForm.newPassword}
+                onChange={e => setPwForm(f => ({ ...f, newPassword: e.target.value }))}
+                placeholder="New password"
+                className="w-full rounded-lg pl-10 pr-10 py-2.5 font-mono text-sm bg-scada-dim border border-scada-border text-scada-text placeholder:text-scada-muted/50 focus:outline-none focus:border-scada-accent/50"
+              />
+              <button type="button" onClick={() => setShowPw(p => !p)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-scada-muted">
+                {showPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-scada-muted" />
+              <input
+                type={showPw ? 'text' : 'password'}
+                value={pwForm.confirmPassword}
+                onChange={e => setPwForm(f => ({ ...f, confirmPassword: e.target.value }))}
+                placeholder="Confirm new password"
+                className="w-full rounded-lg pl-10 pr-4 py-2.5 font-mono text-sm bg-scada-dim border border-scada-border text-scada-text placeholder:text-scada-muted/50 focus:outline-none focus:border-scada-accent/50"
+              />
+            </div>
+
+            {pwMsg && <StatusMsg type={pwMsg.type} text={pwMsg.text} />}
+
+            <button
+              type="submit"
+              disabled={savingPw || !pwForm.newPassword}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-display text-xs font-bold tracking-widest transition-all disabled:opacity-50 border border-scada-accent/40 text-scada-accent hover:bg-scada-accent/10"
+            >
+              {savingPw ? (
+                <><div className="w-3.5 h-3.5 border-2 border-scada-accent/30 border-t-scada-accent rounded-full animate-spin" /> UPDATING...</>
+              ) : (
+                <><Lock className="w-3.5 h-3.5" /> UPDATE PASSWORD</>
+              )}
+            </button>
+          </form>
+        </div>
+      </div>
 
     </div>
   )

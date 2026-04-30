@@ -115,36 +115,62 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* ── Tab Bar (scrollable on mobile) ── */}
-        <div className="flex border-t border-white/20 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-          {TABS.map(({ id, label, shortLabel, icon: Icon }) => (
+      </header>
+
+      {/* ── Body: Side Nav + Content ── */}
+      <div className="relative z-10 flex max-w-screen-2xl mx-auto">
+
+        {/* ── Vertical Side Tabs ── */}
+        <nav className="hidden sm:flex flex-col w-52 shrink-0 min-h-[calc(100vh-7rem)] border-r border-scada-border bg-scada-panel/60 backdrop-blur-sm pt-4 pb-8 gap-1 px-2">
+          {TABS.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
               onClick={() => switchTab(id)}
-              className={`flex-shrink-0 flex items-center gap-1.5 px-3 sm:px-5 py-2.5 font-mono text-xs transition-all duration-200 whitespace-nowrap ${
-                activeTab === id ? 'border-b-2 border-white font-bold' : 'opacity-60 hover:opacity-90'
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-mono text-xs transition-all duration-200 text-left w-full ${
+                activeTab === id
+                  ? 'font-bold border border-scada-accent/30'
+                  : 'opacity-50 hover:opacity-80 hover:bg-scada-dim/50'
               }`}
-              style={{ color: activeTab === id ? '#FBF7EF' : 'rgba(251,247,239,0.75)' }}
+              style={activeTab === id ? {
+                background: 'rgba(185,64,64,0.12)',
+                color: '#B94040',
+                boxShadow: 'inset 3px 0 0 #B94040',
+              } : { color: 'var(--scada-text)' }}
             >
-              <Icon className="w-3.5 h-3.5 flex-shrink-0" />
-              <span className="sm:hidden">{shortLabel}</span>
-              <span className="hidden sm:inline">{label}</span>
+              <Icon className="w-4 h-4 shrink-0" />
+              <span>{label}</span>
+            </button>
+          ))}
+        </nav>
+
+        {/* ── Mobile Bottom Tab Bar (visible on small screens) ── */}
+        <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 flex border-t border-scada-border" style={{ background: '#B94040' }}>
+          {TABS.map(({ id, shortLabel, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => switchTab(id)}
+              className={`flex-1 flex flex-col items-center gap-1 py-2.5 font-mono text-[10px] transition-all ${
+                activeTab === id ? 'font-bold' : 'opacity-55'
+              }`}
+              style={{ color: '#FBF7EF' }}
+            >
+              <Icon className="w-4 h-4" />
+              {shortLabel}
             </button>
           ))}
         </div>
-      </header>
 
-      {/* ── Content with fade transition ── */}
-      <main
-        className="relative z-10 max-w-screen-2xl mx-auto px-4 sm:px-6 py-6"
-        style={{
-          opacity: transitioning ? 0 : 1,
-          transform: transitioning ? 'translateY(8px)' : 'translateY(0)',
-          transition: transitioning
-            ? 'opacity 0.18s ease-in, transform 0.18s ease-in'
-            : 'opacity 0.28s ease-out, transform 0.28s ease-out',
-        }}
-      >
+        {/* ── Content with fade transition ── */}
+        <main
+          className="flex-1 px-4 sm:px-6 py-6 pb-24 sm:pb-6"
+          style={{
+            opacity: transitioning ? 0 : 1,
+            transform: transitioning ? 'translateY(8px)' : 'translateY(0)',
+            transition: transitioning
+              ? 'opacity 0.18s ease-in, transform 0.18s ease-in'
+              : 'opacity 0.28s ease-out, transform 0.28s ease-out',
+          }}
+        >
         {activeTab === 'sensors' && (
           <div>
             <SectionHeader title="SENSOR OVERVIEW" subtitle="Real-time monitoring · 5s interval" />
@@ -187,7 +213,8 @@ export default function Dashboard() {
             <ProfilePage />
           </div>
         )}
-      </main>
+        </main>
+      </div>
     </div>
   )
 }
