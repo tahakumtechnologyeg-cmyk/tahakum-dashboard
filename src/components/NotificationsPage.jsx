@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Bell, AlertTriangle, CheckCircle, Power, Zap, Droplets, Thermometer, Gauge, Activity, ArrowLeftRight, Trash2, BellOff } from 'lucide-react'
 import { SENSORS, getSensorStatus } from '../lib/thresholds'
 import { useControls } from '../hooks/useControls'
+import AlertsPanel from './AlertsPanel'
 
 const SENSOR_ICONS = {
   TDS: Droplets,
@@ -286,6 +287,11 @@ export default function NotificationsPage({ latest = {} }) {
             </span>
           )}
         </div>
+      </div>
+
+      {/* System Alerts panel (full widget) */}
+      <div style={{ marginBottom: 24 }}>
+        <AlertsPanel latest={latest} />
       </div>
 
       {/* Live sensor alerts */}
