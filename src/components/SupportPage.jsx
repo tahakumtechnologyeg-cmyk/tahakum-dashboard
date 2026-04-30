@@ -1,4 +1,4 @@
-import { Mail, MessageCircle, Globe, Clock, ChevronRight, Send } from 'lucide-react'
+import { Mail, MessageCircle, Globe, ChevronRight, Send } from 'lucide-react'
 
 const CONTACT_EMAIL = 'team.takamul.eg@gmail.com'
 
@@ -60,22 +60,6 @@ function ContactCard({ icon: Icon, title, value, subtitle, href, color = '#64d2f
         <ChevronRight style={{ width: 14, height: 14, color }} />
       </div>
     </a>
-  )
-}
-
-function InfoRow({ label, value }) {
-  return (
-    <div style={{
-      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-      padding: '10px 0', borderBottom: '1px solid rgba(255,255,255,0.07)',
-    }}>
-      <span style={{ fontFamily: 'monospace', fontSize: 11, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.06em' }}>
-        {label}
-      </span>
-      <span style={{ fontFamily: 'monospace', fontSize: 11, color: '#FBF7EF', fontWeight: 600 }}>
-        {value}
-      </span>
-    </div>
   )
 }
 
@@ -157,30 +141,6 @@ export default function SupportPage() {
           color="#a5d6a7"
           actionLabel="Contact"
         />
-      </div>
-
-      {/* System info section */}
-      <div style={{
-        padding: '18px 20px', borderRadius: 14, marginTop: 24,
-        background: 'rgba(255,255,255,0.04)',
-        border: '1px solid rgba(255,255,255,0.08)',
-      }}>
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
-        }}>
-          <Clock style={{ width: 14, height: 14, color: 'rgba(255,255,255,0.4)' }} />
-          <span style={{ fontFamily: 'monospace', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.4)' }}>
-            SYSTEM INFORMATION
-          </span>
-        </div>
-
-        <InfoRow label="PLATFORM" value="Takamul SCADA v1.0" />
-        <InfoRow label="HARDWARE" value="ESP32 · Modbus RTU" />
-        <InfoRow label="PROTOCOL" value="MQTT / Supabase Realtime" />
-        <InfoRow label="SENSORS" value="TDS · TEMP · FLOW · PRESS · ΔP" />
-        <div style={{ paddingTop: 10 }}>
-          <InfoRow label="SUPPORT EMAIL" value={CONTACT_EMAIL} />
-        </div>
       </div>
 
       {/* Footer note */}
