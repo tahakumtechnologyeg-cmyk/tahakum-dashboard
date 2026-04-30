@@ -1,15 +1,16 @@
 import { useState, useEffect, useRef } from 'react'
-import { Cpu, QrCode, Plus, Trash2, Pencil, Check, X, AlertCircle, CheckCircle, Loader2, Wifi, WifiOff } from 'lucide-react'
+import jsQR from 'jsqr'
+import { Cpu, QrCode, Plus, Trash2, Pencil, Check, X, AlertCircle, CheckCircle, Loader2, WifiOff } from 'lucide-react'
 import { useDevices } from '../hooks/useDevices'
 import { DEMO_MODE } from '../lib/demo'
 
-// ── QR Scanner using jsQR (loaded via CDN script tag) ──────────────────────
+// ── QR Scanner ──────────────────────────────────────────────────────────────
 function QRScanner({ onScan, onClose }) {
   const videoRef = useRef(null)
   const canvasRef = useRef(null)
   const streamRef = useRef(null)
   const rafRef = useRef(null)
-  const [status, setStatus] = useState('starting') // starting | scanning | error
+  const [status, setStatus] = useState('starting')
 
   useEffect(() => {
     let active = true
@@ -45,27 +46,12 @@ function QRScanner({ onScan, onClose }) {
       const ctx = canvas.getContext('2d')
       ctx.drawImage(video, 0, 0)
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-
-      // jsQR is loaded globally via script tag
-      if (window.jsQR) {
-        const code = window.jsQR(imageData.data, imageData.width, imageData.height)
-        if (code?.data) {
-          onScan(code.data)
-          return
-        }
-      }
+      const code = jsQR(imageData.data, imageData.width, imageData.height)
+      if (code?.data) { onScan(code.data); return }
       rafRef.current = requestAnimationFrame(tick)
     }
 
-    // Load jsQR if not already loaded
-    if (!window.jsQR) {
-      const script = document.createElement('script')
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js'
-      script.onload = start
-      document.head.appendChild(script)
-    } else {
-      start()
-    }
+    start()
 
     return () => {
       active = false
@@ -77,7 +63,6 @@ function QRScanner({ onScan, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
       <div className="bg-scada-panel border border-scada-border rounded-2xl overflow-hidden w-full max-w-sm">
-        {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-scada-border">
           <div className="flex items-center gap-2">
             <QrCode className="w-4 h-4 text-scada-accent" />
@@ -88,16 +73,13 @@ function QRScanner({ onScan, onClose }) {
           </button>
         </div>
 
-        {/* Camera view */}
         <div className="relative bg-black aspect-square">
           <video ref={videoRef} className="w-full h-full object-cover" playsInline muted />
           <canvas ref={canvasRef} className="hidden" />
 
-          {/* Scanning overlay */}
           {status === 'scanning' && (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="relative w-52 h-52">
-                {/* Corner brackets */}
                 {[['top-0 left-0', 'border-t-2 border-l-2'],
                   ['top-0 right-0', 'border-t-2 border-r-2'],
                   ['bottom-0 left-0', 'border-b-2 border-l-2'],
@@ -105,7 +87,6 @@ function QRScanner({ onScan, onClose }) {
                 ].map(([pos, border], i) => (
                   <div key={i} className={`absolute ${pos} w-8 h-8 ${border} border-scada-accent rounded-sm`} />
                 ))}
-                {/* Scan line animation */}
                 <div className="absolute inset-x-0 top-0 h-0.5 bg-scada-accent/60"
                   style={{ animation: 'scanLine 2s ease-in-out infinite' }} />
               </div>
@@ -148,7 +129,7 @@ function QRScanner({ onScan, onClose }) {
 
 // ── Add Device Modal ────────────────────────────────────────────────────────
 function AddDeviceModal({ onAdd, onClose }) {
-  const [step, setStep] = useState('input') // input | scanning
+  const [step, setStep] = useState('input')
   const [deviceId, setDeviceId] = useState('')
   const [name, setName] = useState('')
   const [loading, setLoading] = useState(false)
@@ -176,7 +157,6 @@ function AddDeviceModal({ onAdd, onClose }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="bg-scada-panel border border-scada-border rounded-2xl w-full max-w-sm overflow-hidden">
-        {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-scada-border">
           <div className="flex items-center gap-2">
             <Plus className="w-4 h-4 text-scada-accent" />
@@ -188,7 +168,6 @@ function AddDeviceModal({ onAdd, onClose }) {
         </div>
 
         <div className="p-5 space-y-4">
-          {/* Scan QR button */}
           <button
             onClick={() => setStep('scanning')}
             className="w-full flex items-center justify-center gap-3 py-4 border-2 border-dashed border-scada-accent/40 rounded-xl hover:border-scada-accent/70 hover:bg-scada-accent/5 transition-all group"
@@ -200,14 +179,12 @@ function AddDeviceModal({ onAdd, onClose }) {
             </div>
           </button>
 
-          {/* Divider */}
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-scada-border" />
             <span className="font-mono text-xs text-scada-muted">OR</span>
             <div className="flex-1 h-px bg-scada-border" />
           </div>
 
-          {/* Manual entry */}
           <div>
             <label className="font-mono text-xs text-scada-muted uppercase tracking-wider block mb-1.5">
               Device ID
@@ -221,7 +198,6 @@ function AddDeviceModal({ onAdd, onClose }) {
             />
           </div>
 
-          {/* Device name */}
           <div>
             <label className="font-mono text-xs text-scada-muted uppercase tracking-wider block mb-1.5">
               Device Name <span className="text-scada-muted/50">(optional)</span>
@@ -284,7 +260,6 @@ function DeviceCard({ device, onRemove, onRename }) {
 
   return (
     <div className="bg-scada-panel border border-scada-border rounded-xl p-4 space-y-3">
-      {/* Top row: name + actions */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
@@ -333,7 +308,6 @@ function DeviceCard({ device, onRemove, onRename }) {
         )}
       </div>
 
-      {/* Device ID */}
       <div className="rounded-lg px-3 py-2 font-mono text-xs text-scada-muted break-all"
         style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.06)' }}>
         <span className="text-scada-muted/60 mr-1">ID:</span>
@@ -382,7 +356,6 @@ export default function DevicesPage() {
 
   return (
     <div className="max-w-xl mx-auto space-y-4">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <div className="font-display text-xs font-bold tracking-widest text-white">MY DEVICES</div>
@@ -400,7 +373,6 @@ export default function DevicesPage() {
         </button>
       </div>
 
-      {/* Success message */}
       {successMsg && (
         <div className="flex items-center gap-2 bg-scada-green/10 border border-scada-green/30 rounded-lg px-4 py-2.5">
           <CheckCircle className="w-4 h-4 text-scada-green shrink-0" />
@@ -408,7 +380,6 @@ export default function DevicesPage() {
         </div>
       )}
 
-      {/* Error */}
       {error && (
         <div className="flex items-center gap-2 bg-scada-red/10 border border-scada-red/30 rounded-lg px-4 py-2.5">
           <AlertCircle className="w-4 h-4 text-scada-red shrink-0" />
@@ -416,14 +387,12 @@ export default function DevicesPage() {
         </div>
       )}
 
-      {/* Loading */}
       {loading && (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="w-6 h-6 text-scada-accent animate-spin" />
         </div>
       )}
 
-      {/* Empty state */}
       {!loading && devices.length === 0 && (
         <div className="bg-scada-panel border border-dashed border-scada-border rounded-xl p-8 text-center space-y-3">
           <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto"
@@ -445,7 +414,6 @@ export default function DevicesPage() {
         </div>
       )}
 
-      {/* Device list */}
       {!loading && devices.length > 0 && (
         <div className="space-y-3">
           {devices.map(device => (
@@ -459,7 +427,6 @@ export default function DevicesPage() {
         </div>
       )}
 
-      {/* Add device modal */}
       {showAdd && (
         <AddDeviceModal
           onAdd={handleAdd}
