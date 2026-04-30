@@ -59,9 +59,42 @@ function SectionHeader({ title, subtitle }) {
   )
 }
 
+
+function NoDevicesBanner({ onGoToDevices }) {
+  return (
+    <div style={{
+      display: 'flex', flexDirection: 'column', alignItems: 'center',
+      justifyContent: 'center', padding: '48px 24px', textAlign: 'center',
+      background: 'rgba(255,255,255,0.06)', borderRadius: 16,
+      border: '1px dashed rgba(255,255,255,0.2)', marginTop: 16,
+    }}>
+      <div style={{ fontSize: 48, marginBottom: 16 }}>🔌</div>
+      <h3 className="font-mono font-bold text-sm tracking-widest" style={{ color: '#FBF7EF', marginBottom: 8 }}>
+        NO DEVICE LINKED
+      </h3>
+      <p className="font-mono text-xs" style={{ color: 'rgba(255,255,255,0.55)', maxWidth: 280, marginBottom: 20 }}>
+        Link your ESP32 device first to start seeing live data here.
+      </p>
+      <button
+        onClick={onGoToDevices}
+        style={{
+          padding: '10px 24px', borderRadius: 10, cursor: 'pointer',
+          background: '#B94040', color: '#FBF7EF', border: 'none',
+          fontFamily: 'monospace', fontSize: 12, fontWeight: 700,
+          letterSpacing: '0.08em', transition: 'opacity 0.2s',
+        }}
+        onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+        onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+      >
+        + ADD DEVICE
+      </button>
+    </div>
+  )
+}
+
 export default function Dashboard() {
   const { user, signOut } = useAuth()
-  const { latest, history, connected } = useTelemetry()
+  const { latest, history, connected, hasDevices } = useTelemetry()
   const [activeTab, setActiveTab] = useState('sensors')
   const [transitioning, setTransitioning] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -260,35 +293,53 @@ export default function Dashboard() {
           {activeTab === 'sensors' && (
             <div>
               <SectionHeader title="SENSOR OVERVIEW" subtitle="Real-time monitoring · 5s interval" />
-              <AlertsPanel latest={latest} />
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
-                {SENSOR_ORDER.map(type => (
-                  <SensorCard key={type} sensorType={type} data={latest[type]} />
-                ))}
-              </div>
+              {!hasDevices ? (
+                <NoDevicesBanner onGoToDevices={() => switchTab('devices')} />
+              ) : (
+                <>
+                  <AlertsPanel latest={latest} />
+                  <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+                    {SENSOR_ORDER.map(type => (
+                      <SensorCard key={type} sensorType={type} data={latest[type]} />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           )}
 
           {activeTab === 'charts' && (
             <div>
               <SectionHeader title="TREND ANALYSIS" subtitle="Live time-series data" />
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <LiveChart sensorType="FLOW" data={history.FLOW} title="FLOW RATE" />
-                <LiveChart sensorType="PRESSURE" data={history.PRESSURE} title="LINE PRESSURE" />
-              </div>
+              {!hasDevices ? (
+                <NoDevicesBanner onGoToDevices={() => switchTab('devices')} />
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <LiveChart sensorType="FLOW" data={history.FLOW} title="FLOW RATE" />
+                  <LiveChart sensorType="PRESSURE" data={history.PRESSURE} title="LINE PRESSURE" />
+                </div>
+              )}
             </div>
           )}
 
           {activeTab === 'control' && (
             <div className="max-w-2xl mx-auto">
-              <ControlPanel />
+              {!hasDevices ? (
+                <NoDevicesBanner onGoToDevices={() => switchTab('devices')} />
+              ) : (
+                <ControlPanel />
+              )}
             </div>
           )}
 
           {activeTab === 'energy' && (
             <div className="max-w-2xl mx-auto">
               <SectionHeader title="ENERGY TRACKING" subtitle="Pump consumption data" />
-              <PowerStats />
+              {!hasDevices ? (
+                <NoDevicesBanner onGoToDevices={() => switchTab('devices')} />
+              ) : (
+                <PowerStats />
+              )}
             </div>
           )}
 
