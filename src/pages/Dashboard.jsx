@@ -262,26 +262,9 @@ export default function Dashboard() {
       {/* ── Body ── */}
       <div className="relative z-10 flex max-w-screen-2xl mx-auto">
 
-        {/* ── Mobile Bottom Tab Bar ── */}
-        <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 flex border-t border-scada-border" style={{ background: '#B94040' }}>
-          {TABS.map(({ id, shortLabel, icon: Icon }) => (
-            <button
-              key={id}
-              onClick={() => switchTab(id)}
-              className={`flex-1 flex flex-col items-center gap-1 py-2.5 font-mono text-[10px] transition-all ${
-                activeTab === id ? 'font-bold' : 'opacity-55'
-              }`}
-              style={{ color: '#FBF7EF' }}
-            >
-              <Icon className="w-4 h-4" />
-              {shortLabel}
-            </button>
-          ))}
-        </div>
-
         {/* ── Content ── */}
         <main
-          className="flex-1 px-4 sm:px-6 py-6 pb-24 sm:pb-6"
+          className="flex-1 px-4 sm:px-6 py-6 pb-6"
           style={{
             opacity: transitioning ? 0 : 1,
             transform: transitioning ? 'translateY(8px)' : 'translateY(0)',
