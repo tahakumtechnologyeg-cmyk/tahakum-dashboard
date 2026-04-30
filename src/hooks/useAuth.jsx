@@ -66,14 +66,19 @@ export function AuthProvider({ children }) {
       setLoading(false)
       return { error: { message: 'Sign-up is disabled in demo mode' } }
     }
+
     const { data, error } = await supabase.auth.signUp({ email, password })
+
     if (error) {
       setError(error.message)
       setLoading(false)
       return { error }
     }
-    // ← fix: create profile row so the user exists in the public.profiles table
-    if (data?.user) {
+
+    // Safety-net: if auto-confirm is ON the session is live immediately,
+    // so we upsert the profile row here too (the DB trigger handles it
+    // when confirmation is required).
+    if (data?.user && data?.session) {
       await supabase.from('profiles').upsert({
         id: data.user.id,
         email: data.user.email,
@@ -81,8 +86,9 @@ export function AuthProvider({ children }) {
         updated_at: new Date().toISOString(),
       }, { onConflict: 'id' })
     }
+
     setLoading(false)
-    return { error: null }
+    return { error: null, needsConfirmation: !data?.session }
   }
 
   async function signOut() {
