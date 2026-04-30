@@ -59,6 +59,19 @@ export function AuthProvider({ children }) {
     return { error }
   }
 
+  async function signUp(email, password) {
+    setError(null)
+    setLoading(true)
+    if (DEMO_MODE) {
+      setLoading(false)
+      return { error: { message: 'Sign-up is disabled in demo mode' } }
+    }
+    const { error } = await supabase.auth.signUp({ email, password })
+    if (error) setError(error.message)
+    setLoading(false)
+    return { error }
+  }
+
   async function signOut() {
     if (DEMO_MODE) {
       setUser(null)
@@ -69,7 +82,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, error, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, loading, error, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   )
