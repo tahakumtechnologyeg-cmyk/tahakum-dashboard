@@ -294,7 +294,7 @@ export default function Dashboard() {
 
           {activeTab === 'devices' && (
             <div>
-              <SectionHeader title="MY DEVICES" subtitle="Link and manage your ESP32 boards" />
+              <SectionHeader title="MY DEVICES" subtitle="Link and manage your Takamul boards" />
               <DevicesPage />
             </div>
           )}

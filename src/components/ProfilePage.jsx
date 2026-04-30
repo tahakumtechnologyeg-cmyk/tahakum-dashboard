@@ -220,7 +220,6 @@ export default function ProfilePage() {
               onChange={handleAvatarChange}
             />
           </div>
-          <p className="font-mono text-xs text-scada-muted">Tap camera to change photo · Max 2 MB</p>
         </div>
 
         {/* Fields */}
