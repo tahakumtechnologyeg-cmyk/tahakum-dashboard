@@ -44,16 +44,6 @@ function AutomationBg() {
         </defs>
         <rect width="100%" height="100%" fill="url(#circuit-grid)"/>
       </svg>
-      <svg className="absolute" style={{ top: '6%', right: '3%', width: 120, height: 120, opacity: 0.1 }} viewBox="0 0 100 100">
-        <g transform="translate(50,50)">
-          {[0,30,60,90,120,150,180,210,240,270,300,330].map((a, i) => (
-            <rect key={i} x="-4" y="-46" width="8" height="14" rx="2" fill="#7B5E3A" transform={`rotate(${a})`}/>
-          ))}
-          <circle r="34" fill="none" stroke="#7B5E3A" strokeWidth="3"/>
-          <circle r="14" fill="none" stroke="#7B5E3A" strokeWidth="2.5"/>
-          <circle r="5" fill="#7B5E3A"/>
-        </g>
-      </svg>
     </div>
   )
 }
@@ -74,6 +64,7 @@ export default function Dashboard() {
   const { latest, history, connected } = useTelemetry()
   const [activeTab, setActiveTab] = useState('sensors')
   const [transitioning, setTransitioning] = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false)
 
   function switchTab(newTab) {
     if (newTab === activeTab) return
@@ -84,20 +75,39 @@ export default function Dashboard() {
     }, 180)
   }
 
+  function handleTabClick(id) {
+    switchTab(id)
+    setDrawerOpen(false)
+  }
+
   return (
     <div className="min-h-screen font-body relative" style={{ background: 'linear-gradient(160deg, #0A2A6E 0%, #0E4A9C 30%, #1565C0 55%, #0D47A1 80%, #083170 100%)' }}>
-      {/* Sky glow */}
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0, background: 'radial-gradient(ellipse 90% 60% at 50% 10%, rgba(100,210,255,0.18) 0%, rgba(30,136,229,0.08) 50%, transparent 80%)' }} />
-      {/* Grid floor */}
       <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0, backgroundImage: 'linear-gradient(rgba(100,210,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(100,210,255,0.07) 1px, transparent 1px)', backgroundSize: '52px 52px' }} />
       <AutomationBg />
 
       {/* ── Top Bar ── */}
       <header className="sticky top-0 z-40 border-b border-scada-border shadow-sm" style={{ background: '#B94040' }}>
-
-        {/* Logo + user row */}
         <div className="flex items-center justify-between px-4 sm:px-6 h-12 sm:h-14">
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+
+            {/* Hamburger */}
+            <button
+              onClick={() => setDrawerOpen(o => !o)}
+              className="p-1.5 rounded-lg transition-colors hover:bg-white/10 mr-1"
+              style={{ color: '#FBF7EF' }}
+              aria-label="Toggle menu"
+            >
+              <div className="flex flex-col gap-[5px]">
+                <span className="block w-5 h-0.5 bg-current rounded"
+                  style={{ transition: 'transform 0.3s', transform: drawerOpen ? 'rotate(45deg) translateY(6px)' : 'none' }} />
+                <span className="block w-5 h-0.5 bg-current rounded"
+                  style={{ transition: 'opacity 0.3s', opacity: drawerOpen ? 0 : 1 }} />
+                <span className="block w-5 h-0.5 bg-current rounded"
+                  style={{ transition: 'transform 0.3s', transform: drawerOpen ? 'rotate(-45deg) translateY(-6px)' : 'none' }} />
+              </div>
+            </button>
+
             <img src="./bolt-logo.svg" alt="Takamul" className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg"
               style={{ boxShadow: '0 0 15px rgba(211,47,47,0.3)' }} />
             <div>
@@ -120,37 +130,107 @@ export default function Dashboard() {
             </button>
           </div>
         </div>
-
       </header>
 
-      {/* ── Body: Side Nav + Content ── */}
-      <div className="relative z-10 flex max-w-screen-2xl mx-auto">
+      {/* ── Drawer Overlay ── */}
+      <div
+        onClick={() => setDrawerOpen(false)}
+        style={{
+          position: 'fixed', inset: 0, zIndex: 45,
+          background: 'rgba(0,0,0,0.5)',
+          opacity: drawerOpen ? 1 : 0,
+          pointerEvents: drawerOpen ? 'all' : 'none',
+          transition: 'opacity 0.3s ease',
+        }}
+      />
 
-        {/* ── Vertical Side Tabs ── */}
-        <nav className="hidden sm:flex flex-col w-52 shrink-0 min-h-[calc(100vh-7rem)] border-r border-scada-border bg-scada-panel/60 backdrop-blur-sm pt-4 pb-8 gap-1 px-2">
-          {TABS.map(({ id, label, icon: Icon }) => (
+      {/* ── Drawer ── */}
+      <nav style={{
+        position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50,
+        width: 248,
+        background: 'linear-gradient(180deg, #0d1b3e 0%, #0f2755 40%, #0a1f4a 100%)',
+        borderRight: '1px solid rgba(185,64,64,0.35)',
+        boxShadow: drawerOpen ? '8px 0 40px rgba(0,0,0,0.6)' : 'none',
+        transform: drawerOpen ? 'translateX(0)' : 'translateX(-100%)',
+        transition: 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease',
+        display: 'flex', flexDirection: 'column',
+      }}>
+        {/* Drawer top accent bar */}
+        <div style={{
+          height: 48, background: '#B94040',
+          display: 'flex', alignItems: 'center',
+          padding: '0 16px', gap: 10, flexShrink: 0,
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+        }}>
+          <div className="flex flex-col gap-[5px]" onClick={() => setDrawerOpen(false)} style={{ cursor: 'pointer' }}>
+            <span className="block w-5 h-0.5 rounded" style={{ background: '#FBF7EF', transform: 'rotate(45deg) translateY(6px)', transition: 'transform 0.3s' }} />
+            <span className="block w-5 h-0.5 rounded" style={{ background: '#FBF7EF', opacity: 0, transition: 'opacity 0.3s' }} />
+            <span className="block w-5 h-0.5 rounded" style={{ background: '#FBF7EF', transform: 'rotate(-45deg) translateY(-6px)', transition: 'transform 0.3s' }} />
+          </div>
+          <span className="font-mono text-xs font-bold tracking-widest" style={{ color: '#FBF7EF' }}>MENU</span>
+        </div>
+
+        {/* Nav items */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '12px 8px' }}>
+          <div style={{ padding: '4px 8px 10px', marginBottom: 4 }}>
+            <span className="font-mono text-[10px] tracking-widest" style={{ color: 'rgba(185,64,64,0.7)' }}>NAVIGATION</span>
+          </div>
+
+          {TABS.map(({ id, label, icon: Icon }, index) => (
             <button
               key={id}
-              onClick={() => switchTab(id)}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-mono text-xs transition-all duration-200 text-left w-full ${
-                activeTab === id
-                  ? 'font-bold border border-scada-accent/30'
-                  : 'opacity-70 hover:opacity-100 hover:bg-scada-dim/50'
-              }`}
-              style={activeTab === id ? {
-                background: 'rgba(185,64,64,0.12)',
-                color: '#B94040',
-                boxShadow: 'inset 3px 0 0 #B94040',
-              } : { color: '#111111' }}
+              onClick={() => handleTabClick(id)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 12,
+                width: '100%', textAlign: 'left',
+                padding: '11px 14px', borderRadius: 10, marginBottom: 4,
+                fontFamily: 'monospace', fontSize: 12,
+                fontWeight: activeTab === id ? 700 : 400,
+                border: activeTab === id ? '1px solid rgba(185,64,64,0.4)' : '1px solid transparent',
+                background: activeTab === id ? 'rgba(185,64,64,0.18)' : 'transparent',
+                color: activeTab === id ? '#ff8a80' : 'rgba(255,255,255,0.72)',
+                boxShadow: activeTab === id ? 'inset 3px 0 0 #B94040' : 'none',
+                cursor: 'pointer',
+                transform: drawerOpen ? 'translateX(0)' : 'translateX(-16px)',
+                opacity: drawerOpen ? 1 : 0,
+                transition: `transform 0.3s cubic-bezier(0.4,0,0.2,1) ${index * 35}ms, opacity 0.3s ease ${index * 35}ms, background 0.15s, color 0.15s`,
+              }}
             >
-              <Icon className="w-4 h-4 shrink-0" />
-              <span>{label}</span>
+              <Icon style={{ width: 16, height: 16, flexShrink: 0 }} />
+              <span style={{ flex: 1 }}>{label}</span>
+              {activeTab === id && (
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#B94040', flexShrink: 0 }} />
+              )}
             </button>
           ))}
-        </nav>
+        </div>
 
-        {/* ── Mobile Bottom Tab Bar (visible on small screens) ── */}
-        <div className="sm:hidden fixed bottom-0 left-0 right-0 z-50 flex border-t border-scada-border" style={{ background: '#B94040' }}>
+        {/* Sign out at bottom */}
+        <div style={{ padding: '12px 8px', borderTop: '1px solid rgba(185,64,64,0.2)' }}>
+          <button
+            onClick={signOut}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              width: '100%', padding: '10px 14px', borderRadius: 10,
+              fontFamily: 'monospace', fontSize: 12,
+              color: 'rgba(255,255,255,0.45)', background: 'transparent',
+              border: '1px solid transparent', cursor: 'pointer',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#ff8a80'; e.currentTarget.style.background = 'rgba(185,64,64,0.1)' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.45)'; e.currentTarget.style.background = 'transparent' }}
+          >
+            <LogOut style={{ width: 15, height: 15 }} />
+            Sign Out
+          </button>
+        </div>
+      </nav>
+
+      {/* ── Body ── */}
+      <div className="relative z-10 flex max-w-screen-2xl mx-auto">
+
+        {/* ── Mobile Bottom Tab Bar ── */}
+        <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 flex border-t border-scada-border" style={{ background: '#B94040' }}>
           {TABS.map(({ id, shortLabel, icon: Icon }) => (
             <button
               key={id}
@@ -166,7 +246,7 @@ export default function Dashboard() {
           ))}
         </div>
 
-        {/* ── Content with fade transition ── */}
+        {/* ── Content ── */}
         <main
           className="flex-1 px-4 sm:px-6 py-6 pb-24 sm:pb-6"
           style={{
@@ -177,54 +257,54 @@ export default function Dashboard() {
               : 'opacity 0.28s ease-out, transform 0.28s ease-out',
           }}
         >
-        {activeTab === 'sensors' && (
-          <div>
-            <SectionHeader title="SENSOR OVERVIEW" subtitle="Real-time monitoring · 5s interval" />
-            <AlertsPanel latest={latest} />
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
-              {SENSOR_ORDER.map(type => (
-                <SensorCard key={type} sensorType={type} data={latest[type]} />
-              ))}
+          {activeTab === 'sensors' && (
+            <div>
+              <SectionHeader title="SENSOR OVERVIEW" subtitle="Real-time monitoring · 5s interval" />
+              <AlertsPanel latest={latest} />
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+                {SENSOR_ORDER.map(type => (
+                  <SensorCard key={type} sensorType={type} data={latest[type]} />
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {activeTab === 'charts' && (
-          <div>
-            <SectionHeader title="TREND ANALYSIS" subtitle="Live time-series data" />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <LiveChart sensorType="FLOW" data={history.FLOW} title="FLOW RATE" />
-              <LiveChart sensorType="PRESSURE" data={history.PRESSURE} title="LINE PRESSURE" />
+          {activeTab === 'charts' && (
+            <div>
+              <SectionHeader title="TREND ANALYSIS" subtitle="Live time-series data" />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <LiveChart sensorType="FLOW" data={history.FLOW} title="FLOW RATE" />
+                <LiveChart sensorType="PRESSURE" data={history.PRESSURE} title="LINE PRESSURE" />
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {activeTab === 'control' && (
-          <div className="max-w-2xl mx-auto">
-            <ControlPanel />
-          </div>
-        )}
+          {activeTab === 'control' && (
+            <div className="max-w-2xl mx-auto">
+              <ControlPanel />
+            </div>
+          )}
 
-        {activeTab === 'energy' && (
-          <div className="max-w-2xl mx-auto">
-            <SectionHeader title="ENERGY TRACKING" subtitle="Pump consumption data" />
-            <PowerStats />
-          </div>
-        )}
+          {activeTab === 'energy' && (
+            <div className="max-w-2xl mx-auto">
+              <SectionHeader title="ENERGY TRACKING" subtitle="Pump consumption data" />
+              <PowerStats />
+            </div>
+          )}
 
-        {activeTab === 'devices' && (
-          <div>
-            <SectionHeader title="MY DEVICES" subtitle="Link and manage your ESP32 boards" />
-            <DevicesPage />
-          </div>
-        )}
+          {activeTab === 'devices' && (
+            <div>
+              <SectionHeader title="MY DEVICES" subtitle="Link and manage your ESP32 boards" />
+              <DevicesPage />
+            </div>
+          )}
 
-        {activeTab === 'profile' && (
-          <div className="max-w-xl mx-auto">
-            <SectionHeader title="PROFILE" subtitle="Manage your account" />
-            <ProfilePage />
-          </div>
-        )}
+          {activeTab === 'profile' && (
+            <div className="max-w-xl mx-auto">
+              <SectionHeader title="PROFILE" subtitle="Manage your account" />
+              <ProfilePage />
+            </div>
+          )}
         </main>
       </div>
     </div>
