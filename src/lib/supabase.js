@@ -12,32 +12,38 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 
 // ─── Telemetry ────────────────────────────────────────────────────────────────
 
-export async function fetchLatestTelemetry() {
+export async function fetchLatestTelemetry(deviceId = null) {
   const sensors = ['TDS', 'TEMPERATURE', 'FLOW', 'PRESSURE', 'DIFF_PRESSURE']
   const results = {}
 
   for (const sensor of sensors) {
-    const { data, error } = await supabase
+    let query = supabase
       .from('telemetry')
       .select('*')
       .eq('sensor_type', sensor)
       .order('created_at', { ascending: false })
       .limit(1)
-      .single()
 
+    if (deviceId) query = query.eq('device_id', deviceId)
+
+    const { data, error } = await query.single()
     if (!error && data) results[sensor] = data
   }
 
   return results
 }
 
-export async function fetchTelemetryHistory(sensorType, limit = 50) {
-  const { data, error } = await supabase
+export async function fetchTelemetryHistory(sensorType, limit = 50, deviceId = null) {
+  let query = supabase
     .from('telemetry')
     .select('*')
     .eq('sensor_type', sensorType)
     .order('created_at', { ascending: false })
     .limit(limit)
+
+  if (deviceId) query = query.eq('device_id', deviceId)
+
+  const { data, error } = await query
 
   if (error) throw error
   return (data || []).reverse()

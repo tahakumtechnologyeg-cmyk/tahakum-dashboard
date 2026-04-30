@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LogOut, LayoutDashboard, LineChart, Settings, Zap, User } from 'lucide-react'
+import { LogOut, LayoutDashboard, LineChart, Settings, Zap, User, Cpu } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { useTelemetry } from '../hooks/useTelemetry'
 import SensorCard from '../components/SensorCard'
@@ -8,6 +8,7 @@ import ControlPanel from '../components/ControlPanel'
 import PowerStats from '../components/PowerStats'
 import AlertsPanel from '../components/AlertsPanel'
 import ProfilePage from '../components/ProfilePage'
+import DevicesPage from '../components/DevicesPage'
 
 const SENSOR_ORDER = ['TDS', 'TEMPERATURE', 'FLOW', 'PRESSURE', 'DIFF_PRESSURE']
 
@@ -16,6 +17,7 @@ const TABS = [
   { id: 'charts',  label: 'Trend Analysis',      shortLabel: 'Trends',  icon: LineChart },
   { id: 'control', label: 'VFD Control Panel',   shortLabel: 'Control', icon: Settings },
   { id: 'energy',  label: 'Energy Tracking',     shortLabel: 'Energy',  icon: Zap },
+  { id: 'devices', label: 'My Devices',          shortLabel: 'Devices', icon: Cpu },
   { id: 'profile', label: 'Profile',             shortLabel: 'Profile', icon: User },
 ]
 
@@ -207,6 +209,13 @@ export default function Dashboard() {
           <div className="max-w-2xl mx-auto">
             <SectionHeader title="ENERGY TRACKING" subtitle="Pump consumption data" />
             <PowerStats />
+          </div>
+        )}
+
+        {activeTab === 'devices' && (
+          <div>
+            <SectionHeader title="MY DEVICES" subtitle="Link and manage your ESP32 boards" />
+            <DevicesPage />
           </div>
         )}
 
