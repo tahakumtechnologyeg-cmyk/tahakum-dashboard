@@ -265,7 +265,7 @@ export default function OtaPage() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 680 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 680, margin: '0 auto' }}>
 
       {/* ── Safety warning ── */}
       <div style={{
