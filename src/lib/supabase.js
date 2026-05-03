@@ -68,7 +68,7 @@ export async function fetchControlState(deviceIds = []) {
 
   const { data, error } = await query.single()
   if (error && error.code !== 'PGRST116') throw error
-  return data || { pump_speed: 0, status: false, target_pressure: 3.5, id: null }
+  return data || { pump_speed: 0, status: false, target_pressure: 3.5, id: null, ota_esp32_url: null, ota_stm32_url: null }
 }
 
 export async function updateControlState(payload, deviceId = null) {

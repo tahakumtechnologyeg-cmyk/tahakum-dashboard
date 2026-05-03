@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { LogOut, LayoutDashboard, LineChart, Settings, Zap, User, Cpu, Bell, HeadphonesIcon } from 'lucide-react'
+import { LogOut, LayoutDashboard, LineChart, Settings, Zap, User, Cpu, Bell, HeadphonesIcon, Upload } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { useTelemetry } from '../hooks/useTelemetry'
 import SensorCard from '../components/SensorCard'
@@ -11,6 +11,7 @@ import ProfilePage from '../components/ProfilePage'
 import DevicesPage from '../components/DevicesPage'
 import NotificationsPage, { getNotifCount } from '../components/NotificationsPage'
 import SupportPage from '../components/SupportPage'
+import OtaPage from '../components/OtaPage'
 
 const SENSOR_ORDER = ['TDS', 'TEMPERATURE', 'FLOW', 'PRESSURE', 'DIFF_PRESSURE']
 
@@ -20,6 +21,7 @@ const TABS = [
   { id: 'control',       label: 'VFD Control Panel',   shortLabel: 'Control',       icon: Settings },
   { id: 'energy',        label: 'Energy Tracking',     shortLabel: 'Energy',        icon: Zap },
   { id: 'devices',       label: 'My Devices',          shortLabel: 'Devices',       icon: Cpu },
+  { id: 'ota',           label: 'Firmware Update',     shortLabel: 'OTA',           icon: Upload },
   { id: 'notifications', label: 'Notifications',       shortLabel: 'Alerts',        icon: Bell },
   { id: 'support',       label: 'Support',             shortLabel: 'Support',       icon: HeadphonesIcon },
   { id: 'profile',       label: 'Profile',             shortLabel: 'Profile',       icon: User },
@@ -350,6 +352,13 @@ export default function Dashboard() {
             <div>
               <SectionHeader title="MY DEVICES" subtitle="Link and manage your Takamul boards" />
               <DevicesPage />
+            </div>
+          )}
+
+          {activeTab === 'ota' && (
+            <div>
+              <SectionHeader title="FIRMWARE UPDATE" subtitle="OTA · Over-The-Air · ESP32 & STM32" />
+              <OtaPage />
             </div>
           )}
 
