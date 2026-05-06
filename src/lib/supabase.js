@@ -74,8 +74,21 @@ export async function fetchControlState(deviceIds = []) {
 export async function updateControlState(payload, deviceId = null) {
   const current = await fetchControlState(deviceId ? [deviceId] : [])
 
+  // FIX: Add force_wakeup: true so the ESP32 wakes up sooner (within 30s)
+  // instead of waiting up to 5 minutes for the next normal sleep cycle.
+  //
+  // How it works:
+  //   1. Web writes force_wakeup: true to Supabase controls table
+  //   2. ESP32 wakes up on its normal timer (worst case ~5 min away)
+  //   3. SleepManager sees force_wakeup=true → sets next sleep to 30s
+  //   4. ESP32 sends command to STM32, then sleeps only 30s
+  //   5. On next wakeup, force_wakeup is false → back to normal 5 min cycle
+  //
+  // This does NOT make it truly real-time, but worst-case delay drops
+  // from 5 minutes to 30 seconds after the first wakeup.
   const updatePayload = {
     ...payload,
+    force_wakeup: true,              // ← wake ESP32 sooner
     updated_at: new Date().toISOString(),
     ...(deviceId ? { device_id: deviceId } : {}),
   }
