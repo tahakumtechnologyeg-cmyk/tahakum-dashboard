@@ -6,8 +6,8 @@ import {
 import { SENSORS } from '../lib/thresholds'
 
 const COLORS = {
-  FLOW: { stroke: '#00D4FF', fill: '#00D4FF' },
-  PRESSURE: { stroke: '#00FF88', fill: '#00FF88' },
+  LY485_TEMP: { stroke: '#FF6B35', fill: '#FF6B35' },
+  LY485_HUM: { stroke: '#00D4FF', fill: '#00D4FF' },
 }
 
 function CustomTooltip({ active, payload, label, unit }) {

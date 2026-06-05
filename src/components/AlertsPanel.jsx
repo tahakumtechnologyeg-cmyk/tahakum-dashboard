@@ -4,16 +4,16 @@ import { SENSORS, getSensorStatus } from '../lib/thresholds'
 function getAlerts(latest) {
   const alerts = []
   const ALERT_MSGS = {
-    TDS_warning: 'TDS approaching limit — check RO membrane',
-    TDS_critical: 'HIGH TDS — contamination detected, check source water',
-    TEMPERATURE_warning: 'Water temperature elevated — check heat exchanger',
-    TEMPERATURE_critical: 'CRITICAL TEMPERATURE — risk of microbial growth',
-    FLOW_warning: 'Flow rate high — check valve positions',
-    FLOW_critical: 'FLOW RATE CRITICAL — possible pipe burst',
-    PRESSURE_warning: 'Line pressure above normal range',
-    PRESSURE_critical: 'CRITICAL PRESSURE — overpressure risk',
-    DIFF_PRESSURE_warning: 'Filter ΔP elevated — schedule maintenance',
-    DIFF_PRESSURE_critical: 'FILTER CLOGGED — immediate replacement required',
+    LY485_TEMP_warning: 'Temperature elevated — check environment',
+    LY485_TEMP_critical: 'CRITICAL TEMPERATURE — risk of equipment damage',
+    LY485_HUM_warning: 'Humidity above normal range',
+    LY485_HUM_critical: 'CRITICAL HUMIDITY — condensation risk',
+    NPK_NITROGEN_warning: 'Nitrogen level elevated',
+    NPK_NITROGEN_critical: 'CRITICAL NITROGEN — excessive fertilization',
+    NPK_PHOSPHORUS_warning: 'Phosphorus level elevated',
+    NPK_PHOSPHORUS_critical: 'CRITICAL PHOSPHORUS — environmental risk',
+    NPK_POTASSIUM_warning: 'Potassium level elevated',
+    NPK_POTASSIUM_critical: 'CRITICAL POTASSIUM — check soil conditions',
   }
 
   for (const [type, data] of Object.entries(latest)) {

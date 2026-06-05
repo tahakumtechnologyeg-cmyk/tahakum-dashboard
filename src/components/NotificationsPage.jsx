@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
-import { Bell, AlertTriangle, CheckCircle, Power, Zap, Droplets, Thermometer, Gauge, Activity, ArrowLeftRight, Trash2, BellOff } from 'lucide-react'
+import { Bell, AlertTriangle, CheckCircle, Power, Zap, Droplets, Thermometer, Leaf, Sprout, Flower2, Trash2, BellOff } from 'lucide-react'
 import { SENSORS, getSensorStatus } from '../lib/thresholds'
 import { useControls } from '../hooks/useControls'
 import AlertsPanel from './AlertsPanel'
 
 const SENSOR_ICONS = {
-  TDS: Droplets,
-  TEMPERATURE: Thermometer,
-  FLOW: Gauge,
-  PRESSURE: Activity,
-  DIFF_PRESSURE: ArrowLeftRight,
+  LY485_TEMP: Thermometer,
+  LY485_HUM: Droplets,
+  NPK_NITROGEN: Leaf,
+  NPK_PHOSPHORUS: Sprout,
+  NPK_POTASSIUM: Flower2,
 }
 
 function formatTime(iso) {
@@ -30,16 +30,16 @@ function formatDate(iso) {
 // build sensor alerts from latest telemetry
 function buildSensorAlerts(latest) {
   const ALERT_MSGS = {
-    TDS_warning: 'TDS approaching limit — check RO membrane',
-    TDS_critical: 'HIGH TDS — contamination detected',
-    TEMPERATURE_warning: 'Water temperature elevated',
-    TEMPERATURE_critical: 'CRITICAL TEMPERATURE — microbial risk',
-    FLOW_warning: 'Flow rate above normal range',
-    FLOW_critical: 'FLOW RATE CRITICAL — possible pipe burst',
-    PRESSURE_warning: 'Line pressure above normal range',
-    PRESSURE_critical: 'CRITICAL PRESSURE — overpressure risk',
-    DIFF_PRESSURE_warning: 'Filter ΔP elevated — schedule maintenance',
-    DIFF_PRESSURE_critical: 'FILTER CLOGGED — replace immediately',
+    LY485_TEMP_warning: 'Temperature elevated',
+    LY485_TEMP_critical: 'CRITICAL TEMPERATURE',
+    LY485_HUM_warning: 'Humidity above normal range',
+    LY485_HUM_critical: 'CRITICAL HUMIDITY — condensation risk',
+    NPK_NITROGEN_warning: 'Nitrogen level elevated',
+    NPK_NITROGEN_critical: 'CRITICAL NITROGEN',
+    NPK_PHOSPHORUS_warning: 'Phosphorus level elevated',
+    NPK_PHOSPHORUS_critical: 'CRITICAL PHOSPHORUS',
+    NPK_POTASSIUM_warning: 'Potassium level elevated',
+    NPK_POTASSIUM_critical: 'CRITICAL POTASSIUM',
   }
 
   const alerts = []

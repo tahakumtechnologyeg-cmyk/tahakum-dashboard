@@ -11,7 +11,7 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 
 // deviceIds = array of device_id strings belonging to the current user
 export async function fetchLatestTelemetry(deviceIds = []) {
-  const sensors = ['TDS', 'TEMPERATURE', 'FLOW', 'PRESSURE', 'DIFF_PRESSURE']
+  const sensors = ['LY485_TEMP', 'LY485_HUM', 'NPK_NITROGEN', 'NPK_PHOSPHORUS', 'NPK_POTASSIUM']
   const results = {}
 
   for (const sensor of sensors) {

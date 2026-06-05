@@ -1,7 +1,7 @@
-import { Droplets, Thermometer, Gauge, Activity, ArrowLeftRight, AlertTriangle, CheckCircle } from 'lucide-react'
+import { Droplets, Thermometer, Leaf, Sprout, Flower2, AlertTriangle, CheckCircle } from 'lucide-react'
 import { SENSORS, getSensorStatus, STATUS_COLORS } from '../lib/thresholds'
 
-const ICONS = { Droplets, Thermometer, Gauge, Activity, ArrowLeftRight }
+const ICONS = { Droplets, Thermometer, Leaf, Sprout, Flower2 }
 
 export default function SensorCard({ sensorType, data }) {
   const cfg = SENSORS[sensorType]
@@ -99,16 +99,22 @@ export default function SensorCard({ sensorType, data }) {
       </div>
 
       {/* Alert message */}
-      {status === 'critical' && sensorType === 'DIFF_PRESSURE' && (
+      {status === 'critical' && sensorType === 'LY485_TEMP' && (
         <div className="mt-3 flex items-center gap-2 bg-scada-red/10 border border-scada-red/30 rounded px-3 py-2">
           <AlertTriangle className="w-3 h-3 text-scada-red shrink-0" />
-          <span className="font-mono text-xs text-scada-red">FILTER CLOGGING — MAINTENANCE REQUIRED</span>
+          <span className="font-mono text-xs text-scada-red">CRITICAL TEMPERATURE — CHECK ENVIRONMENT</span>
         </div>
       )}
-      {status === 'critical' && sensorType === 'TDS' && (
+      {status === 'critical' && sensorType === 'LY485_HUM' && (
         <div className="mt-3 flex items-center gap-2 bg-scada-red/10 border border-scada-red/30 rounded px-3 py-2">
           <AlertTriangle className="w-3 h-3 text-scada-red shrink-0" />
-          <span className="font-mono text-xs text-scada-red">HIGH CONTAMINATION — CHECK SOURCE</span>
+          <span className="font-mono text-xs text-scada-red">CRITICAL HUMIDITY — CONDENSATION RISK</span>
+        </div>
+      )}
+      {status === 'critical' && sensorType.startsWith('NPK_') && (
+        <div className="mt-3 flex items-center gap-2 bg-scada-red/10 border border-scada-red/30 rounded px-3 py-2">
+          <AlertTriangle className="w-3 h-3 text-scada-red shrink-0" />
+          <span className="font-mono text-xs text-scada-red">NPK LEVEL CRITICAL — CHECK SOIL CONDITIONS</span>
         </div>
       )}
 

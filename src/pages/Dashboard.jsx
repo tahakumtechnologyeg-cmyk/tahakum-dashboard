@@ -13,7 +13,7 @@ import NotificationsPage, { getNotifCount } from '../components/NotificationsPag
 import SupportPage from '../components/SupportPage'
 import OtaPage from '../components/OtaPage'
 
-const SENSOR_ORDER = ['TDS', 'TEMPERATURE', 'FLOW', 'PRESSURE', 'DIFF_PRESSURE']
+const SENSOR_ORDER = ['LY485_TEMP', 'LY485_HUM', 'NPK_NITROGEN', 'NPK_PHOSPHORUS', 'NPK_POTASSIUM']
 
 const TABS = [
   { id: 'sensors',       label: 'Sensor Overview',    shortLabel: 'Sensors',       icon: LayoutDashboard },
@@ -320,8 +320,8 @@ export default function Dashboard() {
                 <NoDevicesBanner onGoToDevices={() => switchTab('devices')} />
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  <LiveChart sensorType="FLOW" data={history.FLOW} title="FLOW RATE" />
-                  <LiveChart sensorType="PRESSURE" data={history.PRESSURE} title="LINE PRESSURE" />
+                  <LiveChart sensorType="LY485_TEMP" data={history.LY485_TEMP} title="TEMPERATURE" />
+                  <LiveChart sensorType="LY485_HUM" data={history.LY485_HUM} title="HUMIDITY" />
                 </div>
               )}
             </div>
