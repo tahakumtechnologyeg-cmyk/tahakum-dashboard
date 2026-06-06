@@ -1,28 +1,4 @@
 export const SENSORS = {
-  LY485_TEMP: {
-    label: 'TEMP',
-    fullLabel: 'Ambient Temperature',
-    unit: '°C',
-    icon: 'Thermometer',
-    warningThreshold: 40,
-    criticalThreshold: 50,
-    min: -40,
-    max: 80,
-    normalRange: [15, 35],
-    description: 'LY485 temperature sensor',
-  },
-  LY485_HUM: {
-    label: 'HUM',
-    fullLabel: 'Relative Humidity',
-    unit: '%RH',
-    icon: 'Droplets',
-    warningThreshold: 85,
-    criticalThreshold: 95,
-    min: 0,
-    max: 100,
-    normalRange: [30, 80],
-    description: 'LY485 humidity sensor',
-  },
   NPK_NITROGEN: {
     label: 'N',
     fullLabel: 'Nitrogen Content',

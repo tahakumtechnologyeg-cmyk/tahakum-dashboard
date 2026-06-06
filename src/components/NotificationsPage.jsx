@@ -1,12 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
-import { Bell, AlertTriangle, CheckCircle, Power, Zap, Droplets, Thermometer, Leaf, Sprout, Flower2, Trash2, BellOff } from 'lucide-react'
+import { Bell, AlertTriangle, CheckCircle, Power, Zap, Leaf, Sprout, Flower2, Trash2, BellOff } from 'lucide-react'
 import { SENSORS, getSensorStatus } from '../lib/thresholds'
 import { useControls } from '../hooks/useControls'
 import AlertsPanel from './AlertsPanel'
 
 const SENSOR_ICONS = {
-  LY485_TEMP: Thermometer,
-  LY485_HUM: Droplets,
   NPK_NITROGEN: Leaf,
   NPK_PHOSPHORUS: Sprout,
   NPK_POTASSIUM: Flower2,
@@ -30,10 +28,6 @@ function formatDate(iso) {
 // build sensor alerts from latest telemetry
 function buildSensorAlerts(latest) {
   const ALERT_MSGS = {
-    LY485_TEMP_warning: 'Temperature elevated',
-    LY485_TEMP_critical: 'CRITICAL TEMPERATURE',
-    LY485_HUM_warning: 'Humidity above normal range',
-    LY485_HUM_critical: 'CRITICAL HUMIDITY — condensation risk',
     NPK_NITROGEN_warning: 'Nitrogen level elevated',
     NPK_NITROGEN_critical: 'CRITICAL NITROGEN',
     NPK_PHOSPHORUS_warning: 'Phosphorus level elevated',

@@ -5,9 +5,14 @@ import {
 } from 'recharts'
 import { SENSORS } from '../lib/thresholds'
 
-const COLORS = {
-  LY485_TEMP: { stroke: '#FF6B35', fill: '#FF6B35' },
-  LY485_HUM: { stroke: '#00D4FF', fill: '#00D4FF' },
+const NPK_COLORS = ['#00E676', '#FF6B35', '#00D4FF']
+const COLOR_MAP = {}
+let colorIdx = 0
+function getColor(sensorType) {
+  if (!COLOR_MAP[sensorType]) {
+    COLOR_MAP[sensorType] = NPK_COLORS[colorIdx++ % NPK_COLORS.length]
+  }
+  return { stroke: COLOR_MAP[sensorType], fill: COLOR_MAP[sensorType] }
 }
 
 function CustomTooltip({ active, payload, label, unit }) {
@@ -25,7 +30,7 @@ function CustomTooltip({ active, payload, label, unit }) {
 
 export default function LiveChart({ sensorType, data, title }) {
   const cfg = SENSORS[sensorType]
-  const color = COLORS[sensorType] || { stroke: '#00D4FF', fill: '#00D4FF' }
+  const color = getColor(sensorType)
 
   const chartData = useMemo(() =>
     (data || []).map(d => ({

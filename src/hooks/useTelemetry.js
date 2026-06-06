@@ -8,7 +8,7 @@ const HISTORY_MAX = 60
 export function useTelemetry() {
   const { devices, loading: devicesLoading } = useDevices()
   const [latest, setLatest]   = useState({})
-  const [history, setHistory] = useState({ LY485_TEMP: [], LY485_HUM: [] })
+  const [history, setHistory] = useState({})
   const [connected, setConnected] = useState(false)
   const intervalRef = useRef(null)
 
@@ -16,7 +16,6 @@ export function useTelemetry() {
   const deviceIds = devices.map(d => d.device_id)
 
   const appendHistory = useCallback((sensorType, entry) => {
-    if (sensorType !== 'LY485_TEMP' && sensorType !== 'LY485_HUM') return
     setHistory(prev => {
       const arr = [...(prev[sensorType] || []), { time: entry.created_at, value: entry.value }]
       return { ...prev, [sensorType]: arr.slice(-HISTORY_MAX) }
@@ -25,10 +24,6 @@ export function useTelemetry() {
 
   useEffect(() => {
     if (DEMO_MODE) {
-      setHistory({
-        LY485_TEMP: getDemoHistory('LY485_TEMP'),
-        LY485_HUM: getDemoHistory('LY485_HUM'),
-      })
       setLatest(getDemoSensorData())
       setConnected(true)
 
@@ -36,10 +31,14 @@ export function useTelemetry() {
         const data = getDemoSensorData()
         setLatest(data)
         const now = new Date().toISOString()
-        setHistory(prev => ({
-          LY485_TEMP: [...prev.LY485_TEMP, { time: now, value: data.LY485_TEMP.value }].slice(-HISTORY_MAX),
-          LY485_HUM:  [...prev.LY485_HUM,  { time: now, value: data.LY485_HUM.value }].slice(-HISTORY_MAX),
-        }))
+        setHistory(prev => {
+          const next = { ...prev }
+          Object.entries(data).forEach(([type, entry]) => {
+            const arr = [...(next[type] || []), { time: now, value: entry.value }].slice(-HISTORY_MAX)
+            next[type] = arr
+          })
+          return next
+        })
       }, 5000)
 
       return () => clearInterval(intervalRef.current)
@@ -51,27 +50,27 @@ export function useTelemetry() {
     // If user has no devices linked — show empty state
     if (deviceIds.length === 0) {
       setLatest({})
-      setHistory({ LY485_TEMP: [], LY485_HUM: [] })
+      setHistory({})
       setConnected(false)
       return
     }
 
-    async function init() {
-      try {
-        const data = await fetchLatestTelemetry(deviceIds)
-        setLatest(data)
+      async function init() {
+        try {
+          const data = await fetchLatestTelemetry(deviceIds)
+          setLatest(data)
 
-        const [tempHist, humHist] = await Promise.all([
-          fetchTelemetryHistory('LY485_TEMP', 50, deviceIds),
-          fetchTelemetryHistory('LY485_HUM',  50, deviceIds),
-        ])
+          const sensorTypes = ['NPK_NITROGEN', 'NPK_PHOSPHORUS', 'NPK_POTASSIUM']
+          const histResults = await Promise.all(
+            sensorTypes.map(t => fetchTelemetryHistory(t, 50, deviceIds))
+          )
+          const historyMap = {}
+          sensorTypes.forEach((t, i) => {
+            historyMap[t] = histResults[i].map(r => ({ time: r.created_at, value: r.value }))
+          })
+          setHistory(historyMap)
 
-        setHistory({
-          LY485_TEMP: tempHist.map(r => ({ time: r.created_at, value: r.value })),
-          LY485_HUM:  humHist.map(r  => ({ time: r.created_at, value: r.value })),
-        })
-
-        setConnected(true)
+          setConnected(true)
       } catch (e) {
         console.error('Telemetry init error:', e)
       }

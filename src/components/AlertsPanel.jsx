@@ -4,10 +4,6 @@ import { SENSORS, getSensorStatus } from '../lib/thresholds'
 function getAlerts(latest) {
   const alerts = []
   const ALERT_MSGS = {
-    LY485_TEMP_warning: 'Temperature elevated — check environment',
-    LY485_TEMP_critical: 'CRITICAL TEMPERATURE — risk of equipment damage',
-    LY485_HUM_warning: 'Humidity above normal range',
-    LY485_HUM_critical: 'CRITICAL HUMIDITY — condensation risk',
     NPK_NITROGEN_warning: 'Nitrogen level elevated',
     NPK_NITROGEN_critical: 'CRITICAL NITROGEN — excessive fertilization',
     NPK_PHOSPHORUS_warning: 'Phosphorus level elevated',
