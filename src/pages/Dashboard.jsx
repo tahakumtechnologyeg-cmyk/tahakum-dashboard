@@ -13,7 +13,7 @@ import NotificationsPage, { getNotifCount } from '../components/NotificationsPag
 import SupportPage from '../components/SupportPage'
 import OtaPage from '../components/OtaPage'
 
-const SENSOR_ORDER = ['NPK_NITROGEN', 'NPK_PHOSPHORUS', 'NPK_POTASSIUM']
+const SENSOR_ORDER = ['NPK_NITROGEN', 'NPK_PHOSPHORUS', 'NPK_POTASSIUM', 'PRESSURE']
 
 const TABS = [
   { id: 'sensors',       label: 'Sensor Overview',    shortLabel: 'Sensors',       icon: LayoutDashboard },
@@ -323,6 +323,7 @@ export default function Dashboard() {
                   <LiveChart sensorType="NPK_NITROGEN" data={history.NPK_NITROGEN} title="NITROGEN (N)" />
                   <LiveChart sensorType="NPK_PHOSPHORUS" data={history.NPK_PHOSPHORUS} title="PHOSPHORUS (P)" />
                   <LiveChart sensorType="NPK_POTASSIUM" data={history.NPK_POTASSIUM} title="POTASSIUM (K)" />
+                  <LiveChart sensorType="PRESSURE" data={history.PRESSURE} title="PRESSURE (bar)" />
                 </div>
               )}
             </div>

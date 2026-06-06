@@ -10,6 +10,8 @@ function getAlerts(latest) {
     NPK_PHOSPHORUS_critical: 'CRITICAL PHOSPHORUS — environmental risk',
     NPK_POTASSIUM_warning: 'Potassium level elevated',
     NPK_POTASSIUM_critical: 'CRITICAL POTASSIUM — check soil conditions',
+    PRESSURE_warning: 'Pressure elevated',
+    PRESSURE_critical: 'CRITICAL PRESSURE — risk of pipe damage',
   }
 
   for (const [type, data] of Object.entries(latest)) {

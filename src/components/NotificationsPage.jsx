@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Bell, AlertTriangle, CheckCircle, Power, Zap, Leaf, Sprout, Flower2, Trash2, BellOff } from 'lucide-react'
+import { Bell, AlertTriangle, CheckCircle, Power, Zap, Leaf, Sprout, Flower2, Gauge, Trash2, BellOff } from 'lucide-react'
 import { SENSORS, getSensorStatus } from '../lib/thresholds'
 import { useControls } from '../hooks/useControls'
 import AlertsPanel from './AlertsPanel'
@@ -8,6 +8,7 @@ const SENSOR_ICONS = {
   NPK_NITROGEN: Leaf,
   NPK_PHOSPHORUS: Sprout,
   NPK_POTASSIUM: Flower2,
+  PRESSURE: Gauge,
 }
 
 function formatTime(iso) {
@@ -34,6 +35,8 @@ function buildSensorAlerts(latest) {
     NPK_PHOSPHORUS_critical: 'CRITICAL PHOSPHORUS',
     NPK_POTASSIUM_warning: 'Potassium level elevated',
     NPK_POTASSIUM_critical: 'CRITICAL POTASSIUM',
+    PRESSURE_warning: 'Pressure elevated',
+    PRESSURE_critical: 'CRITICAL PRESSURE',
   }
 
   const alerts = []

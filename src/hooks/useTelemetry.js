@@ -60,7 +60,7 @@ export function useTelemetry() {
           const data = await fetchLatestTelemetry(deviceIds)
           setLatest(data)
 
-          const sensorTypes = ['NPK_NITROGEN', 'NPK_PHOSPHORUS', 'NPK_POTASSIUM']
+          const sensorTypes = ['NPK_NITROGEN', 'NPK_PHOSPHORUS', 'NPK_POTASSIUM', 'PRESSURE']
           const histResults = await Promise.all(
             sensorTypes.map(t => fetchTelemetryHistory(t, 50, deviceIds))
           )

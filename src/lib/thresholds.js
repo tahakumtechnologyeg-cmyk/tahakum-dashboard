@@ -1,4 +1,16 @@
 export const SENSORS = {
+  PRESSURE: {
+    label: 'PRES',
+    fullLabel: 'Water Pressure',
+    unit: 'bar',
+    icon: 'Gauge',
+    warningThreshold: 8,
+    criticalThreshold: 9.5,
+    min: 0,
+    max: 10,
+    normalRange: [1, 5],
+    description: 'LEFOO T2XXX pressure transmitter',
+  },
   NPK_NITROGEN: {
     label: 'N',
     fullLabel: 'Nitrogen Content',

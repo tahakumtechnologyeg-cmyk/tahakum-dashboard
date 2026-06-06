@@ -1,7 +1,7 @@
-import { Leaf, Sprout, Flower2, AlertTriangle, CheckCircle } from 'lucide-react'
+import { Leaf, Sprout, Flower2, Gauge, AlertTriangle, CheckCircle } from 'lucide-react'
 import { SENSORS, getSensorStatus, STATUS_COLORS } from '../lib/thresholds'
 
-const ICONS = { Leaf, Sprout, Flower2 }
+const ICONS = { Leaf, Sprout, Flower2, Gauge }
 
 export default function SensorCard({ sensorType, data }) {
   const cfg = SENSORS[sensorType]
