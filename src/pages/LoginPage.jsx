@@ -1,6 +1,43 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useAuth } from '../hooks/useAuth'
-import { Lock, User, AlertCircle, Eye, EyeOff, UserPlus } from 'lucide-react'
+import { Lock, User, AlertCircle, Eye, EyeOff, UserPlus, Cpu } from 'lucide-react'
+
+function Particles() {
+  const circles = useMemo(() => {
+    return Array.from({ length: 20 }, (_, i) => ({
+      id: i,
+      size: 4 + Math.random() * 6,
+      left: Math.random() * 100,
+      delay: Math.random() * 8,
+      duration: 10 + Math.random() * 12,
+      opacity: 0.15 + Math.random() * 0.35,
+    }))
+  }, [])
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {circles.map(c => (
+        <div
+          key={c.id}
+          className="absolute rounded-full"
+          style={{
+            width: c.size,
+            height: c.size,
+            left: `${c.left}%`,
+            bottom: '-10px',
+            background: c.id % 3 === 0
+              ? 'rgba(0, 180, 255, 0.6)'
+              : c.id % 3 === 1
+                ? 'rgba(100, 210, 255, 0.4)'
+                : 'rgba(185, 64, 64, 0.3)',
+            animation: `particleRise ${c.duration}s ease-in-out ${c.delay}s infinite`,
+            opacity: 0,
+          }}
+        />
+      ))}
+    </div>
+  )
+}
 
 export default function LoginPage() {
   const { signIn, signUp, loading, error } = useAuth()
@@ -69,9 +106,11 @@ export default function LoginPage() {
         background: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.025) 3px, rgba(0,0,0,0.025) 4px)'
       }} />
 
+      <Particles />
+
       {/* Card */}
-      <div className="relative z-10 w-full max-w-md px-5">
-        <div style={{
+      <div className="relative z-10 w-full max-w-md px-5 animate-slideUp">
+        <div className="animate-borderGlow" style={{
           border: '1px solid rgba(0,180,255,0.35)',
           borderRadius: '16px',
           padding: '2.5rem 2rem',
@@ -83,7 +122,7 @@ export default function LoginPage() {
           {/* Logo */}
           <div className="text-center mb-7">
             <div className="flex justify-center mb-4">
-              <div style={{
+              <div className="animate-logoPulse" style={{
                 width: 64, height: 64, borderRadius: 14,
                 background: 'linear-gradient(135deg, #B94040, #8B2020)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -168,8 +207,10 @@ export default function LoginPage() {
                     onChange={e => setPassword(e.target.value)}
                     required
                     placeholder="••••••••"
-                    className="w-full rounded-lg pl-10 pr-10 py-3 font-mono text-sm focus:outline-none"
-                    style={{ background: 'rgba(0,30,70,0.6)', border: '1px solid rgba(0,150,220,0.3)', color: '#E0F4FF' }}
+                    className="w-full rounded-lg pl-10 pr-10 py-3 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-scada-accent/50"
+                    style={{ background: 'rgba(0,30,70,0.6)', border: '1px solid rgba(0,150,220,0.3)', color: '#E0F4FF', transition: 'border-color 0.2s, box-shadow 0.2s' }}
+                    onFocus={e => e.currentTarget.style.borderColor = 'rgba(0,200,255,0.7)'}
+                    onBlur={e => e.currentTarget.style.borderColor = 'rgba(0,150,220,0.3)'}
                   />
                   <button type="button" onClick={() => setShowPass(p => !p)}
                     className="absolute right-3 top-1/2 -translate-y-1/2"
@@ -204,12 +245,13 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full font-display font-bold text-sm tracking-widest py-3 rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                className={`w-full font-display font-bold text-sm tracking-widest py-3 rounded-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 ${!loading ? 'card-hover' : ''}`}
                 style={{
                   background: 'linear-gradient(135deg, rgba(0,140,220,0.9), rgba(0,100,180,0.9))',
                   color: '#E0F4FF',
                   border: '1px solid rgba(0,200,255,0.4)',
                   boxShadow: '0 0 24px rgba(0,160,255,0.3)',
+                  animation: loading ? 'none' : 'pulseGlow 2.5s ease-in-out infinite',
                 }}
               >
                 {loading ? (
@@ -267,8 +309,10 @@ function InputField({ label, type, value, onChange, placeholder, icon: Icon }) {
           onChange={e => onChange(e.target.value)}
           required
           placeholder={placeholder}
-          className="w-full rounded-lg pl-10 pr-4 py-3 font-mono text-sm focus:outline-none"
-          style={{ background: 'rgba(0,30,70,0.6)', border: '1px solid rgba(0,150,220,0.3)', color: '#E0F4FF' }}
+          className="w-full rounded-lg pl-10 pr-4 py-3 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-scada-accent/50"
+          style={{ background: 'rgba(0,30,70,0.6)', border: '1px solid rgba(0,150,220,0.3)', color: '#E0F4FF', transition: 'border-color 0.2s, box-shadow 0.2s' }}
+          onFocus={e => e.currentTarget.style.borderColor = 'rgba(0,200,255,0.7)'}
+          onBlur={e => e.currentTarget.style.borderColor = 'rgba(0,150,220,0.3)'}
         />
       </div>
     </div>

@@ -24,7 +24,7 @@ export default function SensorCard({ sensorType, data }) {
 
   return (
     <div
-      className={`relative bg-scada-panel border rounded-xl p-5 overflow-hidden transition-all duration-500 ${colors.border} ${colors.bg}`}
+      className={`card-hover relative bg-scada-panel border rounded-xl p-5 overflow-hidden transition-all duration-500 ${colors.border} ${colors.bg}`}
       style={{ boxShadow: isAlert ? colors.glow : '0 2px 16px rgba(0,0,0,0.4)' }}>
 
       {/* Animated border for critical */}

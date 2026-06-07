@@ -60,7 +60,7 @@ export default function ControlPanel() {
       )}
 
       {/* Pump ON/OFF */}
-      <div className={`bg-scada-panel border rounded-xl p-5 transition-all duration-300 ${
+      <div className={`card-hover bg-scada-panel border rounded-xl p-5 transition-all duration-300 ${
         controls?.status ? 'border-scada-green/30' : 'border-scada-border'
       }`} style={controls?.status ? { boxShadow: '0 0 20px rgba(0,255,136,0.15)' } : {}}>
 
@@ -98,7 +98,7 @@ export default function ControlPanel() {
       </div>
 
       {/* VFD Frequency */}
-      <div className="bg-scada-panel border border-scada-border rounded-xl p-5">
+      <div className="card-hover bg-scada-panel border border-scada-border rounded-xl p-5">
         <div className="flex items-center gap-2 mb-4">
           <Cpu className="w-4 h-4 text-scada-accent" />
           <span className="font-display text-xs font-bold tracking-widest text-scada-text">VFD FREQUENCY</span>
@@ -170,7 +170,7 @@ export default function ControlPanel() {
       </div>
 
       {/* Target Pressure */}
-      <div className="bg-scada-panel border border-scada-border rounded-xl p-5">
+      <div className="card-hover bg-scada-panel border border-scada-border rounded-xl p-5">
         <div className="flex items-center gap-2 mb-4">
           <Target className="w-4 h-4 text-scada-green" />
           <span className="font-display text-xs font-bold tracking-widest text-scada-text">TARGET PRESSURE</span>

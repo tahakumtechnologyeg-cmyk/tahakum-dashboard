@@ -69,7 +69,7 @@ export default function PowerStats() {
   const loadPct  = Math.round(Math.pow(pumpHz / VFD_MAX_HZ, 3) * 100)
 
   return (
-    <div className="bg-scada-panel border border-scada-border rounded-xl p-5 space-y-4">
+    <div className="card-hover bg-scada-panel border border-scada-border rounded-xl p-5 space-y-4">
 
       {/* Header */}
       <div className="flex items-center justify-between">

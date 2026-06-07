@@ -56,7 +56,7 @@ function AutomationBg() {
 
 function SectionHeader({ title, subtitle }) {
   return (
-    <div className="flex items-center justify-between pb-1 border-b border-white/20 mb-4">
+    <div className="flex items-center justify-between pb-1 border-b border-white/20 mb-4 animate-slideDown">
       <div>
         <h2 className="font-display text-xs font-bold tracking-widest text-white">{title}</h2>
         {subtitle && <p className="font-body text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.75)' }}>{subtitle}</p>}
@@ -68,13 +68,15 @@ function SectionHeader({ title, subtitle }) {
 
 function NoDevicesBanner({ onGoToDevices }) {
   return (
-    <div style={{
-      display: 'flex', flexDirection: 'column', alignItems: 'center',
-      justifyContent: 'center', padding: '48px 24px', textAlign: 'center',
-      background: 'rgba(255,255,255,0.06)', borderRadius: 16,
-      border: '1px dashed rgba(255,255,255,0.2)', marginTop: 16,
-    }}>
-      <div style={{ fontSize: 48, marginBottom: 16 }}>🔌</div>
+    <div className="animate-scaleIn flex flex-col items-center justify-center text-center mt-4"
+      style={{
+        padding: '48px 24px',
+        background: 'rgba(255,255,255,0.06)', borderRadius: 16,
+        border: '1px dashed rgba(255,255,255,0.2)',
+      }}>
+      <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4 border-2 border-dashed border-white/20">
+        <Cpu className="w-6 h-6" style={{ color: 'rgba(255,255,255,0.35)' }} />
+      </div>
       <h3 className="font-mono font-bold text-sm tracking-widest" style={{ color: '#FBF7EF', marginBottom: 8 }}>
         NO DEVICE LINKED
       </h3>
@@ -83,14 +85,13 @@ function NoDevicesBanner({ onGoToDevices }) {
       </p>
       <button
         onClick={onGoToDevices}
+        className="card-hover"
         style={{
           padding: '10px 24px', borderRadius: 10, cursor: 'pointer',
           background: '#B94040', color: '#FBF7EF', border: 'none',
           fontFamily: 'monospace', fontSize: 12, fontWeight: 700,
-          letterSpacing: '0.08em', transition: 'opacity 0.2s',
+          letterSpacing: '0.08em',
         }}
-        onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
-        onMouseLeave={e => e.currentTarget.style.opacity = '1'}
       >
         + ADD DEVICE
       </button>
@@ -203,11 +204,12 @@ export default function Dashboard() {
           padding: '0 16px', gap: 10, flexShrink: 0,
           borderBottom: '1px solid rgba(255,255,255,0.1)',
         }}>
-          <div className="flex flex-col gap-[5px]" onClick={() => setDrawerOpen(false)} style={{ cursor: 'pointer' }}>
+          <button onClick={() => setDrawerOpen(false)} aria-label="Close menu"
+            style={{ display: 'flex', flexDirection: 'column', gap: 5, cursor: 'pointer', background: 'none', border: 'none', padding: 0 }}>
             <span className="block w-5 h-0.5 rounded" style={{ background: '#FBF7EF', transform: 'rotate(45deg) translateY(6px)', transition: 'transform 0.3s' }} />
             <span className="block w-5 h-0.5 rounded" style={{ background: '#FBF7EF', opacity: 0, transition: 'opacity 0.3s' }} />
             <span className="block w-5 h-0.5 rounded" style={{ background: '#FBF7EF', transform: 'rotate(-45deg) translateY(-6px)', transition: 'transform 0.3s' }} />
-          </div>
+          </button>
           <span className="font-mono text-xs font-bold tracking-widest" style={{ color: '#FBF7EF' }}>MENU</span>
         </div>
 
@@ -237,6 +239,8 @@ export default function Dashboard() {
                 transition: `transform 0.3s cubic-bezier(0.4,0,0.2,1) ${index * 35}ms, opacity 0.3s ease ${index * 35}ms, background 0.15s, color 0.15s`,
                 position: 'relative',
               }}
+              onMouseEnter={e => { if (activeTab !== id) { e.currentTarget.style.background = 'rgba(255,255,255,0.06)' } }}
+              onMouseLeave={e => { if (activeTab !== id) { e.currentTarget.style.background = 'transparent' } }}
             >
               <Icon style={{ width: 16, height: 16, flexShrink: 0 }} />
               <span style={{ flex: 1 }}>{label}</span>
@@ -298,6 +302,7 @@ export default function Dashboard() {
               : 'opacity 0.28s ease-out, transform 0.28s ease-out',
           }}
         >
+          <div key={activeTab} className="animate-fadeIn">
           {activeTab === 'sensors' && (
             <div>
               <SectionHeader title="SENSOR OVERVIEW" subtitle="Real-time monitoring · 5s interval" />
@@ -305,8 +310,10 @@ export default function Dashboard() {
                 <NoDevicesBanner onGoToDevices={() => switchTab('devices')} />
               ) : (
                 <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
-                  {SENSOR_ORDER.map(type => (
-                    <SensorCard key={type} sensorType={type} data={latest[type]} />
+                  {SENSOR_ORDER.map((type, i) => (
+                    <div key={type} className={`animate-slideUp stagger-${i + 1}`}>
+                      <SensorCard sensorType={type} data={latest[type]} />
+                    </div>
                   ))}
                 </div>
               )}
@@ -320,17 +327,23 @@ export default function Dashboard() {
                 <NoDevicesBanner onGoToDevices={() => switchTab('devices')} />
               ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                  <LiveChart sensorType="NPK_NITROGEN" data={history.NPK_NITROGEN} title="NITROGEN (N)" />
-                  <LiveChart sensorType="NPK_PHOSPHORUS" data={history.NPK_PHOSPHORUS} title="PHOSPHORUS (P)" />
-                  <LiveChart sensorType="NPK_POTASSIUM" data={history.NPK_POTASSIUM} title="POTASSIUM (K)" />
-                  <LiveChart sensorType="PRESSURE" data={history.PRESSURE} title="PRESSURE (bar)" />
+                  {[
+                    ['NPK_NITROGEN', 'NITROGEN (N)'],
+                    ['NPK_PHOSPHORUS', 'PHOSPHORUS (P)'],
+                    ['NPK_POTASSIUM', 'POTASSIUM (K)'],
+                    ['PRESSURE', 'PRESSURE (bar)'],
+                  ].map(([type, title], i) => (
+                    <div key={type} className={`animate-slideUp stagger-${i + 1}`}>
+                      <LiveChart sensorType={type} data={history[type]} title={title} />
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
           )}
 
           {activeTab === 'control' && (
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-2xl mx-auto animate-slideUp">
               {!hasDevices ? (
                 <NoDevicesBanner onGoToDevices={() => switchTab('devices')} />
               ) : (
@@ -340,7 +353,7 @@ export default function Dashboard() {
           )}
 
           {activeTab === 'energy' && (
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-2xl mx-auto animate-slideUp">
               <SectionHeader title="ENERGY TRACKING" subtitle="Pump consumption data" />
               {!hasDevices ? (
                 <NoDevicesBanner onGoToDevices={() => switchTab('devices')} />
@@ -351,39 +364,40 @@ export default function Dashboard() {
           )}
 
           {activeTab === 'devices' && (
-            <div>
+            <div className="animate-slideUp">
               <SectionHeader title="MY DEVICES" subtitle="Link and manage your Takamul boards" />
               <DevicesPage />
             </div>
           )}
 
           {activeTab === 'ota' && (
-            <div>
+            <div className="animate-slideUp">
               <SectionHeader title="FIRMWARE UPDATE" subtitle="OTA · Over-The-Air · ESP32 & STM32" />
               <OtaPage />
             </div>
           )}
 
           {activeTab === 'profile' && (
-            <div className="max-w-xl mx-auto">
+            <div className="max-w-xl mx-auto animate-slideUp">
               <SectionHeader title="PROFILE" subtitle="Manage your account" />
               <ProfilePage />
             </div>
           )}
 
           {activeTab === 'notifications' && (
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-2xl mx-auto animate-slideUp">
               <SectionHeader title="NOTIFICATIONS" subtitle="Sensor alerts & motor events" />
               <NotificationsPage latest={latest} />
             </div>
           )}
 
           {activeTab === 'support' && (
-            <div className="max-w-xl mx-auto">
+            <div className="max-w-xl mx-auto animate-slideUp">
               <SectionHeader title="SUPPORT" subtitle="Get help from the Takamul team" />
               <SupportPage />
             </div>
           )}
+          </div>
         </main>
       </div>
     </div>

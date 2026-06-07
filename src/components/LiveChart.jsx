@@ -46,7 +46,7 @@ export default function LiveChart({ sensorType, data, title }) {
   const critLine = cfg?.criticalThreshold
 
   return (
-    <div className="bg-scada-panel border border-scada-border rounded-xl p-5">
+    <div className="card-hover bg-scada-panel border border-scada-border rounded-xl p-5">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h3 className="font-display text-sm font-bold tracking-widest text-scada-text">{title}</h3>

@@ -39,7 +39,7 @@ export default function AlertsPanel({ latest }) {
 
   if (alerts.length === 0) {
     return (
-      <div className="bg-scada-panel border border-scada-border rounded-xl p-5">
+      <div className="card-hover bg-scada-panel border border-scada-border rounded-xl p-5">
         <div className="flex items-center gap-2 mb-4">
           <Bell className="w-4 h-4 text-scada-muted" />
           <span className="font-display text-xs font-bold tracking-widest text-scada-text">SYSTEM ALERTS</span>
