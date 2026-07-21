@@ -19,13 +19,27 @@ export default function OutputCard({ output, onDelete }) {
   const { t } = useI18n()
   const cfg = TYPE_CONFIG[output.outputType] || TYPE_CONFIG.other
   const Icon = cfg.icon
+  const storageKey = `outputState_${output.id}`
 
-  const [on, setOn] = useState(false)
-  const [speed, setSpeed] = useState(output.outputType === 'vfd' ? 25 : 0)
-  const [direction, setDirection] = useState('forward')
+  const [on, setOn] = useState(() => {
+    try { const v = JSON.parse(localStorage.getItem(storageKey)); return v?.on ?? false }
+    catch { return false }
+  })
+  const [speed, setSpeed] = useState(() => {
+    try { const v = JSON.parse(localStorage.getItem(storageKey)); return v?.speed ?? (output.outputType === 'vfd' ? 25 : 0) }
+    catch { return output.outputType === 'vfd' ? 25 : 0 }
+  })
+  const [direction, setDirection] = useState(() => {
+    try { const v = JSON.parse(localStorage.getItem(storageKey)); return v?.direction ?? 'forward' }
+    catch { return 'forward' }
+  })
   const [daily, setDaily] = useState(0)
   const [weekly, setWeekly] = useState(0)
   const [monthly, setMonthly] = useState(0)
+
+  useEffect(() => {
+    localStorage.setItem(storageKey, JSON.stringify({ on, speed, direction }))
+  }, [on, speed, direction, storageKey])
 
   const intervalRef = useRef(null)
 
