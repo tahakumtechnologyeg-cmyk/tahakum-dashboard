@@ -369,7 +369,7 @@ export default function Dashboard() {
           {activeTab === 'energy' && (
             <div className="max-w-2xl mx-auto animate-slideUp">
               <SectionHeader title={t('dashboard.energy')} subtitle={t('dashboard.energySub')} />
-              {!hasDevices ? <NoDevicesBanner onGoToDevices={() => switchTab('devices')} /> : <PowerStats />}
+              {!hasDevices ? <NoDevicesBanner onGoToDevices={() => switchTab('devices')} /> : <PowerStats outputs={activeOutputs} />}
             </div>
           )}
 

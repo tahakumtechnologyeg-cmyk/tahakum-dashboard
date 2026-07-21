@@ -1,20 +1,27 @@
 import { useMemo } from 'react'
-import { Zap, Clock, Sun, Calendar, BarChart3, Activity, TrendingUp } from 'lucide-react'
+import { Zap, Clock, Sun, Calendar, BarChart3, Activity } from 'lucide-react'
 import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis,
   CartesianGrid, Tooltip, Cell
 } from 'recharts'
-import { useControls } from '../hooks/useControls'
 
-// ─── غيّر القيم دي حسب موتورك ───────────────────────────────────────────────
-const MOTOR_RATED_KW = 45    // قدرة الموتور بالـ kW
-const VFD_MAX_HZ     = 50    // أقصى تردد للـ VFD
-const EFFICIENCY     = 0.92  // كفاءة الموتور + الـ VFD
+const OUTPUT_RATED_KW = { vfd: 45, motor: 30, relay: 0.5, contactor: 5, led: 0.1, valve: 0.3, other: 1 }
+const VFD_MAX_HZ = 50
 
-// Affinity Law: P = P_rated × (Hz/Hz_max)³ ÷ η
-function calcPowerKW(hz) {
-  if (!hz || hz <= 0) return 0
-  return +((MOTOR_RATED_KW * Math.pow(hz / VFD_MAX_HZ, 3)) / EFFICIENCY).toFixed(2)
+function calcPowerKW(outputType, hz, on) {
+  if (!on || !hz || hz <= 0) return 0
+  const rated = OUTPUT_RATED_KW[outputType] || 1
+  if (outputType === 'vfd' || outputType === 'motor') {
+    return +((rated * Math.pow(hz / VFD_MAX_HZ, 3)) / 0.92).toFixed(2)
+  }
+  return rated
+}
+
+function getOutputState(id) {
+  try {
+    const v = JSON.parse(localStorage.getItem(`outputState_${id}`))
+    return v || { on: false, speed: 0 }
+  } catch { return { on: false, speed: 0 } }
 }
 
 function CustomTooltip({ active, payload, label }) {
@@ -30,19 +37,27 @@ function CustomTooltip({ active, payload, label }) {
   )
 }
 
-export default function PowerStats() {
-  const { controls } = useControls()
+export default function PowerStats({ outputs }) {
+  const enriched = useMemo(() => {
+    if (!outputs?.length) return []
+    return outputs.map(o => {
+      const st = getOutputState(o.id)
+      return { ...o, ...st }
+    })
+  }, [outputs])
 
-  const pumpHz = controls?.pump_speed ?? 0
-  const pumpOn = controls?.status     ?? false
-  const currentKW = pumpOn ? calcPowerKW(pumpHz) : 0
+  const totalKW = useMemo(() => {
+    return enriched.reduce((sum, o) => sum + calcPowerKW(o.outputType, o.speed, o.on), 0)
+  }, [enriched])
+
+  const runningCount = enriched.filter(o => o.on).length
 
   const { stats, chartData } = useMemo(() => {
-    const kwhPerHour  = +(currentKW * 1).toFixed(2)
-    const kwhPerDay   = +(currentKW * 24).toFixed(1)
-    const kwhPerWeek  = +(currentKW * 24 * 7).toFixed(1)
-    const kwhPerMonth = +(currentKW * 24 * 30).toFixed(1)
-    const kwhPerYear  = +(currentKW * 24 * 365).toFixed(0)
+    const kwhPerHour  = +(totalKW * 1).toFixed(2)
+    const kwhPerDay   = +(totalKW * 24).toFixed(1)
+    const kwhPerWeek  = +(totalKW * 24 * 7).toFixed(1)
+    const kwhPerMonth = +(totalKW * 24 * 30).toFixed(1)
+    const kwhPerYear  = +(totalKW * 24 * 365).toFixed(0)
 
     const statsList = [
       { label: 'PAST HOUR',  value: kwhPerHour,                          unit: 'kWh', icon: Clock,      color: 'text-scada-accent' },
@@ -52,21 +67,20 @@ export default function PowerStats() {
       { label: 'THIS YEAR',  value: Number(kwhPerYear).toLocaleString(), unit: 'kWh', icon: Activity,   color: 'text-scada-red'    },
     ]
 
-    // Last 12 hours bar chart
     const bars = []
     const now = Date.now()
     for (let i = 11; i >= 0; i--) {
       const h = new Date(now - i * 3600000)
       const label = h.toLocaleTimeString('en', { hour: '2-digit', minute: '2-digit', hour12: false })
-      const variation = pumpOn ? (0.8 + Math.random() * 0.4) : (Math.random() * 0.2)
+      const variation = totalKW > 0 ? (0.8 + Math.random() * 0.4) : (Math.random() * 0.2)
       bars.push({ time: label, kwh: +(kwhPerHour * variation).toFixed(2) })
     }
 
     return { stats: statsList, chartData: bars }
-  }, [currentKW, pumpOn])
+  }, [totalKW])
 
-  const speedPct = Math.round((pumpHz / VFD_MAX_HZ) * 100)
-  const loadPct  = Math.round(Math.pow(pumpHz / VFD_MAX_HZ, 3) * 100)
+  const totalRated = enriched.reduce((sum, o) => sum + (OUTPUT_RATED_KW[o.outputType] || 1), 0)
+  const loadPct = totalRated > 0 ? Math.round((totalKW / totalRated) * 100) : 0
 
   return (
     <div className="card-hover bg-scada-panel border border-scada-border rounded-xl p-5 space-y-4">
@@ -75,7 +89,7 @@ export default function PowerStats() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-display text-sm font-bold tracking-widest" style={{ color: '#111111' }}>POWER CONSUMPTION</h2>
-          <p className="font-body text-xs text-scada-muted mt-0.5">Energy metrics and usage statistics</p>
+          <p className="font-body text-xs text-scada-muted mt-0.5">{runningCount} of {enriched.length} outputs running</p>
         </div>
         <div className="flex items-center justify-center w-8 h-8 rounded-lg border border-yellow-400/30 bg-yellow-400/10">
           <Zap className="w-4 h-4 text-yellow-400" />
@@ -84,33 +98,33 @@ export default function PowerStats() {
 
       {/* Live Power */}
       <div className={`rounded-lg border p-3 transition-all duration-300 ${
-        pumpOn ? 'border-yellow-400/30 bg-yellow-400/5' : 'border-scada-border bg-scada-bg'
+        totalKW > 0 ? 'border-yellow-400/30 bg-yellow-400/5' : 'border-scada-border bg-scada-bg'
       }`}>
         <div className="flex items-center justify-between mb-2">
-          <span className="font-mono text-xs text-scada-muted">LIVE POWER DRAW</span>
+          <span className="font-mono text-xs text-scada-muted">TOTAL LIVE POWER</span>
           <span className={`font-mono text-xs px-2 py-0.5 rounded border ${
-            pumpOn ? 'text-yellow-400 border-yellow-400/30' : 'text-scada-muted border-scada-muted/20'
-          }`}>{pumpOn ? 'RUNNING' : 'IDLE'}</span>
+            totalKW > 0 ? 'text-yellow-400 border-yellow-400/30' : 'text-scada-muted border-scada-muted/20'
+          }`}>{totalKW > 0 ? `${runningCount} ACTIVE` : 'IDLE'}</span>
         </div>
         <div className="flex items-end justify-between">
           <div>
             <div className="flex items-baseline gap-1">
-              <span className="font-display text-3xl font-bold text-yellow-400">{currentKW.toFixed(1)}</span>
+              <span className="font-display text-3xl font-bold text-yellow-400">{totalKW.toFixed(1)}</span>
               <span className="font-mono text-sm text-scada-muted">kW</span>
             </div>
             <div className="font-mono text-xs text-scada-muted mt-0.5">
-              {pumpHz} Hz · {speedPct}% speed · {loadPct}% load
+              {loadPct}% load · {totalRated.toFixed(1)} kW rated
             </div>
           </div>
           <div className="text-right">
             <div className="w-20 h-2 bg-scada-bg rounded-full overflow-hidden border border-scada-border mb-1">
               <div className="h-full rounded-full transition-all duration-700"
                 style={{
-                  width: `${Math.min(100, (currentKW / MOTOR_RATED_KW) * 100)}%`,
-                  background: pumpOn ? 'linear-gradient(90deg, #FFB800, #FF8C00)' : '#1A3A5C',
+                  width: `${Math.min(100, loadPct)}%`,
+                  background: totalKW > 0 ? 'linear-gradient(90deg, #FFB800, #FF8C00)' : '#1A3A5C',
                 }} />
             </div>
-            <span className="font-mono text-xs text-scada-muted">{MOTOR_RATED_KW} kW rated</span>
+            <span className="font-mono text-xs text-scada-muted">{totalRated.toFixed(1)} kW rated</span>
           </div>
         </div>
       </div>
