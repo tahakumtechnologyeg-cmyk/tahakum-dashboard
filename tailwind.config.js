@@ -30,6 +30,38 @@ export default {
           text:   'var(--scada-text)',
           muted:  'var(--scada-muted)',
         },
+        surface: {
+          DEFAULT:   'var(--bg-surface)',
+          elevated:  'var(--bg-surface-elevated)',
+          hover:     'var(--bg-surface-hover)',
+        },
+        semantic: {
+          success:       'var(--semantic-success)',
+          'success-bg':  'var(--semantic-success-bg)',
+          warning:       'var(--semantic-warning)',
+          'warning-bg':  'var(--semantic-warning-bg)',
+          error:         'var(--semantic-error)',
+          'error-bg':    'var(--semantic-error-bg)',
+          info:          'var(--semantic-info)',
+        },
+        code: {
+          bg:     'var(--code-bg)',
+          text:   'var(--code-text)',
+          border: 'var(--code-border)',
+        },
+      },
+      borderRadius: {
+        sm: 'var(--radius-sm)',
+        md: 'var(--radius-md)',
+        lg: 'var(--radius-lg)',
+        xl: 'var(--radius-xl)',
+      },
+      boxShadow: {
+        xs: 'var(--shadow-xs)',
+        sm: 'var(--shadow-sm)',
+        md: 'var(--shadow-md)',
+        lg: 'var(--shadow-lg)',
+        xl: 'var(--shadow-xl)',
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
