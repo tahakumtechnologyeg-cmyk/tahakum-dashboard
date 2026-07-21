@@ -66,11 +66,11 @@ export default function OutputCard({ output, onDelete }) {
             <span className={`px-2 py-1 rounded-md font-mono text-[10px] font-bold tracking-wider ${on ? 'bg-scada-green/10 text-scada-green border border-scada-green/30' : 'bg-scada-dim/20 text-scada-muted border border-scada-border'}`}>
               {on ? t('dashboard.powerOn') : t('dashboard.powerOff')}
             </span>
-            {!output.builtIn && <button onClick={() => onDelete(output.id)}
+            <button onClick={() => onDelete(output.id)}
               className="p-1.5 rounded-lg text-scada-muted/40 hover:text-scada-red/70 hover:bg-scada-red/10 transition-colors"
               title={t('dashboard.deleteOutput')}>
               <Trash2 className="w-3.5 h-3.5" />
-            </button>}
+            </button>
           </div>
         </div>
 
@@ -143,25 +143,27 @@ export default function OutputCard({ output, onDelete }) {
           </div>
         )}
 
-        {/* ── Consumption stats ── */}
-        <div>
-          <div className="font-mono text-[10px] font-bold tracking-widest text-scada-muted mb-2">{t('dashboard.consumption')}</div>
-          <div className="grid grid-cols-3 gap-2">
-            {[
-              { label: t('dashboard.daily'),   value: daily,   color: 'text-cyan-400' },
-              { label: t('dashboard.weekly'),  value: weekly,  color: 'text-scada-accent' },
-              { label: t('dashboard.monthly'), value: monthly, color: 'text-scada-green' },
-            ].map(s => (
-              <div key={s.label} className="bg-scada-bg rounded-lg px-3 py-2 text-center">
-                <div className="font-mono text-[10px] text-scada-muted mb-0.5">{s.label}</div>
-                <div className={`font-display text-sm font-bold ${s.color}`}>
-                  {s.value}
-                  <span className="font-mono text-[10px] text-scada-muted ml-0.5">kWh</span>
+        {/* ── Consumption stats (motors & VFD only) ── */}
+        {HAS_SPEED.includes(output.outputType) && (
+          <div>
+            <div className="font-mono text-[10px] font-bold tracking-widest text-scada-muted mb-2">{t('dashboard.consumption')}</div>
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { label: t('dashboard.daily'),   value: daily,   color: 'text-cyan-400' },
+                { label: t('dashboard.weekly'),  value: weekly,  color: 'text-scada-accent' },
+                { label: t('dashboard.monthly'), value: monthly, color: 'text-scada-green' },
+              ].map(s => (
+                <div key={s.label} className="bg-scada-bg rounded-lg px-3 py-2 text-center">
+                  <div className="font-mono text-[10px] text-scada-muted mb-0.5">{s.label}</div>
+                  <div className={`font-display text-sm font-bold ${s.color}`}>
+                    {s.value}
+                    <span className="font-mono text-[10px] text-scada-muted ml-0.5">kWh</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   )
