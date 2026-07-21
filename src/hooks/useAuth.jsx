@@ -12,10 +12,17 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  // Clear old localStorage auth so tab-close = sign-out
+  useEffect(() => {
+    // Remove any lingering Supabase auth tokens from localStorage
+    Object.keys(localStorage).forEach(k => { if (k.startsWith('sb-') || k.startsWith('supabase.')) localStorage.removeItem(k) })
+    localStorage.removeItem('aqua_demo_session')
+  }, [])
+
   useEffect(() => {
     if (DEMO_MODE) {
       // Check local session
-      const saved = localStorage.getItem('aqua_demo_session')
+      const saved = sessionStorage.getItem('aqua_demo_session')
       if (saved) setUser(JSON.parse(saved))
       setLoading(false)
       return
@@ -42,7 +49,7 @@ export function AuthProvider({ children }) {
       if (email === DEMO_ADMIN.email && password === DEMO_ADMIN.password) {
         const demoUser = { id: 'demo-admin', email, role: 'admin' }
         setUser(demoUser)
-        localStorage.setItem('aqua_demo_session', JSON.stringify(demoUser))
+        sessionStorage.setItem('aqua_demo_session', JSON.stringify(demoUser))
         setLoading(false)
         return { error: null }
       } else {
@@ -94,7 +101,7 @@ export function AuthProvider({ children }) {
   async function signOut() {
     if (DEMO_MODE) {
       setUser(null)
-      localStorage.removeItem('aqua_demo_session')
+      sessionStorage.removeItem('aqua_demo_session')
       return
     }
     await supabase.auth.signOut()
