@@ -15,7 +15,7 @@ function AppContent() {
         <div className="flex flex-col items-center gap-6 relative z-10">
           <div className="w-16 h-16 rounded-xl flex items-center justify-center animate-logoPulse"
             style={{ background: 'linear-gradient(135deg, #B94040, #8B2020)' }}>
-            <img src="./bolt-logo.svg" alt="Takamul" className="w-10 h-10" />
+            <img src="./bolt-logo.svg" alt="Tahakum Technology" className="w-10 h-10" />
           </div>
           <div className="flex flex-col items-center gap-3">
             <div className="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin" />

@@ -150,11 +150,11 @@ export default function Dashboard() {
               </div>
             </button>
 
-            <img src="./bolt-logo.svg" alt="Takamul" className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg"
+            <img src="./bolt-logo.svg" alt="Tahakum Technology" className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg"
               style={{ boxShadow: '0 0 15px rgba(211,47,47,0.3)' }} />
             <div>
-              <div className="font-display text-sm font-bold tracking-widest leading-none" style={{ color: '#FBF7EF' }}>TAKAMUL</div>
-              <div className="font-mono text-[10px] sm:text-xs leading-none mt-0.5" style={{ color: 'rgba(251,247,239,0.75)' }}>SMART SOLUTION</div>
+              <div className="font-display text-sm font-bold tracking-widest leading-none" style={{ color: '#FBF7EF' }}>TAHAKUM TECHNOLOGY</div>
+              <div className="font-mono text-[10px] sm:text-xs leading-none mt-0.5" style={{ color: 'rgba(251,247,239,0.75)' }}>تحكم تكنولوجي</div>
             </div>
           </div>
 
@@ -365,7 +365,7 @@ export default function Dashboard() {
 
           {activeTab === 'devices' && (
             <div className="animate-slideUp">
-              <SectionHeader title="MY DEVICES" subtitle="Link and manage your Takamul boards" />
+              <SectionHeader title="MY DEVICES" subtitle="Link and manage your Tahakum boards" />
               <DevicesPage />
             </div>
           )}
@@ -393,7 +393,7 @@ export default function Dashboard() {
 
           {activeTab === 'support' && (
             <div className="max-w-xl mx-auto animate-slideUp">
-              <SectionHeader title="SUPPORT" subtitle="Get help from the Takamul team" />
+              <SectionHeader title="SUPPORT" subtitle="Get help from the Tahakum team" />
               <SupportPage />
             </div>
           )}

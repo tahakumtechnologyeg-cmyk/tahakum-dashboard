@@ -122,21 +122,8 @@ export default function LoginPage() {
           {/* Logo */}
           <div className="text-center mb-7">
             <div className="flex justify-center mb-4">
-              <div className="animate-logoPulse" style={{
-                width: 64, height: 64, borderRadius: 14,
-                background: 'linear-gradient(135deg, #B94040, #8B2020)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 0 30px rgba(185,64,64,0.5)'
-              }}>
-                <img src="./bolt-logo.svg" alt="Takamul" style={{ width: 40, height: 40 }} />
-              </div>
+              <img src="./bolt-logo.svg" alt="Tahakum Technology" className="w-64 max-w-[85vw]" />
             </div>
-            <div className="font-display font-bold text-xl tracking-widest mb-1" style={{ color: '#E0F4FF', letterSpacing: '0.2em' }}>
-              TAKAMUL
-            </div>
-            <p className="font-mono text-xs tracking-widest" style={{ color: 'rgba(0,200,255,0.7)' }}>
-              SMART SOLUTION — WATER TREATMENT
-            </p>
           </div>
 
           {/* Mode switcher */}
@@ -288,7 +275,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center font-mono text-xs mt-5" style={{ color: 'rgba(0,150,200,0.4)' }}>
-          Takamul Smart Solution v2.4.1
+          Tahakum Technology v2.4.1
         </p>
       </div>
     </div>

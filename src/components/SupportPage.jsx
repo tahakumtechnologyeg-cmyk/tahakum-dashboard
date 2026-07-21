@@ -95,7 +95,7 @@ export default function SupportPage() {
         </div>
 
         <div style={{ fontFamily: 'monospace', fontSize: 16, fontWeight: 700, letterSpacing: '0.1em', color: '#FBF7EF', marginBottom: 8 }}>
-          TAKAMUL SUPPORT
+          TAHAKUM TECHNOLOGY SUPPORT
         </div>
         <div style={{ fontFamily: 'monospace', fontSize: 12, color: 'rgba(255,255,255,0.55)', maxWidth: 300, margin: '0 auto', lineHeight: 1.7 }}>
           Having an issue? Our team is ready to help you get your system back on track.
@@ -117,7 +117,7 @@ export default function SupportPage() {
           title="EMAIL SUPPORT"
           value={CONTACT_EMAIL}
           subtitle="Typical response: within 24 hours"
-          href={`mailto:${CONTACT_EMAIL}?subject=Takamul%20SCADA%20Support%20Request`}
+          href={`mailto:${CONTACT_EMAIL}?subject=Tahakum%20Technology%20SCADA%20Support%20Request`}
           color="#64d2ff"
           actionLabel="Send Email"
         />
@@ -127,7 +127,7 @@ export default function SupportPage() {
           title="QUICK REPORT"
           value="Send a pre-filled bug report"
           subtitle="Auto-fills device & system info"
-          href={`mailto:${CONTACT_EMAIL}?subject=Bug%20Report%20%E2%80%94%20Takamul%20SCADA&body=Device%3A%0AIssue%3A%0ASteps%20to%20reproduce%3A%0A`}
+          href={`mailto:${CONTACT_EMAIL}?subject=Bug%20Report%20%E2%80%94%20Tahakum%20Technology%20SCADA&body=Device%3A%0AIssue%3A%0ASteps%20to%20reproduce%3A%0A`}
           color="#ff8a80"
           actionLabel="Report Bug"
         />
@@ -135,7 +135,7 @@ export default function SupportPage() {
         <ContactCard
           icon={Globe}
           title="COMPANY"
-          value="Takamul Smart Solutions"
+          value="Tahakum Technology — تحكم تكنولوجي"
           subtitle="Egypt · Industrial Automation"
           href="mailto:team.takamul.eg@gmail.com"
           color="#a5d6a7"
@@ -146,7 +146,7 @@ export default function SupportPage() {
       {/* Footer note */}
       <div style={{ textAlign: 'center', padding: '20px 16px 8px' }}>
         <span style={{ fontFamily: 'monospace', fontSize: 10, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.08em' }}>
-          © 2025 TAKAMUL SMART SOLUTIONS · EGYPT
+          © 2025 TAHAKUM TECHNOLOGY · EGYPT
         </span>
       </div>
     </div>
