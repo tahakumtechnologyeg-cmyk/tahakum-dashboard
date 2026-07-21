@@ -1,13 +1,15 @@
-import { Mail, MessageCircle, Globe, ChevronRight, Send } from 'lucide-react'
+import { Mail, MessageCircle, Globe, ChevronRight, Send, Phone, ExternalLink } from 'lucide-react'
 import { useI18n } from '../i18n/I18nContext'
 
 const CONTACT_EMAIL = 'team.takamul.eg@gmail.com'
+const CONTACT_PHONE = '+201068817108'
+const CONTACT_WEBSITE = 'https://teamtakamuleg-sudo.github.io/Tahamok-Technology/'
 
-function ContactCard({ icon: Icon, title, value, subtitle, href, color = 'var(--color-primary)', actionLabel = 'Open' }) {
+function ContactCard({ icon: Icon, title, value, subtitle, href, color = 'var(--color-primary)', actionLabel = 'Open', external = true }) {
   return (
     <a
       href={href}
-      target="_blank"
+      target={external ? '_blank' : '_self'}
       rel="noopener noreferrer"
       className="flex items-center gap-4 p-[18px_20px] rounded-xl no-underline cursor-pointer transition-all mb-3 bg-scada-panel border border-scada-border hover:bg-scada-dim hover:-translate-y-px"
       style={{ borderColor: 'var(--scada-border)' }}
@@ -56,6 +58,27 @@ export default function SupportPage() {
         <div className="font-mono text-[10px] font-bold tracking-widest text-scada-muted/50 mb-3 pl-1">{t('support.contactUs')}</div>
 
         <ContactCard
+          icon={MessageCircle}
+          title={t('support.whatsapp')}
+          value={CONTACT_PHONE}
+          subtitle={t('support.whatsappSub')}
+          href={`https://wa.me/${CONTACT_PHONE.replace(/[^0-9]/g, '')}?text=Hello%20Tahakum%20Technology%20team%2C%20I%20need%20support`}
+          color="#25D366"
+          actionLabel="WhatsApp"
+        />
+
+        <ContactCard
+          icon={Phone}
+          title={t('support.phone')}
+          value={CONTACT_PHONE}
+          subtitle={t('support.phoneSub')}
+          href={`tel:${CONTACT_PHONE}`}
+          color="var(--color-primary)"
+          actionLabel={t('support.call')}
+          external={false}
+        />
+
+        <ContactCard
           icon={Mail}
           title={t('support.emailSupport')}
           value={CONTACT_EMAIL}
@@ -76,18 +99,21 @@ export default function SupportPage() {
 
         <ContactCard
           icon={Globe}
-          title={t('support.company')}
-          value={t('support.companyValue')}
-          subtitle={t('support.companySub')}
-          href="mailto:team.takamul.eg@gmail.com"
+          title={t('support.website')}
+          value="teamtakamuleg-sudo.github.io/Tahamok-Technology"
+          subtitle={t('support.websiteSub')}
+          href={CONTACT_WEBSITE}
           color="#22c55e"
-          actionLabel={t('support.contact')}
+          actionLabel={t('support.open')}
         />
       </div>
 
       {/* Footer */}
       <div className="text-center py-5">
-        <span className="font-mono text-[10px] text-scada-muted/40 tracking-widest">{t('support.footer')}</span>
+        <a href={CONTACT_WEBSITE} target="_blank" rel="noopener noreferrer"
+          className="font-mono text-[10px] text-scada-muted/40 tracking-widest hover:text-scada-muted/70 transition-colors">
+          {t('support.footer')}
+        </a>
       </div>
     </div>
   )
