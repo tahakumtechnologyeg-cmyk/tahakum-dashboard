@@ -10,6 +10,6 @@ createRoot(document.getElementById('root')).render(
 )
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/Takamul/sw.js')
+    navigator.serviceWorker.register('/Tahakom-v1-DashBoard/sw.js')
   })
 }

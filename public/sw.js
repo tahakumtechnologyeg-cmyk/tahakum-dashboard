@@ -1,7 +1,7 @@
 const CACHE_NAME = 'takamul-v1'
 const STATIC_ASSETS = [
-  '/Takamul/',
-  '/Takamul/index.html',
+  '/Tahakom-v1-DashBoard/',
+  '/Tahakom-v1-DashBoard/index.html',
 ]
 
 self.addEventListener('install', event => {

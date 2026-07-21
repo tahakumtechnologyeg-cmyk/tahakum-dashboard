@@ -2,21 +2,21 @@
   "name": "Takamul SCADA",
   "short_name": "Takamul",
   "description": "Smart Water Treatment Monitoring System",
-  "start_url": "/Takamul/",
-  "scope": "/Takamul/",
+  "start_url": "/Tahakom-v1-DashBoard/",
+  "scope": "/Tahakom-v1-DashBoard/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#FBF7EF",
   "theme_color": "#B94040",
   "icons": [
     {
-      "src": "/Takamul/takamul-logo.jpeg",
+      "src": "/Tahakom-v1-DashBoard/takamul-logo.jpeg",
       "sizes": "192x192",
       "type": "image/jpeg",
       "purpose": "any maskable"
     },
     {
-      "src": "/Takamul/takamul-logo.jpeg",
+      "src": "/Tahakom-v1-DashBoard/takamul-logo.jpeg",
       "sizes": "512x512",
       "type": "image/jpeg",
       "purpose": "any maskable"
