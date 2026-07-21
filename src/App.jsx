@@ -22,7 +22,7 @@ function AppContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-scada-bg">
+        <div className="min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center gap-6">
           <div className="w-16 h-16 rounded-xl flex items-center justify-center"
             style={{ background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-dark))' }}>

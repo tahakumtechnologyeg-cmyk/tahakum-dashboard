@@ -88,7 +88,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen font-body bg-scada-bg">
+    <div className="min-h-screen font-body">
       {/* ── Top Bar ── */}
       <header className="sticky top-0 z-40 bg-scada-panel border-b border-scada-border shadow-sm">
         <div className="flex items-center justify-between px-4 sm:px-6 h-12 sm:h-14">

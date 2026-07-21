@@ -49,7 +49,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-scada-bg">
+    <div className="min-h-screen flex flex-col">
       {/* Top bar */}
       <header className="sticky top-0 z-40 bg-scada-panel border-b border-scada-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
