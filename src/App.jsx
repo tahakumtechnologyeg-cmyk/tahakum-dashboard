@@ -1,25 +1,23 @@
 import { AuthProvider, useAuth } from './hooks/useAuth'
 import LoginPage from './pages/LoginPage'
 import Dashboard from './pages/Dashboard'
+import { useI18n } from './i18n/I18nContext'
 
 function AppContent() {
   const { user, loading } = useAuth()
+  const { t } = useI18n()
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg, #0A2A6E 0%, #0E4A9C 30%, #1565C0 55%, #0D47A1 80%, #083170 100%)' }}>
-        <div className="absolute inset-0" style={{
-          background: 'radial-gradient(ellipse 90% 60% at 50% 10%, rgba(100,210,255,0.2) 0%, transparent 60%)'
-        }} />
-        <div className="flex flex-col items-center gap-6 relative z-10">
-          <div className="w-16 h-16 rounded-xl flex items-center justify-center animate-logoPulse"
-            style={{ background: 'linear-gradient(135deg, #B94040, #8B2020)' }}>
-            <img src="./bolt-logo.svg" alt="Tahakum Technology" className="w-10 h-10" />
+      <div className="min-h-screen flex items-center justify-center bg-scada-bg">
+        <div className="flex flex-col items-center gap-6">
+          <div className="w-16 h-16 rounded-xl flex items-center justify-center"
+            style={{ background: 'linear-gradient(135deg, var(--color-primary), var(--color-primary-dark))' }}>
+            <img src="./bolt-logo.svg" alt="Tahakum Technology" className="w-10 h-10 brightness-0 invert" />
           </div>
           <div className="flex flex-col items-center gap-3">
-            <div className="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-            <span className="font-mono text-xs text-white/60 tracking-[0.15em] animate-pulse">INITIALIZING SCADA</span>
+            <div className="w-10 h-10 border-2 border-scada-border border-t-scada-accent rounded-full animate-spin" />
+            <span className="font-mono text-xs text-scada-muted tracking-[0.15em] animate-pulse">{t('dashboard.title')}</span>
           </div>
         </div>
       </div>

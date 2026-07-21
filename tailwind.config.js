@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: 'class',
   theme: {
     extend: {
       fontFamily: {
@@ -9,18 +10,26 @@ export default {
         body: ['"IBM Plex Sans"', 'sans-serif'],
       },
       colors: {
+        primary: 'var(--color-primary)',
+        'primary-light': 'var(--color-primary-light)',
+        'primary-dark': 'var(--color-primary-dark)',
+        'primary-bg': 'var(--color-primary-bg)',
+        accent: 'var(--color-accent)',
+        'accent-light': 'var(--color-accent-light)',
+        dark: 'var(--color-dark)',
+        'dark-2': 'var(--color-dark-2)',
         scada: {
-          bg:     '#F5EFE4',   // أكريم دافي — خلفية
-          panel:  '#FBF7EF',   // أكريم فاتح — الكروت
-          border: '#D4C9B5',   // بيج رملي للبوردر
-          accent: '#5B8DB8',   // أزرق هادي مش صارخ
-          green:  '#3B6B45',   // أخضر زيتي دافي
-          amber:  '#A0522D',   // بني طوبي — بديل الأحمر الصارخ
-          red:    '#B94040',   // أحمر داكن دافي للتنبيهات
-          dim:    '#EDE5D8',   // hover أغمق شوية
-          text:   '#2C1F10',   // بني داكن جداً بدل الأسود
-          muted:  '#6B5440',   // بني متوسط للنص الثانوي
-        }
+          bg:     'var(--scada-bg)',
+          panel:  'var(--scada-panel)',
+          border: 'var(--scada-border)',
+          accent: 'var(--scada-accent)',
+          green:  'var(--scada-green)',
+          amber:  'var(--scada-amber)',
+          red:    'var(--scada-red)',
+          dim:    'var(--scada-dim)',
+          text:   'var(--scada-text)',
+          muted:  'var(--scada-muted)',
+        },
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -31,7 +40,7 @@ export default {
           '0%, 100%': { opacity: 1 },
           '50%': { opacity: 0 },
         }
-      }
+      },
     },
   },
   plugins: [],

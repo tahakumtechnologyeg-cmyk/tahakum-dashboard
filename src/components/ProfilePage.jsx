@@ -207,8 +207,7 @@ export default function ProfilePage() {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="absolute bottom-0 right-0 w-8 h-8 rounded-full flex items-center justify-center border border-scada-border transition-colors hover:bg-scada-accent/20"
-              style={{ background: '#FBF7EF' }}
+              className="absolute bottom-0 right-0 w-8 h-8 rounded-full flex items-center justify-center border border-scada-border bg-scada-panel transition-colors hover:bg-scada-accent/20"
             >
               <Camera className="w-3.5 h-3.5 text-scada-accent" />
             </button>
@@ -264,9 +263,9 @@ export default function ProfilePage() {
           disabled={savingProfile || uploading}
           className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-display text-xs font-bold tracking-widest transition-all disabled:opacity-50"
           style={{
-            background: '#B94040',
-            color: '#FBF7EF',
-            boxShadow: '0 0 16px rgba(185,64,64,0.25)',
+            background: 'var(--color-primary)',
+            color: '#fff',
+            boxShadow: '0 0 16px rgba(37,99,235,0.25)',
           }}
         >
           {savingProfile || uploading ? (

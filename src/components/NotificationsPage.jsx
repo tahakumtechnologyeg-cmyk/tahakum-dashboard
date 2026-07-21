@@ -84,11 +84,11 @@ function buildMotorAlerts(controls, prevControls) {
 
 const STATUS_STYLES = {
   critical: {
-    border: 'rgba(185,64,64,0.4)',
-    bg: 'rgba(185,64,64,0.1)',
-    iconColor: '#ff5252',
-    labelColor: '#ff5252',
-    badge: { bg: 'rgba(185,64,64,0.2)', border: 'rgba(185,64,64,0.5)', color: '#ff8a80', text: 'CRITICAL' },
+    border: 'rgba(234,88,12,0.3)',
+    bg: 'rgba(234,88,12,0.08)',
+    iconColor: '#ea580c',
+    labelColor: '#ea580c',
+    badge: { bg: 'rgba(234,88,12,0.15)', border: 'rgba(234,88,12,0.4)', color: '#fb923c', text: 'CRITICAL' },
   },
   warning: {
     border: 'rgba(255,184,0,0.35)',
@@ -158,12 +158,12 @@ function NotifCard({ notif, onDismiss }) {
           {notif.live && (
             <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
               <span style={{ width: 5, height: 5, borderRadius: '50%', background: style.iconColor, display: 'inline-block', animation: 'pulse 2s infinite' }} />
-              <span style={{ fontFamily: 'monospace', fontSize: 10, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.06em' }}>LIVE</span>
+              <span style={{ fontFamily: 'monospace', fontSize: 10, color: 'var(--scada-muted)', letterSpacing: '0.06em' }}>LIVE</span>
             </span>
           )}
         </div>
 
-        <div style={{ fontFamily: 'monospace', fontSize: 12, color: 'rgba(255,255,255,0.88)', marginBottom: 5 }}>
+        <div style={{ fontFamily: 'monospace', fontSize: 12, color: 'var(--scada-text)', marginBottom: 5 }}>
           {notif.message}
         </div>
 
@@ -174,11 +174,11 @@ function NotifCard({ notif, onDismiss }) {
             </span>
           )}
           {notif.fullLabel && (
-            <span style={{ fontFamily: 'monospace', fontSize: 10, color: 'rgba(255,255,255,0.4)' }}>
+            <span style={{ fontFamily: 'monospace', fontSize: 10, color: 'var(--scada-muted)' }}>
               {notif.fullLabel}
             </span>
           )}
-          <span style={{ fontFamily: 'monospace', fontSize: 10, color: 'rgba(255,255,255,0.35)', marginLeft: 'auto' }}>
+          <span style={{ fontFamily: 'monospace', fontSize: 10, color: 'var(--scada-muted)', marginLeft: 'auto' }}>
             {formatDate(notif.time)}
           </span>
         </div>
@@ -191,11 +191,11 @@ function NotifCard({ notif, onDismiss }) {
           style={{
             position: 'absolute', top: 10, right: 10,
             background: 'transparent', border: 'none', cursor: 'pointer',
-            color: 'rgba(255,255,255,0.3)', padding: 4, borderRadius: 6,
+            color: 'var(--scada-muted)', padding: 4, borderRadius: 6,
             transition: 'color 0.15s',
           }}
-          onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.7)'}
-          onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.3)'}
+          onMouseEnter={e => e.currentTarget.style.color = 'var(--scada-text)'}
+          onMouseLeave={e => e.currentTarget.style.color = 'var(--scada-muted)'}
           title="Dismiss"
         >
           <Trash2 style={{ width: 13, height: 13 }} />
@@ -245,15 +245,13 @@ export default function NotificationsPage({ latest = {} }) {
   return (
     <div>
       {/* Header summary bar */}
-      <div style={{
+      <div className="bg-scada-panel border border-scada-border" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '14px 18px', borderRadius: 14, marginBottom: 20,
-        background: 'rgba(255,255,255,0.05)',
-        border: '1px solid rgba(255,255,255,0.12)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <Bell style={{ width: 16, height: 16, color: '#64d2ff' }} />
-          <span style={{ fontFamily: 'monospace', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: '#FBF7EF' }}>
+          <Bell style={{ width: 16, height: 16, color: 'var(--color-primary)' }} />
+          <span style={{ fontFamily: 'monospace', fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', color: 'var(--scada-text)' }}>
             NOTIFICATION CENTER
           </span>
         </div>
@@ -261,7 +259,7 @@ export default function NotificationsPage({ latest = {} }) {
           {criticalCount > 0 && (
             <span style={{
               padding: '2px 10px', borderRadius: 6,
-              background: 'rgba(185,64,64,0.2)', border: '1px solid rgba(185,64,64,0.45)',
+              background: 'rgba(234,88,12,0.2)', border: '1px solid rgba(234,88,12,0.45)',
               fontFamily: 'monospace', fontSize: 11, fontWeight: 700,
               color: '#ff8a80', letterSpacing: '0.06em', animation: 'pulse 2s infinite',
             }}>
@@ -279,7 +277,7 @@ export default function NotificationsPage({ latest = {} }) {
             </span>
           )}
           {allNotifications.length === 0 && (
-            <span style={{ fontFamily: 'monospace', fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>
+            <span style={{ fontFamily: 'monospace', fontSize: 11, color: 'var(--scada-muted)' }}>
               All clear
             </span>
           )}
@@ -296,10 +294,10 @@ export default function NotificationsPage({ latest = {} }) {
         <div style={{ marginBottom: 24 }}>
           <div style={{
             display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12,
-            paddingBottom: 8, borderBottom: '1px solid rgba(255,255,255,0.1)',
+            paddingBottom: 8, borderBottom: '1px solid var(--scada-border)',
           }}>
             <AlertTriangle style={{ width: 13, height: 13, color: '#ffb800' }} />
-            <span style={{ fontFamily: 'monospace', fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.5)' }}>
+            <span style={{ fontFamily: 'monospace', fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', color: 'var(--scada-muted)' }}>
               LIVE SENSOR ALERTS
             </span>
           </div>
@@ -314,11 +312,11 @@ export default function NotificationsPage({ latest = {} }) {
         <div style={{ marginBottom: 24 }}>
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            marginBottom: 12, paddingBottom: 8, borderBottom: '1px solid rgba(255,255,255,0.1)',
+            marginBottom: 12, paddingBottom: 8, borderBottom: '1px solid var(--scada-border)',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <Power style={{ width: 13, height: 13, color: '#64d2ff' }} />
-              <span style={{ fontFamily: 'monospace', fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.5)' }}>
+              <span style={{ fontFamily: 'monospace', fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', color: 'var(--scada-muted)' }}>
                 MOTOR / PUMP EVENTS
               </span>
             </div>
@@ -326,13 +324,13 @@ export default function NotificationsPage({ latest = {} }) {
               onClick={clearHistory}
               style={{
                 display: 'flex', alignItems: 'center', gap: 5,
-                background: 'transparent', border: '1px solid rgba(255,255,255,0.15)',
+                background: 'transparent', border: '1px solid var(--scada-border)',
                 borderRadius: 7, padding: '4px 10px', cursor: 'pointer',
-                fontFamily: 'monospace', fontSize: 10, color: 'rgba(255,255,255,0.4)',
+                fontFamily: 'monospace', fontSize: 10, color: 'var(--scada-muted)',
                 transition: 'all 0.15s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.8)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.35)' }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.4)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)' }}
+              onMouseEnter={e => { e.currentTarget.style.color = 'var(--scada-text)'; e.currentTarget.style.borderColor = 'var(--scada-text)' }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'var(--scada-muted)'; e.currentTarget.style.borderColor = 'var(--scada-border)' }}
             >
               <Trash2 style={{ width: 11, height: 11 }} /> Clear
             </button>
@@ -345,23 +343,19 @@ export default function NotificationsPage({ latest = {} }) {
 
       {/* Empty state */}
       {allNotifications.length === 0 && (
-        <div style={{
+        <div className="bg-scada-panel border border-dashed border-scada-border" style={{
           display: 'flex', flexDirection: 'column', alignItems: 'center',
           justifyContent: 'center', padding: '56px 24px', textAlign: 'center',
-          background: 'rgba(255,255,255,0.04)', borderRadius: 16,
-          border: '1px dashed rgba(255,255,255,0.15)',
         }}>
-          <div style={{
+          <div className="bg-primary-bg border border-primary/20" style={{
             width: 56, height: 56, borderRadius: 16, marginBottom: 20,
-            background: 'rgba(100,210,255,0.08)', border: '1px solid rgba(100,210,255,0.2)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
-            <BellOff style={{ width: 24, height: 24, color: 'rgba(100,210,255,0.6)' }} />
+            display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <BellOff style={{ width: 24, height: 24, color: 'var(--color-primary)' }} />
           </div>
-          <div style={{ fontFamily: 'monospace', fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', color: '#FBF7EF', marginBottom: 8 }}>
+          <div style={{ fontFamily: 'monospace', fontSize: 13, fontWeight: 700, letterSpacing: '0.1em', color: 'var(--scada-text)', marginBottom: 8 }}>
             ALL SYSTEMS NORMAL
           </div>
-          <div style={{ fontFamily: 'monospace', fontSize: 11, color: 'rgba(255,255,255,0.4)', maxWidth: 280, lineHeight: 1.6 }}>
+          <div style={{ fontFamily: 'monospace', fontSize: 11, color: 'var(--scada-muted)', maxWidth: 280, lineHeight: 1.6 }}>
             No active alerts · All sensors within normal range · Motor operating normally
           </div>
         </div>

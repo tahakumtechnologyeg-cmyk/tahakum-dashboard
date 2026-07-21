@@ -222,7 +222,7 @@ function AddDeviceModal({ onAdd, onClose }) {
             onClick={handleSubmit}
             disabled={loading || !deviceId.trim()}
             className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg font-display text-xs font-bold tracking-widest transition-all disabled:opacity-50"
-            style={{ background: '#B94040', color: '#FBF7EF', boxShadow: '0 0 16px rgba(185,64,64,0.25)' }}
+            style={{ background: 'var(--color-primary)', color: '#fff', boxShadow: '0 0 16px rgba(37,99,235,0.25)' }}
           >
             {loading
               ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> LINKING...</>
@@ -263,7 +263,7 @@ function DeviceCard({ device, onRemove, onRename }) {
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-            style={{ background: 'rgba(185,64,64,0.12)', border: '1px solid rgba(185,64,64,0.3)' }}>
+            style={{ background: 'var(--color-primary-bg)', border: '1px solid var(--color-primary)' }}>
             <Cpu className="w-4 h-4 text-scada-accent" />
           </div>
           {editing ? (
@@ -308,8 +308,7 @@ function DeviceCard({ device, onRemove, onRename }) {
         )}
       </div>
 
-      <div className="rounded-lg px-3 py-2 font-mono text-xs text-scada-muted break-all"
-        style={{ background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="rounded-lg px-3 py-2 font-mono text-xs text-scada-muted break-all bg-scada-panel border border-scada-border">
         <span className="text-scada-muted/60 mr-1">ID:</span>
         {device.device_id}
       </div>
@@ -366,7 +365,7 @@ export default function DevicesPage() {
         <button
           onClick={() => setShowAdd(true)}
           className="flex items-center gap-2 px-3 py-2 rounded-lg font-display text-xs font-bold tracking-wider transition-all hover:opacity-90"
-          style={{ background: '#B94040', color: '#FBF7EF', boxShadow: '0 0 12px rgba(185,64,64,0.3)' }}
+          style={{ background: 'var(--color-primary)', color: '#fff', boxShadow: '0 0 12px rgba(37,99,235,0.3)' }}
         >
           <Plus className="w-3.5 h-3.5" />
           ADD DEVICE
@@ -396,7 +395,7 @@ export default function DevicesPage() {
       {!loading && devices.length === 0 && (
         <div className="bg-scada-panel border border-dashed border-scada-border rounded-xl p-8 text-center space-y-3">
           <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto"
-            style={{ background: 'rgba(185,64,64,0.1)', border: '1px solid rgba(185,64,64,0.2)' }}>
+            style={{ background: 'var(--color-primary-bg)', border: '1px solid var(--color-primary)' }}>
             <Cpu className="w-6 h-6 text-scada-accent/60" />
           </div>
           <div className="font-display text-xs font-bold tracking-widest text-scada-text">NO DEVICES LINKED</div>
@@ -406,7 +405,7 @@ export default function DevicesPage() {
           <button
             onClick={() => setShowAdd(true)}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-display text-xs font-bold tracking-wider transition-all hover:opacity-90 mt-2"
-            style={{ background: '#B94040', color: '#FBF7EF' }}
+            style={{ background: 'var(--color-primary)', color: '#fff' }}
           >
             <Plus className="w-3.5 h-3.5" />
             ADD FIRST DEVICE

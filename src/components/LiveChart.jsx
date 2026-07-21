@@ -20,7 +20,7 @@ function CustomTooltip({ active, payload, label, unit }) {
   return (
     <div className="bg-scada-panel border border-scada-border rounded-lg px-3 py-2 shadow-xl">
       <p className="font-mono text-xs text-scada-muted mb-1">{label}</p>
-      <p className="font-display text-base font-bold text-white">
+      <p className="font-display text-base font-bold text-scada-text">
         {payload[0]?.value?.toFixed(2)}
         <span className="font-mono text-xs text-scada-muted ml-1">{unit}</span>
       </p>

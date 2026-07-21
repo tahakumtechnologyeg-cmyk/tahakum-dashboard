@@ -95,10 +95,10 @@ export default function AlertsPanel({ latest }) {
                 }`}>
                   [{alert.label}]
                 </span>
-                <span className="font-mono text-xs text-white">{alert.message}</span>
+                <span className="font-mono text-xs text-scada-text">{alert.message}</span>
               </div>
               <div className="flex items-center gap-3 mt-1">
-                <span className="font-display text-sm font-bold text-white">
+                <span className="font-display text-sm font-bold text-scada-text">
                   {alert.value?.toFixed(2)} {alert.unit}
                 </span>
                 {alert.time && (

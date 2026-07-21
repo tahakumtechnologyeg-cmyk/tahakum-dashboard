@@ -6,46 +6,33 @@ import {
 import { useControls } from '../hooks/useControls'
 import { useAuth } from '../hooks/useAuth'
 
-// ─── Shared card ──────────────────────────────────────────────────────────────
 function Card({ children, style = {} }) {
   return (
-    <div style={{
-      background: 'rgba(255,255,255,0.07)',
-      border: '1px solid rgba(255,255,255,0.13)',
-      borderRadius: 14,
-      padding: '20px 22px',
-      ...style,
-    }}>
+    <div className="bg-scada-panel border border-scada-border rounded-xl p-[20px_22px]" style={style}>
       {children}
     </div>
   )
 }
 
-// ─── Status badge ─────────────────────────────────────────────────────────────
 function StatusBadge({ status }) {
   const map = {
-    idle:    { color: 'rgba(255,255,255,0.35)', bg: 'rgba(255,255,255,0.07)', label: 'IDLE' },
-    pending: { color: '#FFD54F',                bg: 'rgba(255,213,79,0.12)',  label: 'QUEUING…' },
-    ok:      { color: '#69F0AE',                bg: 'rgba(105,240,174,0.12)', label: 'SENT ✓' },
-    error:   { color: '#EF5350',                bg: 'rgba(239,83,80,0.12)',   label: 'ERROR' },
+    idle:    { color: 'var(--scada-muted)', bg: 'var(--scada-dim)', label: 'IDLE' },
+    pending: { color: '#d97706',            bg: 'rgba(217,119,6,0.1)',  label: 'QUEUING…' },
+    ok:      { color: '#16a34a',            bg: 'rgba(22,163,74,0.1)', label: 'SENT ✓' },
+    error:   { color: '#dc2626',            bg: 'rgba(220,38,38,0.1)',   label: 'ERROR' },
   }
   const s = map[status] || map.idle
   return (
-    <span style={{
-      fontFamily: 'monospace', fontSize: 10, fontWeight: 700,
-      letterSpacing: '0.1em', padding: '3px 10px', borderRadius: 20,
-      color: s.color, background: s.bg, border: `1px solid ${s.color}40`,
-      whiteSpace: 'nowrap',
-    }}>
+    <span className="font-mono text-[10px] font-bold tracking-widest px-[10px] py-[3px] rounded-full whitespace-nowrap"
+      style={{ color: s.color, background: s.bg, border: `1px solid ${s.color}40` }}>
       {s.label}
     </span>
   )
 }
 
-// ─── Single OTA target card ───────────────────────────────────────────────────
-function OtaTarget({ icon: Icon, title, subtitle, field, color = '#ff8a80', onTrigger }) {
+function OtaTarget({ icon: Icon, title, subtitle, field, color = 'var(--color-primary)', onTrigger }) {
   const [url,    setUrl]    = useState('')
-  const [status, setStatus] = useState('idle')   // idle | pending | ok | error
+  const [status, setStatus] = useState('idle')
   const [errMsg, setErrMsg] = useState('')
 
   const canSend = status !== 'pending' && status !== 'ok'
@@ -75,69 +62,49 @@ function OtaTarget({ icon: Icon, title, subtitle, field, color = '#ff8a80', onTr
 
   return (
     <Card>
-      {/* ── Header ── */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-          <div style={{
-            width: 38, height: 38, borderRadius: 10,
-            background: 'rgba(185,64,64,0.15)', border: '1px solid rgba(185,64,64,0.3)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-          }}>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-[38px] h-[38px] rounded-xl flex items-center justify-center shrink-0"
+            style={{ background: `${color}15`, border: `1px solid ${color}30` }}>
             <Icon style={{ width: 18, height: 18, color }} />
           </div>
           <div>
-            <div style={{ fontFamily: 'monospace', fontSize: 12, fontWeight: 700,
-              letterSpacing: '0.08em', color: '#FBF7EF' }}>{title}</div>
-            <div style={{ fontFamily: 'monospace', fontSize: 10,
-              color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>{subtitle}</div>
+            <div className="font-mono text-xs font-bold tracking-wider text-scada-text">{title}</div>
+            <div className="font-mono text-[10px] text-scada-muted mt-1">{subtitle}</div>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div className="flex items-center gap-2">
           <StatusBadge status={status} />
           {(status === 'ok' || status === 'error') && (
-            <button onClick={handleReset} title="Reset"
-              style={{ background: 'none', border: 'none', cursor: 'pointer',
-                color: 'rgba(255,255,255,0.35)', padding: 2, display: 'flex' }}>
+            <button onClick={handleReset} title="Reset" className="text-scada-muted hover:text-scada-text p-0.5 flex bg-none border-none cursor-pointer">
               <RotateCcw style={{ width: 13, height: 13 }} />
             </button>
           )}
         </div>
       </div>
 
-      {/* ── URL input ── */}
-      <div style={{ marginBottom: 10 }}>
-        <label style={{ fontFamily: 'monospace', fontSize: 10, letterSpacing: '0.08em',
-          color: 'rgba(255,255,255,0.45)', display: 'block', marginBottom: 6 }}>
+      <div className="mb-[10px]">
+        <label className="font-mono text-[10px] tracking-wider text-scada-muted block mb-1.5">
           FIRMWARE .BIN URL
         </label>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div className="flex gap-2">
           <input
             type="url"
             value={url}
             onChange={e => { setUrl(e.target.value); if (status === 'error') setStatus('idle') }}
             disabled={!canSend}
             placeholder="https://github.com/…/releases/download/v1.0/firmware.bin"
-            style={{
-              flex: 1, padding: '9px 12px',
-              fontFamily: 'monospace', fontSize: 11, color: '#FBF7EF',
-              background: 'rgba(0,0,0,0.28)',
-              border: `1px solid ${status === 'error' ? 'rgba(239,83,80,0.5)' : 'rgba(255,255,255,0.14)'}`,
-              borderRadius: 8, outline: 'none',
-              opacity: canSend ? 1 : 0.5,
-              transition: 'border-color 0.2s',
-            }}
+            className="flex-1 px-3 py-2.5 font-mono text-xs rounded-lg outline-none transition-colors bg-scada-dim text-scada-text placeholder:text-scada-muted/50"
+            style={{ border: `1px solid ${status === 'error' ? 'rgba(220,38,38,0.5)' : 'var(--scada-border)'}`, opacity: canSend ? 1 : 0.5 }}
           />
           <button
             onClick={handleSend}
             disabled={!canSend}
+            className="px-[18px] py-2.5 rounded-lg border-none whitespace-nowrap font-mono text-[11px] font-bold tracking-wider flex items-center gap-1.5 transition-all"
             style={{
-              padding: '9px 18px', borderRadius: 8, border: 'none', whiteSpace: 'nowrap',
-              background: canSend ? '#B94040' : 'rgba(185,64,64,0.2)',
-              color: canSend ? '#FBF7EF' : 'rgba(255,255,255,0.3)',
-              fontFamily: 'monospace', fontSize: 11, fontWeight: 700, letterSpacing: '0.06em',
+              background: canSend ? 'var(--color-primary)' : 'var(--scada-border)',
+              color: canSend ? '#fff' : 'var(--scada-muted)',
               cursor: canSend ? 'pointer' : 'not-allowed',
-              display: 'flex', alignItems: 'center', gap: 6,
-              transition: 'all 0.2s',
             }}
           >
             {status === 'pending' ? <><Clock style={{ width: 13, height: 13 }} />QUEUING</>
@@ -147,23 +114,17 @@ function OtaTarget({ icon: Icon, title, subtitle, field, color = '#ff8a80', onTr
         </div>
       </div>
 
-      {/* ── Error ── */}
       {status === 'error' && errMsg && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 7,
-          background: 'rgba(239,83,80,0.09)', border: '1px solid rgba(239,83,80,0.28)',
-          borderRadius: 8, padding: '8px 12px' }}>
-          <AlertCircle style={{ width: 13, height: 13, color: '#EF5350', flexShrink: 0 }} />
-          <span style={{ fontFamily: 'monospace', fontSize: 11, color: '#EF5350' }}>{errMsg}</span>
+        <div className="flex items-center gap-2 rounded-lg px-3 py-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+          <AlertCircle style={{ width: 13, height: 13, color: '#dc2626', flexShrink: 0 }} />
+          <span className="font-mono text-xs text-red-600 dark:text-red-400">{errMsg}</span>
         </div>
       )}
 
-      {/* ── Success ── */}
       {status === 'ok' && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 7,
-          background: 'rgba(105,240,174,0.08)', border: '1px solid rgba(105,240,174,0.22)',
-          borderRadius: 8, padding: '8px 12px' }}>
-          <CheckCircle2 style={{ width: 13, height: 13, color: '#69F0AE', flexShrink: 0 }} />
-          <span style={{ fontFamily: 'monospace', fontSize: 11, color: '#69F0AE' }}>
+        <div className="flex items-center gap-2 rounded-lg px-3 py-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+          <CheckCircle2 style={{ width: 13, height: 13, color: '#16a34a', flexShrink: 0 }} />
+          <span className="font-mono text-xs text-green-600 dark:text-green-400">
             OTA command queued — device will update on next poll (≈5 s)
           </span>
         </div>
@@ -172,7 +133,6 @@ function OtaTarget({ icon: Icon, title, subtitle, field, color = '#ff8a80', onTr
   )
 }
 
-// ─── Collapsible how-it-works ─────────────────────────────────────────────────
 function HowItWorks() {
   const [open, setOpen] = useState(false)
   const steps = [
@@ -185,38 +145,29 @@ function HowItWorks() {
   ]
   return (
     <Card>
-      <button onClick={() => setOpen(o => !o)} style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-          <Info style={{ width: 15, height: 15, color: '#90CAF9' }} />
-          <span style={{ fontFamily: 'monospace', fontSize: 11, fontWeight: 700,
-            letterSpacing: '0.08em', color: '#90CAF9' }}>HOW IT WORKS</span>
+      <button onClick={() => setOpen(o => !o)} className="flex items-center justify-between w-full bg-none border-none cursor-pointer p-0">
+        <div className="flex items-center gap-2">
+          <Info style={{ width: 15, height: 15, color: 'var(--color-primary)' }} />
+          <span className="font-mono text-[11px] font-bold tracking-wider" style={{ color: 'var(--color-primary)' }}>HOW IT WORKS</span>
         </div>
         {open
-          ? <ChevronUp  style={{ width: 14, height: 14, color: 'rgba(255,255,255,0.35)' }} />
-          : <ChevronDown style={{ width: 14, height: 14, color: 'rgba(255,255,255,0.35)' }} />}
+          ? <ChevronUp  style={{ width: 14, height: 14, color: 'var(--scada-muted)' }} />
+          : <ChevronDown style={{ width: 14, height: 14, color: 'var(--scada-muted)' }} />}
       </button>
 
       {open && (
-        <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 11 }}>
+        <div className="mt-4 flex flex-col gap-3">
           {steps.map((text, i) => (
-            <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-              <span style={{ fontFamily: 'monospace', fontSize: 11, fontWeight: 700,
-                color: '#B94040', flexShrink: 0, marginTop: 1 }}>
+            <div key={i} className="flex gap-3 items-start">
+              <span className="font-mono text-[11px] font-bold shrink-0 mt-0.5 text-scada-accent">
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <span style={{ fontFamily: 'monospace', fontSize: 11,
-                color: 'rgba(255,255,255,0.62)', lineHeight: 1.65 }}>{text}</span>
+              <span className="font-mono text-[11px] text-scada-muted leading-relaxed">{text}</span>
             </div>
           ))}
 
-          {/* Warning */}
-          <div style={{ marginTop: 4, padding: '10px 14px',
-            background: 'rgba(255,213,79,0.07)', border: '1px solid rgba(255,213,79,0.22)',
-            borderRadius: 8 }}>
-            <span style={{ fontFamily: 'monospace', fontSize: 10, color: '#FFD54F', lineHeight: 1.6 }}>
+          <div className="mt-1 px-3 py-2.5 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+            <span className="font-mono text-[10px] text-amber-700 dark:text-amber-400 leading-relaxed">
               ⚠ The firmware URL must be publicly accessible (no authentication).
               GitHub Releases direct asset links work perfectly.
             </span>
@@ -224,8 +175,8 @@ function HowItWorks() {
 
           <a href="https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository"
             target="_blank" rel="noopener noreferrer"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 5,
-              fontFamily: 'monospace', fontSize: 10, color: '#90CAF9', textDecoration: 'none' }}>
+            className="inline-flex items-center gap-1.5 font-mono text-[10px] no-underline"
+            style={{ color: 'var(--color-primary)' }}>
             <ExternalLink style={{ width: 11, height: 11 }} />
             How to create a GitHub Release →
           </a>
@@ -235,7 +186,6 @@ function HowItWorks() {
   )
 }
 
-// ─── Main page export ─────────────────────────────────────────────────────────
 export default function OtaPage() {
   const { applyControl, hasDevices } = useControls()
   const { user } = useAuth()
@@ -244,20 +194,12 @@ export default function OtaPage() {
     await applyControl({ [field]: url })
   }
 
-  // ── No device linked ─────────────────────────────────────────────────────
   if (!hasDevices) {
     return (
-      <div style={{
-        display: 'flex', flexDirection: 'column', alignItems: 'center',
-        justifyContent: 'center', padding: '48px 24px', textAlign: 'center',
-        background: 'rgba(255,255,255,0.06)', borderRadius: 16,
-        border: '1px dashed rgba(255,255,255,0.2)', marginTop: 16,
-      }}>
-        <div style={{ fontSize: 42, marginBottom: 14 }}>🔌</div>
-        <h3 style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: 13,
-          letterSpacing: '0.1em', color: '#FBF7EF', marginBottom: 8 }}>NO DEVICE LINKED</h3>
-        <p style={{ fontFamily: 'monospace', fontSize: 11,
-          color: 'rgba(255,255,255,0.5)', maxWidth: 280 }}>
+      <div className="flex flex-col items-center justify-center p-12 text-center bg-scada-panel border border-dashed border-scada-border rounded-2xl mt-4">
+        <div className="text-4xl mb-4">🔌</div>
+        <h3 className="font-mono font-bold text-sm tracking-widest text-scada-text mb-2">NO DEVICE LINKED</h3>
+        <p className="font-mono text-xs text-scada-muted max-w-[280px]">
           Link your ESP32 device first before triggering OTA updates.
         </p>
       </div>
@@ -265,21 +207,14 @@ export default function OtaPage() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 14, maxWidth: 680, margin: '0 auto' }}>
-
-      {/* ── Safety warning ── */}
-      <div style={{
-        display: 'flex', alignItems: 'flex-start', gap: 10,
-        background: 'rgba(255,213,79,0.08)', border: '1px solid rgba(255,213,79,0.25)',
-        borderRadius: 12, padding: '11px 16px',
-      }}>
-        <AlertCircle style={{ width: 15, height: 15, color: '#FFD54F', flexShrink: 0, marginTop: 1 }} />
-        <span style={{ fontFamily: 'monospace', fontSize: 11, color: '#FFD54F', lineHeight: 1.6 }}>
+    <div className="flex flex-col gap-4 max-w-[680px] mx-auto">
+      <div className="flex items-start gap-2.5 rounded-xl px-4 py-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+        <AlertCircle style={{ width: 15, height: 15, color: '#d97706', flexShrink: 0, marginTop: 1 }} />
+        <span className="font-mono text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
           OTA updates will reboot the target device. Make sure the system is in a safe state before proceeding.
         </span>
       </div>
 
-      {/* ── ESP32 target ── */}
       <OtaTarget
         icon={Wifi}
         title="ESP32-S3 FIRMWARE"
@@ -288,7 +223,6 @@ export default function OtaPage() {
         onTrigger={triggerOta}
       />
 
-      {/* ── STM32 target ── */}
       <OtaTarget
         icon={Cpu}
         title="STM32F401 FIRMWARE"
@@ -297,12 +231,9 @@ export default function OtaPage() {
         onTrigger={triggerOta}
       />
 
-      {/* ── How it works ── */}
       <HowItWorks />
 
-      {/* ── Footer note ── */}
-      <p style={{ fontFamily: 'monospace', fontSize: 10,
-        color: 'rgba(255,255,255,0.22)', textAlign: 'center', paddingTop: 2 }}>
+      <p className="font-mono text-[10px] text-center pt-1 text-scada-muted/50">
         Signed in as {user?.email} · OTA commands are written to the Supabase controls table
       </p>
     </div>

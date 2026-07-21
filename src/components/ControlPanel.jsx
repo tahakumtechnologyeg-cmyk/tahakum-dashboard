@@ -41,10 +41,10 @@ export default function ControlPanel() {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between pb-1 border-b border-white/20 mb-4">
+      <div className="flex items-center justify-between pb-1 border-b border-scada-border mb-4">
         <div>
-          <h2 className="font-display text-sm font-bold tracking-widest text-white">VFD CONTROL PANEL</h2>
-          <p className="font-body text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.75)' }}>Variable Frequency Drive · Water Pump</p>
+          <h2 className="font-display text-sm font-bold tracking-widest text-scada-text">VFD CONTROL PANEL</h2>
+          <p className="font-body text-xs mt-0.5" style={{ color: 'var(--scada-muted)' }}>Variable Frequency Drive · Water Pump</p>
         </div>
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-scada-accent/30 bg-scada-accent/5">
           <Lock className="w-3 h-3 text-scada-accent" />
@@ -111,7 +111,7 @@ export default function ControlPanel() {
           </div>
           <div className="text-right">
             <div className="font-mono text-xs text-scada-muted">MOTOR SPEED</div>
-            <div className="font-display text-lg font-bold text-white">{freqPct}<span className="text-sm text-scada-muted">%</span></div>
+            <div className="font-display text-lg font-bold text-scada-text">{freqPct}<span className="text-sm text-scada-muted">%</span></div>
           </div>
         </div>
 
@@ -142,7 +142,7 @@ export default function ControlPanel() {
         <div className="flex items-center gap-3">
           <div className="flex items-center border border-scada-border rounded-lg overflow-hidden bg-scada-bg">
             <button onClick={() => setLocalSpeed(s => Math.max(0, +(s - 0.5).toFixed(1)))}
-              className="px-2 py-2 text-scada-muted hover:text-white hover:bg-scada-dim transition-colors">
+              className="px-2 py-2 text-scada-muted hover:text-scada-text hover:bg-scada-dim transition-colors">
               <ChevronDown className="w-4 h-4" />
             </button>
             <input
@@ -152,10 +152,10 @@ export default function ControlPanel() {
               step={0.5}
               value={localSpeed}
               onChange={e => setLocalSpeed(Math.min(50, Math.max(0, parseFloat(e.target.value) || 0)))}
-              className="w-16 bg-transparent text-center font-mono text-sm text-white focus:outline-none py-2"
+              className="w-16 bg-transparent text-center font-mono text-sm text-scada-text focus:outline-none py-2"
             />
             <button onClick={() => setLocalSpeed(s => Math.min(50, +(s + 0.5).toFixed(1)))}
-              className="px-2 py-2 text-scada-muted hover:text-white hover:bg-scada-dim transition-colors">
+              className="px-2 py-2 text-scada-muted hover:text-scada-text hover:bg-scada-dim transition-colors">
               <ChevronUp className="w-4 h-4" />
             </button>
           </div>
@@ -179,7 +179,7 @@ export default function ControlPanel() {
         <div className="flex items-center gap-3">
           <div className="flex items-center border border-scada-border rounded-lg overflow-hidden bg-scada-bg">
             <button onClick={() => setLocalPressure(p => Math.max(0.5, +(p - 0.1).toFixed(1)))}
-              className="px-2 py-2 text-scada-muted hover:text-white hover:bg-scada-dim transition-colors">
+              className="px-2 py-2 text-scada-muted hover:text-scada-text hover:bg-scada-dim transition-colors">
               <ChevronDown className="w-4 h-4" />
             </button>
             <input
@@ -189,10 +189,10 @@ export default function ControlPanel() {
               step={0.1}
               value={localPressure}
               onChange={e => setLocalPressure(Math.min(8, Math.max(0.5, parseFloat(e.target.value) || 0.5)))}
-              className="w-16 bg-transparent text-center font-mono text-sm text-white focus:outline-none py-2"
+              className="w-16 bg-transparent text-center font-mono text-sm text-scada-text focus:outline-none py-2"
             />
             <button onClick={() => setLocalPressure(p => Math.min(8, +(p + 0.1).toFixed(1)))}
-              className="px-2 py-2 text-scada-muted hover:text-white hover:bg-scada-dim transition-colors">
+              className="px-2 py-2 text-scada-muted hover:text-scada-text hover:bg-scada-dim transition-colors">
               <ChevronUp className="w-4 h-4" />
             </button>
           </div>
@@ -214,7 +214,7 @@ export default function ControlPanel() {
       <button
         onClick={() => applyControl({ status: false, pump_speed: 0, target_pressure: 3.5 })}
         disabled={updating}
-        className="w-full flex items-center justify-center gap-2 py-2.5 border border-white/30 rounded-lg text-white hover:bg-white/10 hover:border-white/50 font-mono text-xs transition-all disabled:opacity-40">
+        className="w-full flex items-center justify-center gap-2 py-2.5 border border-scada-border rounded-lg text-scada-text hover:bg-scada-dim hover:border-scada-accent/50 font-mono text-xs transition-all disabled:opacity-40">
         <RotateCcw className="w-3.5 h-3.5" />
         EMERGENCY STOP & RESET
       </button>

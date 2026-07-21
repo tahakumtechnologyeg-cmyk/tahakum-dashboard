@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { LogOut, LayoutDashboard, LineChart, Settings, Zap, User, Cpu, Bell, HeadphonesIcon, Upload } from 'lucide-react'
+import { LogOut, LayoutDashboard, LineChart, Settings, Zap, User, Cpu, Bell, HeadphonesIcon, Upload, Moon, Sun } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { useTelemetry } from '../hooks/useTelemetry'
+import { useI18n } from '../i18n/I18nContext'
+import { useThemeContext } from '../ThemeContext'
 import SensorCard from '../components/SensorCard'
 import LiveChart from '../components/LiveChart'
 import ControlPanel from '../components/ControlPanel'
@@ -16,84 +18,47 @@ import OtaPage from '../components/OtaPage'
 const SENSOR_ORDER = ['NPK_NITROGEN', 'NPK_PHOSPHORUS', 'NPK_POTASSIUM', 'PRESSURE']
 
 const TABS = [
-  { id: 'sensors',       label: 'Sensor Overview',    shortLabel: 'Sensors',       icon: LayoutDashboard },
-  { id: 'charts',        label: 'Trend Analysis',      shortLabel: 'Trends',        icon: LineChart },
-  { id: 'control',       label: 'VFD Control Panel',   shortLabel: 'Control',       icon: Settings },
-  { id: 'energy',        label: 'Energy Tracking',     shortLabel: 'Energy',        icon: Zap },
-  { id: 'devices',       label: 'My Devices',          shortLabel: 'Devices',       icon: Cpu },
-  { id: 'ota',           label: 'Firmware Update',     shortLabel: 'OTA',           icon: Upload },
-  { id: 'notifications', label: 'Notifications',       shortLabel: 'Alerts',        icon: Bell },
-  { id: 'support',       label: 'Support',             shortLabel: 'Support',       icon: HeadphonesIcon },
-  { id: 'profile',       label: 'Profile',             shortLabel: 'Profile',       icon: User },
+  { id: 'sensors',       icon: LayoutDashboard },
+  { id: 'charts',        icon: LineChart },
+  { id: 'control',       icon: Settings },
+  { id: 'energy',        icon: Zap },
+  { id: 'devices',       icon: Cpu },
+  { id: 'ota',           icon: Upload },
+  { id: 'notifications', icon: Bell },
+  { id: 'support',       icon: HeadphonesIcon },
+  { id: 'profile',       icon: User },
 ]
-
-function AutomationBg() {
-  return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-      <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg" style={{ opacity: 0.18 }}>
-        <defs>
-          <pattern id="circuit-grid" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-            <line x1="0" y1="40" x2="80" y2="40" stroke="#8B6F47" strokeWidth="0.5" strokeDasharray="4 4"/>
-            <line x1="40" y1="0" x2="40" y2="80" stroke="#8B6F47" strokeWidth="0.5" strokeDasharray="4 4"/>
-            <circle cx="40" cy="40" r="2.5" fill="#7B5E3A" fillOpacity="0.6"/>
-            <circle cx="0" cy="0" r="1.5" fill="#7B5E3A" fillOpacity="0.4"/>
-            <circle cx="80" cy="0" r="1.5" fill="#7B5E3A" fillOpacity="0.4"/>
-            <circle cx="0" cy="80" r="1.5" fill="#7B5E3A" fillOpacity="0.4"/>
-            <circle cx="80" cy="80" r="1.5" fill="#7B5E3A" fillOpacity="0.4"/>
-            <line x1="40" y1="40" x2="60" y2="40" stroke="#7B5E3A" strokeWidth="1.2"/>
-            <line x1="60" y1="40" x2="60" y2="55" stroke="#7B5E3A" strokeWidth="1.2"/>
-            <circle cx="60" cy="55" r="2" fill="#7B5E3A" fillOpacity="0.5"/>
-            <line x1="40" y1="40" x2="40" y2="20" stroke="#7B5E3A" strokeWidth="1.2"/>
-            <line x1="40" y1="20" x2="25" y2="20" stroke="#7B5E3A" strokeWidth="1.2"/>
-            <circle cx="25" cy="20" r="2" fill="#7B5E3A" fillOpacity="0.5"/>
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#circuit-grid)"/>
-      </svg>
-    </div>
-  )
-}
 
 function SectionHeader({ title, subtitle }) {
   return (
-    <div className="flex items-center justify-between pb-1 border-b border-white/20 mb-4 animate-slideDown">
+    <div className="flex items-center justify-between pb-1 border-b border-scada-border mb-4 animate-slideDown">
       <div>
-        <h2 className="font-display text-xs font-bold tracking-widest text-white">{title}</h2>
-        {subtitle && <p className="font-body text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.75)' }}>{subtitle}</p>}
+        <h2 className="font-display text-xs font-bold tracking-widest text-scada-text">{title}</h2>
+        {subtitle && <p className="font-body text-xs mt-0.5 text-scada-muted">{subtitle}</p>}
       </div>
     </div>
   )
 }
 
-
 function NoDevicesBanner({ onGoToDevices }) {
+  const { t } = useI18n()
   return (
-    <div className="animate-scaleIn flex flex-col items-center justify-center text-center mt-4"
-      style={{
-        padding: '48px 24px',
-        background: 'rgba(255,255,255,0.06)', borderRadius: 16,
-        border: '1px dashed rgba(255,255,255,0.2)',
-      }}>
-      <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4 border-2 border-dashed border-white/20">
-        <Cpu className="w-6 h-6" style={{ color: 'rgba(255,255,255,0.35)' }} />
+    <div className="animate-scaleIn flex flex-col items-center justify-center text-center mt-4 p-12 bg-scada-panel border border-dashed border-scada-border rounded-2xl">
+      <div className="w-14 h-14 rounded-full flex items-center justify-center mb-4 border-2 border-dashed border-scada-border">
+        <Cpu className="w-6 h-6 text-scada-muted" />
       </div>
-      <h3 className="font-mono font-bold text-sm tracking-widest" style={{ color: '#FBF7EF', marginBottom: 8 }}>
-        NO DEVICE LINKED
+      <h3 className="font-mono font-bold text-sm tracking-widest text-scada-text mb-2">
+        {t('dashboard.noDevice')}
       </h3>
-      <p className="font-mono text-xs" style={{ color: 'rgba(255,255,255,0.55)', maxWidth: 280, marginBottom: 20 }}>
-        Link your ESP32 device first to start seeing live data here.
+      <p className="font-mono text-xs text-scada-muted max-w-[280px] mb-5">
+        {t('dashboard.noDeviceDesc')}
       </p>
       <button
         onClick={onGoToDevices}
-        className="card-hover"
-        style={{
-          padding: '10px 24px', borderRadius: 10, cursor: 'pointer',
-          background: '#B94040', color: '#FBF7EF', border: 'none',
-          fontFamily: 'monospace', fontSize: 12, fontWeight: 700,
-          letterSpacing: '0.08em',
-        }}
+        className="px-6 py-2.5 rounded-xl font-mono text-xs font-bold tracking-widest text-white transition-all hover:opacity-90"
+        style={{ background: 'var(--color-primary)' }}
       >
-        + ADD DEVICE
+        {t('dashboard.addDevice')}
       </button>
     </div>
   )
@@ -102,6 +67,8 @@ function NoDevicesBanner({ onGoToDevices }) {
 export default function Dashboard() {
   const { user, signOut } = useAuth()
   const { latest, history, connected, hasDevices } = useTelemetry()
+  const { t, lang, toggleLang, isRTL } = useI18n()
+  const { theme, toggleTheme } = useThemeContext()
   const [activeTab, setActiveTab] = useState('sensors')
   const [transitioning, setTransitioning] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -123,22 +90,16 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen font-body relative" style={{ background: 'linear-gradient(160deg, #0A2A6E 0%, #0E4A9C 30%, #1565C0 55%, #0D47A1 80%, #083170 100%)' }}>
-      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0, background: 'radial-gradient(ellipse 90% 60% at 50% 10%, rgba(100,210,255,0.18) 0%, rgba(30,136,229,0.08) 50%, transparent 80%)' }} />
-      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0, backgroundImage: 'linear-gradient(rgba(100,210,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(100,210,255,0.07) 1px, transparent 1px)', backgroundSize: '52px 52px' }} />
-      <AutomationBg />
-
+    <div className="min-h-screen font-body bg-scada-bg">
       {/* ── Top Bar ── */}
-      <header className="sticky top-0 z-40 border-b border-scada-border shadow-sm" style={{ background: '#B94040' }}>
+      <header className="sticky top-0 z-40 bg-scada-panel border-b border-scada-border shadow-sm">
         <div className="flex items-center justify-between px-4 sm:px-6 h-12 sm:h-14">
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-
             {/* Hamburger */}
             <button
               onClick={() => setDrawerOpen(o => !o)}
-              className="p-1.5 rounded-lg transition-colors hover:bg-white/10 mr-1"
-              style={{ color: '#FBF7EF' }}
-              aria-label="Toggle menu"
+              className="p-1.5 rounded-lg transition-colors hover:bg-scada-dim mr-1 text-scada-text"
+              aria-label={t('common.menu')}
             >
               <div className="flex flex-col gap-[5px]">
                 <span className="block w-5 h-0.5 bg-current rounded"
@@ -150,24 +111,34 @@ export default function Dashboard() {
               </div>
             </button>
 
-            <img src="./bolt-logo.svg" alt="Tahakum Technology" className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg"
-              style={{ boxShadow: '0 0 15px rgba(211,47,47,0.3)' }} />
-            <div>
-              <div className="font-display text-sm font-bold tracking-widest leading-none" style={{ color: '#FBF7EF' }}>TAHAKUM TECHNOLOGY</div>
-              <div className="font-mono text-[10px] sm:text-xs leading-none mt-0.5" style={{ color: 'rgba(251,247,239,0.75)' }}>تحكم تكنولوجي</div>
+            <img src="./bolt-logo.svg" alt="Tahakum Technology" className="w-7 h-7 sm:w-8 sm:h-8" />
+            <div className="hidden sm:block">
+              <div className="font-display text-sm font-bold tracking-widest leading-none text-scada-text">TAHAKUM TECHNOLOGY</div>
+              <div className="font-mono text-[10px] sm:text-xs leading-none mt-0.5 text-scada-muted">تحكم تكنولوجي</div>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${connected ? 'bg-green-300 animate-pulse' : 'bg-white/40'}`} />
-            <div className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 border border-white/30 rounded-lg"
-              style={{ background: 'rgba(255,255,255,0.12)' }}>
-              <div className="w-1.5 h-1.5 rounded-full bg-green-300 flex-shrink-0" />
-              <span className="font-mono text-[11px] sm:text-xs max-w-[80px] sm:max-w-none truncate" style={{ color: '#FBF7EF' }}>
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg text-scada-muted hover:text-primary hover:bg-scada-dim transition-colors"
+            >
+              {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
+            <button
+              onClick={toggleLang}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium text-scada-muted hover:text-primary hover:bg-scada-dim transition-colors border border-scada-border"
+            >
+              {lang === 'en' ? 'AR' : 'EN'}
+            </button>
+            <div className={`w-2 h-2 rounded-full ${connected ? 'bg-green-500 animate-pulse' : 'bg-scada-border'}`} />
+            <div className="hidden sm:flex items-center gap-1.5 px-2 sm:px-3 py-1.5 border border-scada-border rounded-lg bg-scada-dim/50">
+              <div className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0" />
+              <span className="font-mono text-[11px] sm:text-xs text-scada-text max-w-[80px] sm:max-w-none truncate">
                 {user?.email?.split('@')[0]}
               </span>
             </div>
-            <button onClick={signOut} className="p-1.5 sm:p-2" style={{ color: 'rgba(251,247,239,0.8)' }} title="Sign out">
+            <button onClick={signOut} className="p-1.5 sm:p-2 text-scada-muted hover:text-scada-text transition-colors" title={t('nav.signOut')}>
               <LogOut className="w-4 h-4" />
             </button>
           </div>
@@ -177,121 +148,73 @@ export default function Dashboard() {
       {/* ── Drawer Overlay ── */}
       <div
         onClick={() => setDrawerOpen(false)}
-        style={{
-          position: 'fixed', inset: 0, zIndex: 45,
-          background: 'rgba(0,0,0,0.5)',
-          opacity: drawerOpen ? 1 : 0,
-          pointerEvents: drawerOpen ? 'all' : 'none',
-          transition: 'opacity 0.3s ease',
-        }}
+        className="fixed inset-0 z-45 bg-black/50 transition-opacity duration-300"
+        style={{ opacity: drawerOpen ? 1 : 0, pointerEvents: drawerOpen ? 'all' : 'none' }}
       />
 
       {/* ── Drawer ── */}
-      <nav style={{
-        position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50,
-        width: 248,
-        background: 'linear-gradient(180deg, #0d1b3e 0%, #0f2755 40%, #0a1f4a 100%)',
-        borderRight: '1px solid rgba(185,64,64,0.35)',
-        boxShadow: drawerOpen ? '8px 0 40px rgba(0,0,0,0.6)' : 'none',
-        transform: drawerOpen ? 'translateX(0)' : 'translateX(-100%)',
-        transition: 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease',
-        display: 'flex', flexDirection: 'column',
-      }}>
-        {/* Drawer top accent bar */}
-        <div style={{
-          height: 48, background: '#B94040',
-          display: 'flex', alignItems: 'center',
-          padding: '0 16px', gap: 10, flexShrink: 0,
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
-        }}>
-          <button onClick={() => setDrawerOpen(false)} aria-label="Close menu"
-            style={{ display: 'flex', flexDirection: 'column', gap: 5, cursor: 'pointer', background: 'none', border: 'none', padding: 0 }}>
-            <span className="block w-5 h-0.5 rounded" style={{ background: '#FBF7EF', transform: 'rotate(45deg) translateY(6px)', transition: 'transform 0.3s' }} />
-            <span className="block w-5 h-0.5 rounded" style={{ background: '#FBF7EF', opacity: 0, transition: 'opacity 0.3s' }} />
-            <span className="block w-5 h-0.5 rounded" style={{ background: '#FBF7EF', transform: 'rotate(-45deg) translateY(-6px)', transition: 'transform 0.3s' }} />
+      <nav className="fixed top-0 bottom-0 z-50 w-60 bg-scada-panel border-r border-scada-border shadow-xl flex flex-col transition-transform duration-300"
+        style={{
+          left: isRTL ? 'auto' : 0,
+          right: isRTL ? 0 : 'auto',
+          transform: drawerOpen
+            ? 'translateX(0)'
+            : isRTL ? 'translateX(100%)' : 'translateX(-100%)',
+        }}
+      >
+        {/* Drawer top */}
+        <div className="h-12 bg-scada-bg border-b border-scada-border flex items-center px-4 gap-2 shrink-0">
+          <button onClick={() => setDrawerOpen(false)} className="p-1 text-scada-text">
+            <div className="flex flex-col gap-[5px]">
+              <span className="block w-5 h-0.5 bg-current rounded" style={{ transform: 'rotate(45deg) translateY(6px)' }} />
+              <span className="block w-5 h-0.5 bg-current rounded" style={{ opacity: 0 }} />
+              <span className="block w-5 h-0.5 bg-current rounded" style={{ transform: 'rotate(-45deg) translateY(-6px)' }} />
+            </div>
           </button>
-          <span className="font-mono text-xs font-bold tracking-widest" style={{ color: '#FBF7EF' }}>MENU</span>
+          <span className="font-mono text-xs font-bold tracking-widest text-scada-text">{t('nav.menu')}</span>
         </div>
 
         {/* Nav items */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '12px 8px' }}>
-          <div style={{ padding: '4px 8px 10px', marginBottom: 4 }}>
-            <span className="font-mono text-[10px] tracking-widest" style={{ color: 'rgba(185,64,64,0.7)' }}>NAVIGATION</span>
-          </div>
-
-          {TABS.map(({ id, label, icon: Icon }, index) => (
+        <div className="flex-1 overflow-y-auto p-3">
+          {TABS.map(({ id, icon: Icon }) => (
             <button
               key={id}
               onClick={() => handleTabClick(id)}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 12,
-                width: '100%', textAlign: 'left',
-                padding: '11px 14px', borderRadius: 10, marginBottom: 4,
-                fontFamily: 'monospace', fontSize: 12,
-                fontWeight: activeTab === id ? 700 : 400,
-                border: activeTab === id ? '1px solid rgba(185,64,64,0.4)' : '1px solid transparent',
-                background: activeTab === id ? 'rgba(185,64,64,0.18)' : 'transparent',
-                color: activeTab === id ? '#ff8a80' : 'rgba(255,255,255,0.72)',
-                boxShadow: activeTab === id ? 'inset 3px 0 0 #B94040' : 'none',
-                cursor: 'pointer',
-                transform: drawerOpen ? 'translateX(0)' : 'translateX(-16px)',
-                opacity: drawerOpen ? 1 : 0,
-                transition: `transform 0.3s cubic-bezier(0.4,0,0.2,1) ${index * 35}ms, opacity 0.3s ease ${index * 35}ms, background 0.15s, color 0.15s`,
-                position: 'relative',
-              }}
-              onMouseEnter={e => { if (activeTab !== id) { e.currentTarget.style.background = 'rgba(255,255,255,0.06)' } }}
-              onMouseLeave={e => { if (activeTab !== id) { e.currentTarget.style.background = 'transparent' } }}
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-mono mb-1 transition-all ${
+                activeTab === id
+                  ? 'text-primary bg-primary-bg'
+                  : 'text-scada-muted hover:text-scada-text hover:bg-scada-dim'
+              }`}
             >
-              <Icon style={{ width: 16, height: 16, flexShrink: 0 }} />
-              <span style={{ flex: 1 }}>{label}</span>
-              {/* Notification badge */}
+              <Icon size={16} className="shrink-0" />
+              <span className="flex-1 text-left">{t(`nav.${id}`)}</span>
               {id === 'notifications' && notifCount > 0 && (
-                <span style={{
-                  minWidth: 18, height: 18, borderRadius: 9,
-                  background: '#B94040', color: '#FBF7EF',
-                  fontFamily: 'monospace', fontSize: 10, fontWeight: 700,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  padding: '0 5px', flexShrink: 0,
-                  animation: 'pulse 2s infinite',
-                }}>
+                <span className="min-w-[18px] h-[18px] rounded-full text-[10px] font-bold flex items-center justify-center px-1 text-white shrink-0"
+                  style={{ background: 'var(--color-primary)' }}>
                   {notifCount}
                 </span>
               )}
-              {activeTab === id && notifCount === 0 && id !== 'notifications' && (
-                <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#B94040', flexShrink: 0 }} />
-              )}
-              {activeTab === id && id === 'notifications' && notifCount === 0 && (
-                <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#B94040', flexShrink: 0 }} />
+              {activeTab === id && notifCount === 0 && (
+                <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: 'var(--color-primary)' }} />
               )}
             </button>
           ))}
         </div>
 
-        {/* Sign out at bottom */}
-        <div style={{ padding: '12px 8px', borderTop: '1px solid rgba(185,64,64,0.2)' }}>
+        {/* Sign out */}
+        <div className="p-3 border-t border-scada-border">
           <button
             onClick={signOut}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 10,
-              width: '100%', padding: '10px 14px', borderRadius: 10,
-              fontFamily: 'monospace', fontSize: 12,
-              color: 'rgba(255,255,255,0.45)', background: 'transparent',
-              border: '1px solid transparent', cursor: 'pointer',
-              transition: 'all 0.2s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.color = '#ff8a80'; e.currentTarget.style.background = 'rgba(185,64,64,0.1)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.45)'; e.currentTarget.style.background = 'transparent' }}
+            className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-mono text-scada-muted hover:text-scada-text hover:bg-scada-dim transition-all"
           >
-            <LogOut style={{ width: 15, height: 15 }} />
-            Sign Out
+            <LogOut size={16} />
+            {t('nav.signOut')}
           </button>
         </div>
       </nav>
 
       {/* ── Body ── */}
       <div className="relative z-10 flex max-w-screen-2xl mx-auto">
-
-        {/* ── Content ── */}
         <main
           className="flex-1 px-4 sm:px-6 py-6 pb-6"
           style={{
@@ -305,7 +228,7 @@ export default function Dashboard() {
           <div key={activeTab} className="animate-fadeIn">
           {activeTab === 'sensors' && (
             <div>
-              <SectionHeader title="SENSOR OVERVIEW" subtitle="Real-time monitoring · 5s interval" />
+              <SectionHeader title={t('dashboard.sensors')} subtitle={t('dashboard.sensorsSub')} />
               {!hasDevices ? (
                 <NoDevicesBanner onGoToDevices={() => switchTab('devices')} />
               ) : (
@@ -322,7 +245,7 @@ export default function Dashboard() {
 
           {activeTab === 'charts' && (
             <div>
-              <SectionHeader title="TREND ANALYSIS" subtitle="Live time-series data" />
+              <SectionHeader title={t('dashboard.trends')} subtitle={t('dashboard.trendsSub')} />
               {!hasDevices ? (
                 <NoDevicesBanner onGoToDevices={() => switchTab('devices')} />
               ) : (
@@ -354,7 +277,7 @@ export default function Dashboard() {
 
           {activeTab === 'energy' && (
             <div className="max-w-2xl mx-auto animate-slideUp">
-              <SectionHeader title="ENERGY TRACKING" subtitle="Pump consumption data" />
+              <SectionHeader title={t('dashboard.energy')} subtitle={t('dashboard.energySub')} />
               {!hasDevices ? (
                 <NoDevicesBanner onGoToDevices={() => switchTab('devices')} />
               ) : (
@@ -365,35 +288,35 @@ export default function Dashboard() {
 
           {activeTab === 'devices' && (
             <div className="animate-slideUp">
-              <SectionHeader title="MY DEVICES" subtitle="Link and manage your Tahakum boards" />
+              <SectionHeader title={t('dashboard.devices')} subtitle={t('dashboard.devicesSub')} />
               <DevicesPage />
             </div>
           )}
 
           {activeTab === 'ota' && (
             <div className="animate-slideUp">
-              <SectionHeader title="FIRMWARE UPDATE" subtitle="OTA · Over-The-Air · ESP32 & STM32" />
+              <SectionHeader title={t('dashboard.ota')} subtitle={t('dashboard.otaSub')} />
               <OtaPage />
             </div>
           )}
 
           {activeTab === 'profile' && (
             <div className="max-w-xl mx-auto animate-slideUp">
-              <SectionHeader title="PROFILE" subtitle="Manage your account" />
+              <SectionHeader title={t('dashboard.profile')} subtitle={t('dashboard.profileSub')} />
               <ProfilePage />
             </div>
           )}
 
           {activeTab === 'notifications' && (
             <div className="max-w-2xl mx-auto animate-slideUp">
-              <SectionHeader title="NOTIFICATIONS" subtitle="Sensor alerts & motor events" />
+              <SectionHeader title={t('dashboard.notifications')} subtitle={t('dashboard.notificationsSub')} />
               <NotificationsPage latest={latest} />
             </div>
           )}
 
           {activeTab === 'support' && (
             <div className="max-w-xl mx-auto animate-slideUp">
-              <SectionHeader title="SUPPORT" subtitle="Get help from the Tahakum team" />
+              <SectionHeader title={t('dashboard.support')} subtitle={t('dashboard.supportSub')} />
               <SupportPage />
             </div>
           )}
