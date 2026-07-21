@@ -66,11 +66,11 @@ export default function OutputCard({ output, onDelete }) {
             <span className={`px-2 py-1 rounded-md font-mono text-[10px] font-bold tracking-wider ${on ? 'bg-scada-green/10 text-scada-green border border-scada-green/30' : 'bg-scada-dim/20 text-scada-muted border border-scada-border'}`}>
               {on ? t('dashboard.powerOn') : t('dashboard.powerOff')}
             </span>
-            <button onClick={() => onDelete(output.id)}
+            {!output.builtIn && <button onClick={() => onDelete(output.id)}
               className="p-1.5 rounded-lg text-scada-muted/40 hover:text-scada-red/70 hover:bg-scada-red/10 transition-colors"
               title={t('dashboard.deleteOutput')}>
               <Trash2 className="w-3.5 h-3.5" />
-            </button>
+            </button>}
           </div>
         </div>
 

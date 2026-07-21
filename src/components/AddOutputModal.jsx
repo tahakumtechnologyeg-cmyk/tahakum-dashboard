@@ -15,7 +15,7 @@ export default function AddOutputModal({ onClose, onAdd }) {
     onAdd({
       id: `output_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
       name: name.trim(),
-      type,
+      outputType: type,
     })
     onClose()
   }

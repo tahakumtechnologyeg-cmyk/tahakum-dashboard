@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { AuthProvider, useAuth } from './hooks/useAuth'
 import LoginPage from './pages/LoginPage'
 import Dashboard from './pages/Dashboard'
@@ -6,6 +7,18 @@ import { useI18n } from './i18n/I18nContext'
 function AppContent() {
   const { user, loading } = useAuth()
   const { t } = useI18n()
+
+  useEffect(() => {
+    const img = new Image()
+    img.src = `${import.meta.env.BASE_URL}iiot.jpg`
+    img.onload = () => {
+      document.body.style.backgroundImage = `linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('${img.src}')`
+      document.body.style.backgroundSize = 'cover'
+      document.body.style.backgroundPosition = 'center'
+      document.body.style.backgroundAttachment = 'fixed'
+      document.body.style.backgroundRepeat = 'no-repeat'
+    }
+  }, [])
 
   if (loading) {
     return (
