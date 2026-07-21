@@ -51,13 +51,15 @@ export function useDashboardConfig() {
     let cancelled = false
     async function load() {
       setLoading(true)
-      const [sensors, outputs] = await Promise.all([
-        fetchCustomSensors(user.id),
-        fetchCustomOutputs(user.id),
-      ])
-      if (cancelled) return
-      setCustomSensors(sensors)
-      setCustomOutputs(outputs)
+      try {
+        const [sensors, outputs] = await Promise.all([
+          fetchCustomSensors(user.id),
+          fetchCustomOutputs(user.id),
+        ])
+        if (cancelled) return
+        setCustomSensors(sensors)
+        setCustomOutputs(outputs)
+      } catch (e) { console.error('useDashboardConfig fetch failed:', e) }
       setLoading(false)
     }
     load()
@@ -75,43 +77,51 @@ export function useDashboardConfig() {
   ]
 
   const addSensor = useCallback(async (sensorData) => {
-    if (sensorData.builtIn) {
-      setRemovedSensorIds(prev => prev.filter(id => id !== sensorData.id))
-      return
-    }
-    if (!user) return
-    const newSensor = await addCustomSensor(user.id, sensorData)
-    setCustomSensors(prev => [...prev, newSensor])
-    return newSensor
+    try {
+      if (sensorData.builtIn) {
+        setRemovedSensorIds(prev => prev.filter(id => id !== sensorData.id))
+        return
+      }
+      if (!user) { console.error('addSensor: no user'); return }
+      const newSensor = await addCustomSensor(user.id, sensorData)
+      setCustomSensors(prev => [...prev, newSensor])
+      return newSensor
+    } catch (e) { console.error('addSensor failed:', e) }
   }, [user])
 
   const deleteSensor = useCallback(async (id) => {
-    const isBuiltIn = DEFAULT_SENSORS.some(s => s.id === id)
-    if (isBuiltIn) {
-      setRemovedSensorIds(prev => [...prev, id])
-    } else {
-      if (!user) return
-      await deleteCustomSensor(id, user.id)
-      setCustomSensors(prev => prev.filter(s => s.id !== id))
-    }
+    try {
+      const isBuiltIn = DEFAULT_SENSORS.some(s => s.id === id)
+      if (isBuiltIn) {
+        setRemovedSensorIds(prev => [...prev, id])
+      } else {
+        if (!user) { console.error('deleteSensor: no user'); return }
+        await deleteCustomSensor(id, user.id)
+        setCustomSensors(prev => prev.filter(s => s.id !== id))
+      }
+    } catch (e) { console.error('deleteSensor failed:', e) }
   }, [user])
 
   const addOutput = useCallback(async (outputData) => {
-    if (!user) return
-    const newOutput = await addCustomOutput(user.id, outputData)
-    setCustomOutputs(prev => [...prev, newOutput])
-    return newOutput
+    try {
+      if (!user) { console.error('addOutput: no user'); return }
+      const newOutput = await addCustomOutput(user.id, outputData)
+      setCustomOutputs(prev => [...prev, newOutput])
+      return newOutput
+    } catch (e) { console.error('addOutput failed:', e) }
   }, [user])
 
   const deleteOutput = useCallback(async (id) => {
-    const isBuiltIn = DEFAULT_OUTPUTS.some(o => o.id === id)
-    if (isBuiltIn) {
-      setRemovedOutputIds(prev => [...prev, id])
-    } else {
-      if (!user) return
-      await deleteCustomOutput(id, user.id)
-      setCustomOutputs(prev => prev.filter(o => o.id !== id))
-    }
+    try {
+      const isBuiltIn = DEFAULT_OUTPUTS.some(o => o.id === id)
+      if (isBuiltIn) {
+        setRemovedOutputIds(prev => [...prev, id])
+      } else {
+        if (!user) { console.error('deleteOutput: no user'); return }
+        await deleteCustomOutput(id, user.id)
+        setCustomOutputs(prev => prev.filter(o => o.id !== id))
+      }
+    } catch (e) { console.error('deleteOutput failed:', e) }
   }, [user])
 
   return { sensors, outputs, loading, addSensor, deleteSensor, addOutput, deleteOutput }
