@@ -11,13 +11,13 @@ const SENSOR_ICONS = {
   PRESSURE: Gauge,
 }
 
-function formatTime(iso) {
+export function formatTime(iso) {
   if (!iso) return ''
   const d = new Date(iso)
   return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
 }
 
-function formatDate(iso) {
+export function formatDate(iso) {
   if (!iso) return ''
   const d = new Date(iso)
   const today = new Date()
@@ -27,7 +27,7 @@ function formatDate(iso) {
 }
 
 // build sensor alerts from latest telemetry
-function buildSensorAlerts(latest) {
+export function buildSensorAlerts(latest) {
   const ALERT_MSGS = {
     NPK_NITROGEN_warning: 'Nitrogen level elevated',
     NPK_NITROGEN_critical: 'CRITICAL NITROGEN',
@@ -63,7 +63,7 @@ function buildSensorAlerts(latest) {
 }
 
 // build motor/pump alerts from controls state
-function buildMotorAlerts(controls, prevControls) {
+export function buildMotorAlerts(controls, prevControls) {
   const events = []
   if (!controls) return events
 
