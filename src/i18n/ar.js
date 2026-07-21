@@ -28,6 +28,7 @@ export const ar = {
   },
   nav: {
     sensors: 'المستشعرات',
+    charts: 'تحليل الاتجاهات',
     trends: 'تحليل الاتجاهات',
     control: 'التحكم في المخرجات',
     energy: 'تتبع الطاقة',

@@ -28,6 +28,7 @@ export const en = {
   },
   nav: {
     sensors: 'Sensor Overview',
+    charts: 'Trend Analysis',
     trends: 'Trend Analysis',
     control: 'Output Control',
     energy: 'Energy Tracking',
