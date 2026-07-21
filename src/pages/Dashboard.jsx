@@ -1,10 +1,14 @@
-import { useState } from 'react'
-import { LogOut, LayoutDashboard, LineChart, Settings, Zap, User, Cpu, Bell, HeadphonesIcon, Upload, Moon, Sun } from 'lucide-react'
+import { useState, useEffect, useCallback } from 'react'
+import { LogOut, LayoutDashboard, LineChart, Settings, Zap, User, Cpu, Bell, HeadphonesIcon, Upload, Moon, Sun, Plus } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { useTelemetry } from '../hooks/useTelemetry'
 import { useI18n } from '../i18n/I18nContext'
 import { useThemeContext } from '../ThemeContext'
 import SensorCard from '../components/SensorCard'
+import CustomSensorCard from '../components/CustomSensorCard'
+import AddSensorModal from '../components/AddSensorModal'
+import OutputCard from '../components/OutputCard'
+import AddOutputModal from '../components/AddOutputModal'
 import LiveChart from '../components/LiveChart'
 import ControlPanel from '../components/ControlPanel'
 import PowerStats from '../components/PowerStats'
@@ -74,6 +78,41 @@ export default function Dashboard() {
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   const notifCount = getNotifCount(latest)
+  const [customSensors, setCustomSensors] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('customSensors') || '[]') }
+    catch { return [] }
+  })
+  const [showAddSensor, setShowAddSensor] = useState(false)
+
+  useEffect(() => {
+    localStorage.setItem('customSensors', JSON.stringify(customSensors))
+  }, [customSensors])
+
+  const handleAddSensor = useCallback((sensor) => {
+    setCustomSensors(prev => [...prev, sensor])
+  }, [])
+
+  const handleDeleteSensor = useCallback((id) => {
+    setCustomSensors(prev => prev.filter(s => s.id !== id))
+  }, [])
+
+  const [customOutputs, setCustomOutputs] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('customOutputs') || '[]') }
+    catch { return [] }
+  })
+  const [showAddOutput, setShowAddOutput] = useState(false)
+
+  useEffect(() => {
+    localStorage.setItem('customOutputs', JSON.stringify(customOutputs))
+  }, [customOutputs])
+
+  const handleAddOutput = useCallback((output) => {
+    setCustomOutputs(prev => [...prev, output])
+  }, [])
+
+  const handleDeleteOutput = useCallback((id) => {
+    setCustomOutputs(prev => prev.filter(o => o.id !== id))
+  }, [])
 
   function switchTab(newTab) {
     if (newTab === activeTab) return
@@ -228,17 +267,52 @@ export default function Dashboard() {
           <div key={activeTab} className="animate-fadeIn">
           {activeTab === 'sensors' && (
             <div>
-              <SectionHeader title={t('dashboard.sensors')} subtitle={t('dashboard.sensorsSub')} />
+              <div className="flex items-center justify-between pb-1 border-b border-scada-border mb-4 animate-slideDown">
+                <div>
+                  <h2 className="font-display text-xs font-bold tracking-widest text-scada-text">{t('dashboard.sensors')}</h2>
+                  <p className="font-body text-xs mt-0.5 text-scada-muted">{t('dashboard.sensorsSub')}</p>
+                </div>
+                <button
+                  onClick={() => setShowAddSensor(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-mono text-xs font-bold tracking-widest text-white transition-all hover:opacity-90"
+                  style={{ background: 'var(--color-primary)' }}
+                >
+                  <Plus size={14} />
+                  {t('dashboard.addSensor')}
+                </button>
+              </div>
+              {showAddSensor && (
+                <AddSensorModal onClose={() => setShowAddSensor(false)} onAdd={handleAddSensor} />
+              )}
               {!hasDevices ? (
                 <NoDevicesBanner onGoToDevices={() => switchTab('devices')} />
               ) : (
-                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
-                  {SENSOR_ORDER.map((type, i) => (
-                    <div key={type} className={`animate-slideUp stagger-${i + 1}`}>
-                      <SensorCard sensorType={type} data={latest[type]} />
+                <>
+                  <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
+                    {SENSOR_ORDER.map((type, i) => (
+                      <div key={type} className={`animate-slideUp stagger-${i + 1}`}>
+                        <SensorCard sensorType={type} data={latest[type]} />
+                      </div>
+                    ))}
+                    {customSensors.map((s, i) => (
+                      <div key={s.id} className={`animate-slideUp stagger-${i + 1}`}>
+                        <CustomSensorCard sensor={s} onDelete={(id) => {
+                          if (window.confirm(t('dashboard.deleteConfirm'))) handleDeleteSensor(id)
+                        }} />
+                      </div>
+                    ))}
+                  </div>
+                  {customSensors.length === 0 && (
+                    <div className="mt-6 flex flex-col items-center justify-center text-center p-8 bg-scada-panel border border-dashed border-scada-border rounded-2xl">
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center mb-3 border-2 border-dashed border-scada-border">
+                        <Plus className="w-5 h-5 text-scada-muted" />
+                      </div>
+                      <p className="font-mono text-xs text-scada-muted max-w-[240px]">
+                        {t('dashboard.noCustomSensors')}
+                      </p>
                     </div>
-                  ))}
-                </div>
+                  )}
+                </>
               )}
             </div>
           )}
@@ -266,11 +340,62 @@ export default function Dashboard() {
           )}
 
           {activeTab === 'control' && (
-            <div className="max-w-2xl mx-auto animate-slideUp">
+            <div className="animate-slideUp">
+              {showAddOutput && (
+                <AddOutputModal onClose={() => setShowAddOutput(false)} onAdd={handleAddOutput} />
+              )}
+              <div className="max-w-2xl mx-auto">
+                <div className="flex items-center justify-between pb-1 border-b border-scada-border mb-4">
+                  <div>
+                    <h2 className="font-display text-xs font-bold tracking-widest text-scada-text">{t('dashboard.control')}</h2>
+                    <p className="font-body text-xs mt-0.5 text-scada-muted">VFD · Relays · Contactors</p>
+                  </div>
+                  <button
+                    onClick={() => setShowAddOutput(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-mono text-xs font-bold tracking-widest text-white transition-all hover:opacity-90"
+                    style={{ background: 'var(--color-primary)' }}
+                  >
+                    <Plus size={14} />
+                    {t('dashboard.addOutput')}
+                  </button>
+                </div>
+              </div>
               {!hasDevices ? (
-                <NoDevicesBanner onGoToDevices={() => switchTab('devices')} />
+                <div className="max-w-2xl mx-auto">
+                  <NoDevicesBanner onGoToDevices={() => switchTab('devices')} />
+                </div>
               ) : (
-                <ControlPanel />
+                <>
+                  <div className="max-w-2xl mx-auto">
+                    <ControlPanel />
+                  </div>
+                  {customOutputs.length > 0 && (
+                    <div className="max-w-2xl mx-auto mt-6">
+                      <h3 className="font-mono text-xs font-bold tracking-widest text-scada-muted mb-3">
+                        {t('dashboard.customOutput')}s
+                      </h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {customOutputs.map((o, i) => (
+                          <div key={o.id} className={`animate-slideUp stagger-${i + 1}`}>
+                            <OutputCard output={o} onDelete={(id) => {
+                              if (window.confirm(t('dashboard.deleteOutputConfirm'))) handleDeleteOutput(id)
+                            }} />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {customOutputs.length === 0 && (
+                    <div className="max-w-2xl mx-auto mt-6 flex flex-col items-center justify-center text-center p-8 bg-scada-panel border border-dashed border-scada-border rounded-2xl">
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center mb-3 border-2 border-dashed border-scada-border">
+                        <Plus className="w-5 h-5 text-scada-muted" />
+                      </div>
+                      <p className="font-mono text-xs text-scada-muted max-w-[240px]">
+                        {t('dashboard.noCustomOutputs')}
+                      </p>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           )}
