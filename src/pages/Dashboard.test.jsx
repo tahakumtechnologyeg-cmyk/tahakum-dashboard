@@ -127,12 +127,40 @@ vi.mock('../hooks/useControls', () => ({
   }),
 }))
 
+vi.mock('../hooks/useDashboardConfig', () => ({
+  useDashboardConfig: () => ({
+    sensors: [
+      { id: 'NPK_NITROGEN',   builtIn: true, label: 'Nitrogen (N)',       unit: 'mg/kg', min: 0, max: 1999 },
+      { id: 'NPK_PHOSPHORUS', builtIn: true, label: 'Phosphorus (P)',     unit: 'mg/kg', min: 0, max: 1999 },
+      { id: 'NPK_POTASSIUM',  builtIn: true, label: 'Potassium (K)',      unit: 'mg/kg', min: 0, max: 1999 },
+      { id: 'PRESSURE',       builtIn: true, label: 'Water Pressure',      unit: 'bar',   min: 0, max: 10   },
+    ],
+    outputs: [
+      { id: 'pump_vfd', builtIn: true, outputType: 'vfd', name: 'Water Pump' },
+    ],
+    loading: false,
+    addSensor: vi.fn(),
+    deleteSensor: vi.fn(),
+    addOutput: vi.fn(),
+    deleteOutput: vi.fn(),
+  }),
+}))
+
 vi.mock('../lib/supabase', () => ({
   supabase: { auth: { getSession: () => Promise.resolve({ data: { session: null } }) } },
 }))
 
 vi.mock('../lib/demo', () => ({
   DEMO_MODE: false,
+}))
+
+vi.mock('../lib/dashboard', () => ({
+  fetchCustomSensors: () => Promise.resolve([]),
+  addCustomSensor: vi.fn(),
+  deleteCustomSensor: vi.fn(),
+  fetchCustomOutputs: () => Promise.resolve([]),
+  addCustomOutput: vi.fn(),
+  deleteCustomOutput: vi.fn(),
 }))
 
 // Mock child components to avoid rendering issues

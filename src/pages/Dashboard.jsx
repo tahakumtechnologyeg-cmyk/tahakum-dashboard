@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { LogOut, LayoutDashboard, LineChart, Settings, Zap, User, Cpu, Bell, HeadphonesIcon, Upload, Moon, Sun, Plus, Power, ChevronUp, ChevronDown, RotateCcw, GaugeIcon, Activity, BarChart3 } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
 import { useTelemetry } from '../hooks/useTelemetry'
+import { useDashboardConfig } from '../hooks/useDashboardConfig'
 import { useI18n } from '../i18n/I18nContext'
 import { useThemeContext } from '../ThemeContext'
 import SensorCard from '../components/SensorCard'
@@ -17,17 +18,6 @@ import SupportPage from '../components/SupportPage'
 import OtaPage from '../components/OtaPage'
 import OutputCard from '../components/OutputCard'
 import { SENSORS } from '../lib/thresholds'
-
-const DEFAULT_SENSORS = [
-  { id: 'NPK_NITROGEN',   builtIn: true, label: 'Nitrogen (N)',       unit: 'mg/kg', min: 0, max: 1999 },
-  { id: 'NPK_PHOSPHORUS', builtIn: true, label: 'Phosphorus (P)',     unit: 'mg/kg', min: 0, max: 1999 },
-  { id: 'NPK_POTASSIUM',  builtIn: true, label: 'Potassium (K)',      unit: 'mg/kg', min: 0, max: 1999 },
-  { id: 'PRESSURE',       builtIn: true, label: 'Water Pressure',      unit: 'bar',   min: 0, max: 10   },
-]
-
-const DEFAULT_OUTPUTS = [
-  { id: 'pump_vfd', builtIn: true, outputType: 'vfd', name: 'Water Pump' },
-]
 
 const TABS = [
   { id: 'sensors',       icon: LayoutDashboard },
@@ -73,49 +63,15 @@ export default function Dashboard() {
   const { latest, history, connected, hasDevices } = useTelemetry()
   const { t, lang, toggleLang, isRTL } = useI18n()
   const { theme, toggleTheme } = useThemeContext()
+  const { sensors: activeSensors, outputs: activeOutputs, addSensor, deleteSensor, addOutput, deleteOutput } = useDashboardConfig()
   const [activeTab, setActiveTab] = useState('sensors')
   const [transitioning, setTransitioning] = useState(false)
   const [drawerOpen, setDrawerOpen] = useState(false)
 
   const notifCount = getNotifCount(latest)
 
-  /* ── Unified sensors list (defaults + custom) ──────────────────── */
-  const [activeSensors, setActiveSensors] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('activeSensors') || 'null') || DEFAULT_SENSORS }
-    catch { return DEFAULT_SENSORS }
-  })
   const [showAddSensor, setShowAddSensor] = useState(false)
-
-  useEffect(() => {
-    localStorage.setItem('activeSensors', JSON.stringify(activeSensors))
-  }, [activeSensors])
-
-  const handleAddSensor = useCallback((sensor) => {
-    setActiveSensors(prev => [...prev, { ...sensor, builtIn: false }])
-  }, [])
-
-  const handleDeleteSensor = useCallback((id) => {
-    setActiveSensors(prev => prev.filter(s => s.id !== id))
-  }, [])
-
-  /* ── Unified outputs list (default pump + custom) ──────────────── */
-  const [activeOutputs, setActiveOutputs] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('activeOutputs') || 'null') || DEFAULT_OUTPUTS }
-    catch { return DEFAULT_OUTPUTS }
-  })
   const [showAddOutput, setShowAddOutput] = useState(false)
-
-  useEffect(() => {
-    localStorage.setItem('activeOutputs', JSON.stringify(activeOutputs))
-  }, [activeOutputs])
-
-  const handleAddOutput = useCallback((output) => {
-    setActiveOutputs(prev => [...prev, { ...output, builtIn: false }])
-  }, [])
-
-  const handleDeleteOutput = useCallback((id) => {
-    setActiveOutputs(prev => prev.filter(o => o.id !== id))
-  }, [])
 
   function switchTab(newTab) {
     if (newTab === activeTab) return
@@ -232,7 +188,7 @@ export default function Dashboard() {
                   </button>
                 }
               />
-              {showAddSensor && <AddSensorModal onClose={() => setShowAddSensor(false)} onAdd={handleAddSensor} existingIds={activeSensors.map(s => s.id)} />}
+              {showAddSensor && <AddSensorModal onClose={() => setShowAddSensor(false)} onAdd={addSensor} existingIds={activeSensors.map(s => s.id)} />}
               {activeSensors.length === 0 ? (
                 <div className="mt-6 flex flex-col items-center justify-center text-center p-8 bg-scada-panel border border-dashed border-scada-border rounded-2xl">
                   <Plus className="w-8 h-8 text-scada-muted mb-3" />
@@ -276,7 +232,7 @@ export default function Dashboard() {
                         </div>
                       )}
                       {/* Delete button overlay */}
-                       <button onClick={() => handleDeleteSensor(s.id)}
+                       <button onClick={() => deleteSensor(s.id)}
                         className="absolute -top-2 -right-2 z-10 w-7 h-7 rounded-full bg-scada-panel border border-scada-border shadow-md flex items-center justify-center text-scada-muted opacity-0 group-hover:opacity-100 hover:text-scada-red transition-all">
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
                       </button>
@@ -338,7 +294,7 @@ export default function Dashboard() {
           {/* ═══════════════ OUTPUT CONTROL PANEL ═══════════════ */}
           {activeTab === 'control' && (
             <div className="animate-slideUp">
-              {showAddOutput && <AddOutputModal onClose={() => setShowAddOutput(false)} onAdd={handleAddOutput} />}
+              {showAddOutput && <AddOutputModal onClose={() => setShowAddOutput(false)} onAdd={addOutput} />}
               <SectionHeader title={t('dashboard.control')} subtitle="VFD · Relays · Contactors · Motors"
                 action={
                   <button onClick={() => setShowAddOutput(true)}
@@ -357,7 +313,7 @@ export default function Dashboard() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {activeOutputs.map((o, i) => (
                     <div key={o.id} className={`animate-slideUp stagger-${(i % 10) + 1}`}>
-                      <OutputCard output={o} onDelete={(id) => handleDeleteOutput(id)} />
+                      <OutputCard output={o} onDelete={(id) => deleteOutput(id)} />
                     </div>
                   ))}
                 </div>

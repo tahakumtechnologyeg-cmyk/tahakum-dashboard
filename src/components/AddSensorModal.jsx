@@ -23,7 +23,6 @@ export default function AddSensorModal({ onClose, onAdd, existingIds }) {
     e.preventDefault()
     if (!name.trim()) return
     onAdd({
-      id: `custom_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
       builtIn: false,
       name: name.trim(),
       unit: unit.trim() || '-',
