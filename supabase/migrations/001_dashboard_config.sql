@@ -20,12 +20,12 @@ ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view their own profile"
   ON profiles FOR SELECT
-  USING (auth.uid() = id);
+  USING (auth.uid()::text = id::text);
 
 CREATE POLICY "Users can update their own profile"
   ON profiles FOR UPDATE
-  USING (auth.uid() = id)
-  WITH CHECK (auth.uid() = id);
+  USING (auth.uid()::text = id::text)
+  WITH CHECK (auth.uid()::text = id::text);
 
 -- 2. devices
 CREATE TABLE IF NOT EXISTS devices (
@@ -39,29 +39,29 @@ ALTER TABLE devices ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Users can view their own devices"
   ON devices FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id::text);
 
 CREATE POLICY "Users can insert their own devices"
   ON devices FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id::text);
 
 CREATE POLICY "Users can update their own devices"
   ON devices FOR UPDATE
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id::text)
+  WITH CHECK (auth.uid()::text = user_id::text);
 
 CREATE POLICY "Users can delete their own devices"
   ON devices FOR DELETE
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id::text);
 
 -- 3. controls
 CREATE TABLE IF NOT EXISTS controls (
-  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  id BIGSERIAL PRIMARY KEY,
   updated_at TIMESTAMPTZ DEFAULT now(),
   pump_speed REAL DEFAULT 0,
   status BOOLEAN DEFAULT false,
   target_pressure REAL DEFAULT 0,
-  device_id TEXT REFERENCES devices(device_id) ON DELETE SET NULL,
+  device_id TEXT,
   ota_esp32_url TEXT,
   ota_stm32_url TEXT,
   force_wakeup BOOLEAN DEFAULT false
@@ -72,38 +72,38 @@ ALTER TABLE controls ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can view controls of their devices"
   ON controls FOR SELECT
   USING (
-    device_id IN (SELECT device_id FROM devices WHERE user_id = auth.uid())
+    device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
 
 CREATE POLICY "Users can insert controls for their devices"
   ON controls FOR INSERT
   WITH CHECK (
-    device_id IN (SELECT device_id FROM devices WHERE user_id = auth.uid())
+    device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
 
 CREATE POLICY "Users can update controls of their devices"
   ON controls FOR UPDATE
   USING (
-    device_id IN (SELECT device_id FROM devices WHERE user_id = auth.uid())
+    device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   )
   WITH CHECK (
-    device_id IN (SELECT device_id FROM devices WHERE user_id = auth.uid())
+    device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
 
 CREATE POLICY "Users can delete controls of their devices"
   ON controls FOR DELETE
   USING (
-    device_id IN (SELECT device_id FROM devices WHERE user_id = auth.uid())
+    device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
 
 -- 4. telemetry
 CREATE TABLE IF NOT EXISTS telemetry (
-  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  id BIGSERIAL PRIMARY KEY,
   created_at TIMESTAMPTZ DEFAULT now(),
   sensor_type TEXT NOT NULL,
   value REAL NOT NULL DEFAULT 0,
   unit TEXT NOT NULL DEFAULT '',
-  device_id TEXT REFERENCES devices(device_id) ON DELETE CASCADE
+  device_id TEXT
 );
 
 ALTER TABLE telemetry ENABLE ROW LEVEL SECURITY;
@@ -111,19 +111,19 @@ ALTER TABLE telemetry ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Users can view telemetry of their devices"
   ON telemetry FOR SELECT
   USING (
-    device_id IN (SELECT device_id FROM devices WHERE user_id = auth.uid())
+    device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
 
 CREATE POLICY "Users can insert telemetry for their devices"
   ON telemetry FOR INSERT
   WITH CHECK (
-    device_id IN (SELECT device_id FROM devices WHERE user_id = auth.uid())
+    device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
 
 CREATE POLICY "Users can delete telemetry of their devices"
   ON telemetry FOR DELETE
   USING (
-    device_id IN (SELECT device_id FROM devices WHERE user_id = auth.uid())
+    device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
 
 -- 5. dashboard_sensors
