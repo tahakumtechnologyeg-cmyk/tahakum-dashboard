@@ -1,7 +1,7 @@
 import { Mail, MessageCircle, Globe, ChevronRight, Send, Phone, ExternalLink } from 'lucide-react'
 import { useI18n } from '../i18n/I18nContext'
 
-const CONTACT_EMAIL = 'team.takamul.eg@gmail.com'
+const CONTACT_EMAIL = 'tahakum.technology.eg@gmail.com'
 const CONTACT_PHONE = '+201068817108'
 const CONTACT_WEBSITE = 'https://teamtakamuleg-sudo.github.io/Tahamok-Technology/'
 
