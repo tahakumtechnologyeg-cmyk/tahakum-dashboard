@@ -18,12 +18,12 @@ CREATE TABLE IF NOT EXISTS profiles (
 
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view their own profile"
-  ON profiles FOR SELECT
+DROP POLICY IF EXISTS "Users can view their own profile" ON profiles;
+CREATE POLICY "Users can view their own profile" FOR SELECT
   USING (auth.uid()::text = id::text);
 
-CREATE POLICY "Users can update their own profile"
-  ON profiles FOR UPDATE
+DROP POLICY IF EXISTS "Users can update their own profile" ON profiles;
+CREATE POLICY "Users can update their own profile" FOR UPDATE
   USING (auth.uid()::text = id::text)
   WITH CHECK (auth.uid()::text = id::text);
 
@@ -37,21 +37,21 @@ CREATE TABLE IF NOT EXISTS devices (
 
 ALTER TABLE devices ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view their own devices"
-  ON devices FOR SELECT
+DROP POLICY IF EXISTS "Users can view their own devices" ON devices;
+CREATE POLICY "Users can view their own devices" FOR SELECT
   USING (auth.uid()::text = user_id::text);
 
-CREATE POLICY "Users can insert their own devices"
-  ON devices FOR INSERT
+DROP POLICY IF EXISTS "Users can insert their own devices" ON devices;
+CREATE POLICY "Users can insert their own devices" FOR INSERT
   WITH CHECK (auth.uid()::text = user_id::text);
 
-CREATE POLICY "Users can update their own devices"
-  ON devices FOR UPDATE
+DROP POLICY IF EXISTS "Users can update their own devices" ON devices;
+CREATE POLICY "Users can update their own devices" FOR UPDATE
   USING (auth.uid()::text = user_id::text)
   WITH CHECK (auth.uid()::text = user_id::text);
 
-CREATE POLICY "Users can delete their own devices"
-  ON devices FOR DELETE
+DROP POLICY IF EXISTS "Users can delete their own devices" ON devices;
+CREATE POLICY "Users can delete their own devices" FOR DELETE
   USING (auth.uid()::text = user_id::text);
 
 -- 3. controls
@@ -69,20 +69,20 @@ CREATE TABLE IF NOT EXISTS controls (
 
 ALTER TABLE controls ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view controls of their devices"
-  ON controls FOR SELECT
+DROP POLICY IF EXISTS "Users can view controls of their devices" ON controls;
+CREATE POLICY "Users can view controls of their devices" FOR SELECT
   USING (
     device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
 
-CREATE POLICY "Users can insert controls for their devices"
-  ON controls FOR INSERT
+DROP POLICY IF EXISTS "Users can insert controls for their devices" ON controls;
+CREATE POLICY "Users can insert controls for their devices" FOR INSERT
   WITH CHECK (
     device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
 
-CREATE POLICY "Users can update controls of their devices"
-  ON controls FOR UPDATE
+DROP POLICY IF EXISTS "Users can update controls of their devices" ON controls;
+CREATE POLICY "Users can update controls of their devices" FOR UPDATE
   USING (
     device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   )
@@ -90,8 +90,8 @@ CREATE POLICY "Users can update controls of their devices"
     device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
 
-CREATE POLICY "Users can delete controls of their devices"
-  ON controls FOR DELETE
+DROP POLICY IF EXISTS "Users can delete controls of their devices" ON controls;
+CREATE POLICY "Users can delete controls of their devices" FOR DELETE
   USING (
     device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
@@ -108,20 +108,20 @@ CREATE TABLE IF NOT EXISTS telemetry (
 
 ALTER TABLE telemetry ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view telemetry of their devices"
-  ON telemetry FOR SELECT
+DROP POLICY IF EXISTS "Users can view telemetry of their devices" ON telemetry;
+CREATE POLICY "Users can view telemetry of their devices" FOR SELECT
   USING (
     device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
 
-CREATE POLICY "Users can insert telemetry for their devices"
-  ON telemetry FOR INSERT
+DROP POLICY IF EXISTS "Users can insert telemetry for their devices" ON telemetry;
+CREATE POLICY "Users can insert telemetry for their devices" FOR INSERT
   WITH CHECK (
     device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
 
-CREATE POLICY "Users can delete telemetry of their devices"
-  ON telemetry FOR DELETE
+DROP POLICY IF EXISTS "Users can delete telemetry of their devices" ON telemetry;
+CREATE POLICY "Users can delete telemetry of their devices" FOR DELETE
   USING (
     device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
@@ -139,16 +139,16 @@ CREATE TABLE IF NOT EXISTS dashboard_sensors (
 
 ALTER TABLE dashboard_sensors ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view their own sensors"
-  ON dashboard_sensors FOR SELECT
+DROP POLICY IF EXISTS "Users can view their own sensors" ON dashboard_sensors;
+CREATE POLICY "Users can view their own sensors" FOR SELECT
   USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can insert their own sensors"
-  ON dashboard_sensors FOR INSERT
+DROP POLICY IF EXISTS "Users can insert their own sensors" ON dashboard_sensors;
+CREATE POLICY "Users can insert their own sensors" FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Users can delete their own sensors"
-  ON dashboard_sensors FOR DELETE
+DROP POLICY IF EXISTS "Users can delete their own sensors" ON dashboard_sensors;
+CREATE POLICY "Users can delete their own sensors" FOR DELETE
   USING (auth.uid() = user_id);
 
 -- 6. dashboard_outputs
@@ -162,14 +162,14 @@ CREATE TABLE IF NOT EXISTS dashboard_outputs (
 
 ALTER TABLE dashboard_outputs ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Users can view their own outputs"
-  ON dashboard_outputs FOR SELECT
+DROP POLICY IF EXISTS "Users can view their own outputs" ON dashboard_outputs;
+CREATE POLICY "Users can view their own outputs" FOR SELECT
   USING (auth.uid() = user_id);
 
-CREATE POLICY "Users can insert their own outputs"
-  ON dashboard_outputs FOR INSERT
+DROP POLICY IF EXISTS "Users can insert their own outputs" ON dashboard_outputs;
+CREATE POLICY "Users can insert their own outputs" FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Users can delete their own outputs"
-  ON dashboard_outputs FOR DELETE
+DROP POLICY IF EXISTS "Users can delete their own outputs" ON dashboard_outputs;
+CREATE POLICY "Users can delete their own outputs" FOR DELETE
   USING (auth.uid() = user_id);
