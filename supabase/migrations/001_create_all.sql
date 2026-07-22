@@ -1,10 +1,10 @@
 -- ============================================================
--- Complete Supabase schema for Tahakum Dashboard
--- Step 2: After dropping old tables, run this SQL to create all tables with Primary Keys
--- https://supabase.com/dashboard/project/ikifunpftkjbvqihnmti/sql/new
+-- Step 2: Create all tables with Primary Keys & Foreign Keys
+-- Run this AFTER 000_drop_all.sql
+-- SQL Editor: https://supabase.com/dashboard/project/ikifunpftkjbvqihnmti/sql/new
 -- ============================================================
 
--- 1. profiles
+-- ─── 1. profiles ────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT,
@@ -27,7 +27,8 @@ CREATE POLICY "Users can update their own profile" ON profiles FOR UPDATE
   USING (auth.uid()::text = id::text)
   WITH CHECK (auth.uid()::text = id::text);
 
--- 2. devices
+-- ─── 2. devices ─────────────────────────────────────────────
+-- كل جهاز بيسجل تحت user معين
 CREATE TABLE IF NOT EXISTS devices (
   device_id TEXT PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id),
@@ -54,14 +55,15 @@ DROP POLICY IF EXISTS "Users can delete their own devices" ON devices;
 CREATE POLICY "Users can delete their own devices" ON devices FOR DELETE
   USING (auth.uid()::text = user_id::text);
 
--- 3. controls
+-- ─── 3. controls ────────────────────────────────────────────
+-- أوامر التحكم (pump speed, status, target_pressure) لكل جهاز
 CREATE TABLE IF NOT EXISTS controls (
   id BIGSERIAL PRIMARY KEY,
   updated_at TIMESTAMPTZ DEFAULT now(),
   pump_speed REAL DEFAULT 0,
   status BOOLEAN DEFAULT false,
   target_pressure REAL DEFAULT 0,
-  device_id TEXT,
+  device_id TEXT REFERENCES devices(device_id) ON DELETE SET NULL,
   ota_esp32_url TEXT,
   ota_stm32_url TEXT,
   force_wakeup BOOLEAN DEFAULT false
@@ -96,14 +98,15 @@ CREATE POLICY "Users can delete controls of their devices" ON controls FOR DELET
     device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
 
--- 4. telemetry
+-- ─── 4. telemetry ───────────────────────────────────────────
+-- قرايات السينسورز الحقيقية من الأجهزة
 CREATE TABLE IF NOT EXISTS telemetry (
   id BIGSERIAL PRIMARY KEY,
   created_at TIMESTAMPTZ DEFAULT now(),
   sensor_type TEXT NOT NULL,
   value REAL NOT NULL DEFAULT 0,
   unit TEXT NOT NULL DEFAULT '',
-  device_id TEXT
+  device_id TEXT REFERENCES devices(device_id) ON DELETE CASCADE
 );
 
 ALTER TABLE telemetry ENABLE ROW LEVEL SECURITY;
@@ -126,7 +129,9 @@ CREATE POLICY "Users can delete telemetry of their devices" ON telemetry FOR DEL
     device_id IN (SELECT device_id FROM devices WHERE auth.uid()::text = user_id::text)
   );
 
--- 5. dashboard_sensors
+-- ─── 5. dashboard_sensors ───────────────────────────────────
+-- سينسورز وهمية المستخدم بيعملها من Dashboard UI
+-- momkin yatwasal b telemetry sensor_type fi mostaqbal
 CREATE TABLE IF NOT EXISTS dashboard_sensors (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES auth.users(id) NOT NULL,
@@ -141,17 +146,19 @@ ALTER TABLE dashboard_sensors ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Users can view their own sensors" ON dashboard_sensors;
 CREATE POLICY "Users can view their own sensors" ON dashboard_sensors FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id::text);
 
 DROP POLICY IF EXISTS "Users can insert their own sensors" ON dashboard_sensors;
 CREATE POLICY "Users can insert their own sensors" ON dashboard_sensors FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id::text);
 
 DROP POLICY IF EXISTS "Users can delete their own sensors" ON dashboard_sensors;
 CREATE POLICY "Users can delete their own sensors" ON dashboard_sensors FOR DELETE
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id::text);
 
--- 6. dashboard_outputs
+-- ─── 6. dashboard_outputs ───────────────────────────────────
+-- أوتبوت وهمية المستخدم بيعملها من Dashboard UI
+-- momkin tatasal b controls fi mostaqbal
 CREATE TABLE IF NOT EXISTS dashboard_outputs (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES auth.users(id) NOT NULL,
@@ -164,12 +171,12 @@ ALTER TABLE dashboard_outputs ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Users can view their own outputs" ON dashboard_outputs;
 CREATE POLICY "Users can view their own outputs" ON dashboard_outputs FOR SELECT
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id::text);
 
 DROP POLICY IF EXISTS "Users can insert their own outputs" ON dashboard_outputs;
 CREATE POLICY "Users can insert their own outputs" ON dashboard_outputs FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (auth.uid()::text = user_id::text);
 
 DROP POLICY IF EXISTS "Users can delete their own outputs" ON dashboard_outputs;
 CREATE POLICY "Users can delete their own outputs" ON dashboard_outputs FOR DELETE
-  USING (auth.uid() = user_id);
+  USING (auth.uid()::text = user_id::text);
