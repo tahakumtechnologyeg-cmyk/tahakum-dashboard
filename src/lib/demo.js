@@ -1,4 +1,4 @@
-export const DEMO_MODE = true
+export const DEMO_MODE = false
 
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v))
 const rand = (min, max) => Math.random() * (max - min) + min
