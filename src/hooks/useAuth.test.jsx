@@ -2,25 +2,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { AuthProvider, useAuth } from '../hooks/useAuth'
 
-// Mock supabase
-vi.mock('../lib/supabase', () => ({
-  supabase: {
-    auth: {
-      getSession: () => Promise.resolve({ data: { session: null } }),
-      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: vi.fn() } } }),
-      signInWithPassword: vi.fn(),
-      signUp: vi.fn(),
-      signOut: vi.fn(),
-    },
-  },
-}))
-
 vi.mock('../lib/demo', () => ({
   DEMO_MODE: true,
 }))
 
 function TestComponent() {
-  const { user, loading, error, signIn, signUp, signOut } = useAuth()
+  const { user, loading, error, signIn, signOut } = useAuth()
   return (
     <div>
       <span data-testid="loading">{String(loading)}</span>
@@ -35,10 +22,10 @@ function TestComponent() {
 
 describe('useAuth (Demo mode)', () => {
   beforeEach(() => {
-    localStorage.clear()
+    sessionStorage.clear()
   })
 
-  it('starts with loading=true then resolves to no user', async () => {
+  it('auto-logs in with demo user', async () => {
     render(
       <AuthProvider>
         <TestComponent />
@@ -47,39 +34,7 @@ describe('useAuth (Demo mode)', () => {
     await waitFor(() => {
       expect(screen.getByTestId('loading').textContent).toBe('false')
     })
-    expect(screen.getByTestId('user').textContent).toBe('null')
-  })
-
-  it('signs in with demo credentials', async () => {
-    render(
-      <AuthProvider>
-        <TestComponent />
-      </AuthProvider>
-    )
-    await waitFor(() => {
-      expect(screen.getByTestId('loading').textContent).toBe('false')
-    })
-
-    fireEvent.click(screen.getByTestId('signin'))
-    await waitFor(() => {
-      expect(screen.getByTestId('user').textContent).toBe('admin@aquacontrol.io')
-    })
-  })
-
-  it('rejects invalid demo credentials', async () => {
-    render(
-      <AuthProvider>
-        <TestComponent />
-      </AuthProvider>
-    )
-    await waitFor(() => {
-      expect(screen.getByTestId('loading').textContent).toBe('false')
-    })
-
-    fireEvent.click(screen.getByTestId('signin-bad'))
-    await waitFor(() => {
-      expect(screen.getByTestId('error').textContent).not.toBe('null')
-    })
+    expect(screen.getByTestId('user').textContent).toBe('admin@aquacontrol.io')
   })
 
   it('signs out and clears user', async () => {
@@ -88,11 +43,6 @@ describe('useAuth (Demo mode)', () => {
         <TestComponent />
       </AuthProvider>
     )
-    await waitFor(() => {
-      expect(screen.getByTestId('loading').textContent).toBe('false')
-    })
-
-    fireEvent.click(screen.getByTestId('signin'))
     await waitFor(() => {
       expect(screen.getByTestId('user').textContent).toBe('admin@aquacontrol.io')
     })

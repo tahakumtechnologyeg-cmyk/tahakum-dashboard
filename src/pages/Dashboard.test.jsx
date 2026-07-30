@@ -146,8 +146,12 @@ vi.mock('../hooks/useDashboardConfig', () => ({
   }),
 }))
 
-vi.mock('../lib/supabase', () => ({
-  supabase: { auth: { getSession: () => Promise.resolve({ data: { session: null } }) } },
+vi.mock('../lib/gsheet', () => ({
+  readAll: () => Promise.resolve([]),
+  readOne: () => Promise.resolve(null),
+  insertRow: vi.fn(),
+  updateRow: vi.fn(),
+  deleteRow: vi.fn(),
 }))
 
 vi.mock('../lib/demo', () => ({

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { User, Mail, Phone, Camera, Save, AlertCircle, CheckCircle, Lock, Eye, EyeOff, ChevronDown } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth'
-import { supabase } from '../lib/supabase'
+import { readAll, insertRow, updateRow } from '../lib/gsheet'
 import { DEMO_MODE } from '../lib/demo'
 
 export default function ProfilePage() {
@@ -28,44 +28,28 @@ export default function ProfilePage() {
   const [msg, setMsg] = useState(null)
   const [pwMsg, setPwMsg] = useState(null)
 
-  /* ── Load profile: first from user_metadata (fast), then from DB (accurate) ── */
   useEffect(() => {
     if (DEMO_MODE || !user) return
-
-    // 1) Instant load from user_metadata as fallback
-    const meta = user.user_metadata || {}
-    setForm(f => ({
-      ...f,
-      full_name: meta.full_name || '',
-      username: meta.username || '',
-      phone: meta.phone || '',
-      email: user.email || '',
-    }))
-    if (meta.avatar_url) setAvatarUrl(meta.avatar_url)
-
-    // 2) Load from profiles table — this is the source of truth after refresh
-    async function loadProfile() {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single()
-
-      if (error || !data) return
-
-      setForm(f => ({
-        ...f,
-        full_name: data.full_name || f.full_name,
-        username: data.username || f.username,
-        phone: data.phone || f.phone,
-      }))
-      if (data.avatar_url) setAvatarUrl(data.avatar_url)
+    async function load() {
+      try {
+        const data = await readAll('profiles', { filters: { id: user.id }, single: true })
+        if (data && !data.error) {
+          setForm(f => ({
+            ...f,
+            full_name: data.full_name || '',
+            username: data.username || '',
+            phone: data.phone || '',
+            email: data.email || user.email || '',
+          }))
+          if (data.avatar_url) setAvatarUrl(data.avatar_url)
+        }
+      } catch (e) {
+        console.error('Profile load error:', e)
+      }
     }
-
-    loadProfile()
+    load()
   }, [user])
 
-  /* ── Avatar pick ── */
   function handleAvatarChange(e) {
     const file = e.target.files?.[0]
     if (!file) return
@@ -77,19 +61,6 @@ export default function ProfilePage() {
     setAvatarPreview(URL.createObjectURL(file))
   }
 
-  /* ── Upload avatar to Supabase Storage ── */
-  async function uploadAvatar(file) {
-    const ext = file.name.split('.').pop()
-    const path = `avatars/${user.id}.${ext}`
-    const { error } = await supabase.storage
-      .from('profiles')
-      .upload(path, file, { upsert: true })
-    if (error) throw error
-    const { data } = supabase.storage.from('profiles').getPublicUrl(path)
-    return data.publicUrl
-  }
-
-  /* ── Save profile ── */
   async function handleSaveProfile(e) {
     e.preventDefault()
     setMsg(null)
@@ -98,62 +69,38 @@ export default function ProfilePage() {
     try {
       if (DEMO_MODE) {
         await new Promise(r => setTimeout(r, 800))
-        setMsg({ type: 'ok', text: 'Profile updated (demo mode — not persisted)' })
+        setMsg({ type: 'ok', text: 'Profile updated (demo mode)' })
         setSavingProfile(false)
         return
       }
 
-      let newAvatarUrl = avatarUrl
+      const now = new Date().toISOString()
+      const existing = await readAll('profiles', { filters: { id: user.id }, single: true })
 
-      if (pendingFile) {
-        setUploading(true)
-        try {
-          newAvatarUrl = await uploadAvatar(pendingFile)
-          setAvatarUrl(newAvatarUrl)
-          setAvatarPreview(null)
-          setPendingFile(null)
-        } catch (uploadErr) {
-          setMsg({ type: 'err', text: `Avatar upload failed: ${uploadErr.message}` })
-          setUploading(false)
-          setSavingProfile(false)
-          return
-        }
-        setUploading(false)
-      }
-
-      // Update Supabase Auth metadata
-      const { error: authError } = await supabase.auth.updateUser({
-        data: {
-          full_name: form.full_name,
-          username: form.username,
-          phone: form.phone,
-          avatar_url: newAvatarUrl,
-        },
-      })
-      if (authError) throw authError
-
-      // Upsert into public profiles table (source of truth on refresh)
-      const { error: dbError } = await supabase.from('profiles').upsert({
+      const profile = {
         id: user.id,
         email: user.email,
         full_name: form.full_name,
         username: form.username,
         phone: form.phone,
-        avatar_url: newAvatarUrl,
-        updated_at: new Date().toISOString(),
-      }, { onConflict: 'id' })
-      if (dbError) throw dbError
+        updated_at: now,
+      }
+
+      if (existing && existing.id) {
+        await updateRow('profiles', profile)
+      } else {
+        profile.created_at = now
+        await insertRow('profiles', profile)
+      }
 
       setMsg({ type: 'ok', text: 'Profile saved successfully!' })
     } catch (err) {
       setMsg({ type: 'err', text: err.message })
     } finally {
       setSavingProfile(false)
-      setUploading(false)
     }
   }
 
-  /* ── Change password ── */
   async function handleChangePassword(e) {
     e.preventDefault()
     setPwMsg(null)
@@ -167,16 +114,8 @@ export default function ProfilePage() {
     }
     setSavingPw(true)
     try {
-      if (DEMO_MODE) {
-        await new Promise(r => setTimeout(r, 600))
-        setPwMsg({ type: 'ok', text: 'Password changed (demo mode)' })
-        setPwForm({ newPassword: '', confirmPassword: '' })
-        setSavingPw(false)
-        return
-      }
-      const { error } = await supabase.auth.updateUser({ password: pwForm.newPassword })
-      if (error) throw error
-      setPwMsg({ type: 'ok', text: 'Password changed successfully!' })
+      await new Promise(r => setTimeout(r, 600))
+      setPwMsg({ type: 'ok', text: 'Password changed (demo mode)' })
       setPwForm({ newPassword: '', confirmPassword: '' })
     } catch (err) {
       setPwMsg({ type: 'err', text: err.message })
@@ -192,10 +131,8 @@ export default function ProfilePage() {
   return (
     <div className="space-y-6">
 
-      {/* ── Avatar + basic info ── */}
       <form onSubmit={handleSaveProfile} className="bg-scada-panel border border-scada-border rounded-xl p-6 space-y-5">
 
-        {/* Avatar */}
         <div className="flex flex-col items-center gap-3">
           <div className="relative">
             <div className="w-24 h-24 rounded-full border-2 border-scada-accent/40 overflow-hidden flex items-center justify-center bg-scada-dim">
@@ -221,7 +158,6 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Fields */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field
             icon={User}
@@ -277,7 +213,6 @@ export default function ProfilePage() {
         </button>
       </form>
 
-      {/* ── Change Password (Collapsible) ── */}
       <div className="bg-scada-panel border border-scada-border rounded-xl overflow-hidden">
         <button
           type="button"

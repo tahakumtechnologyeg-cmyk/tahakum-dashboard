@@ -1,6 +1,4 @@
-// Demo mode: generates realistic sensor data when Supabase is not configured
-
-export const DEMO_MODE = false // Set to false when Supabase is connected
+export const DEMO_MODE = true
 
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v))
 const rand = (min, max) => Math.random() * (max - min) + min
@@ -45,12 +43,10 @@ export function setDemoControl(payload) {
   return getDemoControlState()
 }
 
-// Generate history for charts
 export function getDemoHistory(sensorKey, points = 50) {
   const history = []
   const now = Date.now()
   let val = 300
-
   for (let i = points; i >= 0; i--) {
     val = clamp(val + rand(-10, 10), 0, 1999)
     history.push({
