@@ -5,7 +5,6 @@ const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || 'YOUR_ANON_K
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   realtime: { params: { eventsPerSecond: 10 } },
-  auth: { storage: sessionStorage },
 })
 
 // ─── Telemetry ────────────────────────────────────────────────
