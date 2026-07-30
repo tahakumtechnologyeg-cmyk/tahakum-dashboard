@@ -44,8 +44,15 @@ export function AuthProvider({ children }) {
     return { error: err }
   }
 
-  async function signUp() {
-    return { error: { message: 'Sign-up disabled' } }
+  async function signUp(email, password) {
+    setError(null)
+    setLoading(true)
+    await new Promise(r => setTimeout(r, 500))
+    const demoUser = { id: 'demo-admin', email: email || DEMO_ADMIN.email, role: 'admin' }
+    setUser(demoUser)
+    sessionStorage.setItem('aqua_demo_session', JSON.stringify(demoUser))
+    setLoading(false)
+    return { error: null }
   }
 
   async function signOut() {
